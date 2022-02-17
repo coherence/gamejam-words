@@ -4,43 +4,61 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public string content;
-    public int owner;
+    public string Content { get; private set;  }
+    public int Owner { get; private set; }
+    public bool IsSolid { get; private set; }
+
     public Vector2Int gridPosition = new Vector2Int(25, 25);
     public Grid grid;
-    public TMPro.TMP_Text textControl;
+    public TMPro.TMP_Text textControl, debugText;
     public Renderer solidBackground, tentativeBackground;
-    public bool isSolid = false;
+    
+    public long frameWhenEntered;
     
     public void Initialise(Grid grid, int x, int y)
     {
         this.grid = grid;
         gridPosition = new Vector2Int(x, y);
-        isSolid = false;
-        content = null;
     }
 
-    public void SetSolidState(bool isSolid)
+    public void SetFrame(long frame)
     {
-        this.isSolid = isSolid;
+        frameWhenEntered = frame;
     }
 
+    public void SetContent(string content)
+    {
+        this.Content = content;
+    }
+
+    public void SetOwner(int owner)
+    {
+        this.Owner = owner;
+    }
+
+    public void SetSolid(bool solid)
+    {
+        this.IsSolid = solid;
+    }
+    
     public void SetState(string content, int owner, bool? isSolid = null)
     {
-        this.content = content;
-        this.owner = owner;
+        this.Content = content;
+        this.Owner = owner;
         
         if (isSolid != null)
         {
-            this.isSolid = (bool)isSolid;
+            this.IsSolid = (bool)isSolid;
         }
     }
     
     void Update()
     {
         transform.position = grid.GetGlobalPositionFromGrid(gridPosition.x, gridPosition.y);
-        textControl.text = content;
-        solidBackground.enabled = isSolid && !string.IsNullOrEmpty(content);
-        tentativeBackground.enabled = !isSolid && !string.IsNullOrEmpty(content);
+        textControl.text = Content;
+        solidBackground.enabled = IsSolid && !string.IsNullOrEmpty(Content);
+        tentativeBackground.enabled = !IsSolid && !string.IsNullOrEmpty(Content);
+
+        debugText.text = (!IsSolid && !string.IsNullOrEmpty(Content)) ? $"{grid.MaxFramesForTempLetter - (grid.GetSimulationFrame()-frameWhenEntered)}" : "";
     }
 }

@@ -15,29 +15,54 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
 
     protected override void Simulate(long simulationFrame)
     {
+        grid.UpdateSimulationFrame(simulationFrame);
+        
         foreach (CoherenceClientConnection client in AllClients)
         {
             var player = client.GameObject.GetComponent<Player>();
             var movement = (Vector3)player.GetNetworkInputMovement(simulationFrame);
             var alphabetInt = Mathf.Ceil(player.GetNetworkInputString(simulationFrame));
-            
-            if (movement.x > 0) player.gridPosition.x += 1;
-            if (movement.x < 0) player.gridPosition.x -= 1;
-            if (movement.y > 0) player.gridPosition.y += 1;
-            if (movement.y < 0) player.gridPosition.y -= 1;
 
-            if (player.gridPosition.x < 0) player.gridPosition.x = Grid.tiling - 1;
-            if (player.gridPosition.y < 0) player.gridPosition.y = Grid.tiling - 1;
-            if (player.gridPosition.x >= Grid.tiling) player.gridPosition.x = 0;
-            if (player.gridPosition.y >= Grid.tiling) player.gridPosition.y = 0;
+            var hasMovement = false;
+            
+            if (movement.x > 0)
+            {
+                hasMovement = true; 
+                player.gridPosition.x += 1;
+            }
+            
+            if (movement.x < 0)
+            {
+                hasMovement = true; 
+                player.gridPosition.x -= 1;
+            }
+            
+            if (movement.y > 0)
+            {
+                hasMovement = true; 
+                player.gridPosition.y += 1;
+            }
+
+            if (movement.y < 0)
+            {
+                hasMovement = true;
+                player.gridPosition.y -= 1;
+            }
+
+            if (hasMovement)
+            {
+                if (player.gridPosition.x < 0) player.gridPosition.x = Grid.tiling - 1;
+                if (player.gridPosition.y < 0) player.gridPosition.y = Grid.tiling - 1;
+                if (player.gridPosition.x >= Grid.tiling) player.gridPosition.x = 0;
+                if (player.gridPosition.y >= Grid.tiling) player.gridPosition.y = 0;
+
+                //grid.UpdatePlayerPositionAndClearNonSolidCells(client.ClientId, player.gridPosition.x, player.gridPosition.y);
+            }
 
             if (alphabetInt != 0)
             {
                 var key = (KeyCode) alphabetInt;
-                
-                //Debug.Log($"GetButtonRangeState {alphabetInt} {key} {key.ToString()}");
-                
-                grid.SetCellContentAndCheckWord(player.gridPosition.x, player.gridPosition.y, key.ToString(), client.ClientId);
+                grid.SetCellContentAndCheckWord(player.gridPosition.x, player.gridPosition.y, key.ToString(), client.ClientId, simulationFrame);
             }
         }
     }
