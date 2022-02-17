@@ -19,7 +19,7 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
         {
             var player = client.GameObject.GetComponent<Player>();
             var movement = (Vector3)player.GetNetworkInputMovement(simulationFrame);
-            var alphabet = player.GetNetworkInputString(simulationFrame);
+            var alphabetInt = Mathf.Ceil(player.GetNetworkInputString(simulationFrame));
             
             if (movement.x > 0) player.gridPosition.x += 1;
             if (movement.x < 0) player.gridPosition.x -= 1;
@@ -31,9 +31,13 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
             if (player.gridPosition.x >= Grid.tiling) player.gridPosition.x = 0;
             if (player.gridPosition.y >= Grid.tiling) player.gridPosition.y = 0;
 
-            if (!String.IsNullOrEmpty(alphabet))
+            if (alphabetInt != 0)
             {
-                grid.SetCellContent(player.gridPosition.x, player.gridPosition.y, alphabet, -1);
+                var key = (KeyCode) alphabetInt;
+                
+                //Debug.Log($"GetButtonRangeState {alphabetInt} {key} {key.ToString()}");
+                
+                grid.SetCellContentAndCheckWord(player.gridPosition.x, player.gridPosition.y, key.ToString(), client.ClientId);
             }
         }
     }

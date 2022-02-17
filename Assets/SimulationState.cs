@@ -10,5 +10,6 @@ public struct SimulationState
     {
         public string content;
         public int owner;
+        public bool isSolid;
     }
 }

@@ -18,12 +18,6 @@ public class Player : MonoBehaviour
 
     private const string InternalAlphabet = "qwertyuiopasdfghjklzxcvbnm";
 
-    struct KeyPress
-    {
-        public KeyCode keyCode;
-        public float timestamp;
-    }
-
     private Hashtable keyPresses;
     
     private KeyCode[] acceptedAlphabetKeys;
@@ -78,9 +72,9 @@ public class Player : MonoBehaviour
         return input.GetAxisState("Mov", frame);
     }
 
-    public string GetNetworkInputString(long frame)
+    public float GetNetworkInputString(long frame)
     {
-        return input.GetStringState("key", frame);
+        return input.GetButtonRangeState("key", frame);
     }
 
     public void ApplyLocalInputs()
@@ -97,12 +91,12 @@ public class Player : MonoBehaviour
             {
                 if (CanTypeKey(key))
                 {
-                    input.SetStringState("key", key.ToString());
+                    input.SetButtonRangeState("key", (float)key);
                     RecordKeyTime(key);
                 }
                 else
                 {
-                    input.SetStringState("key", null);
+                    input.SetButtonRangeState("key", 0f);
                 }
             }
         }
@@ -130,13 +124,13 @@ public class Player : MonoBehaviour
     {
         int y = 0;
         int x = 0;
-        
+
         TryTypeKey(KeyCode.UpArrow, 0, 1, ref x, ref y);
         TryTypeKey(KeyCode.DownArrow, 0, -1, ref x, ref y);
         TryTypeKey(KeyCode.RightArrow, 1, 0, ref x, ref y);
         TryTypeKey(KeyCode.LeftArrow, -1, 0, ref x, ref y);
-
-        Vector2 movement = new Vector2(x, y).normalized;
+        
+        var movement = new Vector2(x, y).normalized;
         input.SetAxisState("Mov", movement);
     }
 }

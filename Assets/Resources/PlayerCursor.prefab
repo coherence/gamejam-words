@@ -398,20 +398,10 @@ MonoBehaviour:
   UseFixedSimulationFrames: 1
   inputName: TestCube
   fields:
+  - name: key
+    type: 2
   - name: Mov
     type: 0
-  - name: enter
-    type: 1
-  - name: key
-    type: 3
-  - name: up
-    type: 1
-  - name: down
-    type: 1
-  - name: left
-    type: 1
-  - name: right
-    type: 1
 --- !u!114 &694873017490517114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,5 +414,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76dd0b8d15da42d44a49ef95776a4c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 5
   gridPosition: {x: 25, y: 25}

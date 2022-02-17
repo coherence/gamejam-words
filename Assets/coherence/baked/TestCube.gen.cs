@@ -14,16 +14,11 @@ namespace Coherence.Generated
 
 	public struct TestCube : IEntityInput
 	{
+		public float key;
 		public float2 Mov;
-		public bool enter;
-		public string key;
-		public bool up;
-		public bool down;
-		public bool left;
-		public bool right;
 
+		public float Compressedkey => ValueCompressor.Compressfloat(key, 24, 2400);
 		public float2 CompressedMov => ValueCompressor.Compressfloat2(Mov, 24, 2400);
-		public string Compressedkey => ValueCompressor.Compressstring(key);
 
 		public uint GetComponentType() => Definition.InternalTestCube;
 
@@ -31,65 +26,42 @@ namespace Coherence.Generated
 
 		public TestCube
 		(
+			float datakey,
 			float2 dataMov,
-			bool dataenter,
-			string datakey,
-			bool dataup,
-			bool datadown,
-			bool dataleft,
-			bool dataright,
 			bool isRemoteInput
 		)
 		{
-			Mov = dataMov;
-			enter = dataenter;
 			key = datakey;
-			up = dataup;
-			down = datadown;
-			left = dataleft;
-			right = dataright;
+			Mov = dataMov;
 			this.isRemoteInput = isRemoteInput;
 		}
 
 		public override string ToString()
 		{
 			return isRemoteInput
-				? $"{nameof(Mov)}: {Mov}, {nameof(enter)}: {enter}, {nameof(key)}: {key}, {nameof(up)}: {up}, {nameof(down)}: {down}, {nameof(left)}: {left}, {nameof(right)}: {right}"
-				: $"{nameof(Mov)}:{CompressedMov}, {nameof(enter)}:{enter}, {nameof(key)}:{Compressedkey}, {nameof(up)}:{up}, {nameof(down)}:{down}, {nameof(left)}:{left}, {nameof(right)}:{right}";
+				? $"{nameof(key)}: {key}, {nameof(Mov)}: {Mov}"
+				: $"{nameof(key)}:{Compressedkey}, {nameof(Mov)}:{CompressedMov}";
 		}
 
 		public static void Serialize(TestCube inputData, IOutProtocolBitStream bitStream)
 		{
+			var converted_key = CoherenceToUnityConverters.FromUnityfloat(inputData.key);
+			bitStream.WriteFixedPoint(converted_key, 24, 2400);
 			var converted_Mov = CoherenceToUnityConverters.FromUnityfloat2(inputData.Mov);
 			bitStream.WriteVector2f(converted_Mov, 24, 2400);
-			bitStream.WriteBool(inputData.enter);
-			bitStream.WriteShortString(inputData.key);
-			bitStream.WriteBool(inputData.up);
-			bitStream.WriteBool(inputData.down);
-			bitStream.WriteBool(inputData.left);
-			bitStream.WriteBool(inputData.right);
 		}
 
 		public static TestCube Deserialize(IInProtocolBitStream bitStream)
 		{
+			var converted_key = bitStream.ReadFixedPoint(24, 2400);
+			var datakey = CoherenceToUnityConverters.ToUnityfloat(converted_key);
 			var converted_Mov = bitStream.ReadVector2f(24, 2400);
 			var dataMov = CoherenceToUnityConverters.ToUnityfloat2(converted_Mov);
-			var dataenter = bitStream.ReadBool();
-			var datakey = bitStream.ReadShortString();
-			var dataup = bitStream.ReadBool();
-			var datadown = bitStream.ReadBool();
-			var dataleft = bitStream.ReadBool();
-			var dataright = bitStream.ReadBool();
 
 			return new TestCube
 			(
-				dataMov,
-				dataenter,
 				datakey,
-				dataup,
-				datadown,
-				dataleft,
-				dataright,
+				dataMov,
 				true
 			);
 		}

@@ -517,21 +517,6 @@ namespace Coherence.Generated
 		{
 			switch(name)
 			{
-				case "enter":
-					currentInput.enter = value;
-					break;
-				case "up":
-					currentInput.up = value;
-					break;
-				case "down":
-					currentInput.down = value;
-					break;
-				case "left":
-					currentInput.left = value;
-					break;
-				case "right":
-					currentInput.right = value;
-					break;
 				default:
 					Debug.LogError($"No input button of name: {name}");
 					break;
@@ -542,6 +527,9 @@ namespace Coherence.Generated
 		{
 			switch(name)
 			{
+			case "key":
+				currentInput.key = value;
+				break;
 			default:
 				Debug.LogError($"No input button range of name: {name}");
 				break;
@@ -565,9 +553,6 @@ namespace Coherence.Generated
 		{
 			switch(name)
 			{
-				case "key":
-					currentInput.key = value;
-					break;
 				default:
 					Debug.LogError($"No input button of name: {name}");
 					break;
@@ -610,56 +595,6 @@ namespace Coherence.Generated
 
 			switch(name)
 			{
-				case "enter":
-				{
-					if (ShouldPollCurrentInput(frame))
-					{
-						return currentInput.enter;
-					}
-
-					inputBuffer.TryGetInput(frame, out TestCube input);
-					return input.enter;
-				}
-				case "up":
-				{
-					if (ShouldPollCurrentInput(frame))
-					{
-						return currentInput.up;
-					}
-
-					inputBuffer.TryGetInput(frame, out TestCube input);
-					return input.up;
-				}
-				case "down":
-				{
-					if (ShouldPollCurrentInput(frame))
-					{
-						return currentInput.down;
-					}
-
-					inputBuffer.TryGetInput(frame, out TestCube input);
-					return input.down;
-				}
-				case "left":
-				{
-					if (ShouldPollCurrentInput(frame))
-					{
-						return currentInput.left;
-					}
-
-					inputBuffer.TryGetInput(frame, out TestCube input);
-					return input.left;
-				}
-				case "right":
-				{
-					if (ShouldPollCurrentInput(frame))
-					{
-						return currentInput.right;
-					}
-
-					inputBuffer.TryGetInput(frame, out TestCube input);
-					return input.right;
-				}
 				default:
 					Debug.LogError($"No input button of name: {name}");
 					break;
@@ -674,6 +609,16 @@ namespace Coherence.Generated
 
 			switch(name)
 			{
+			case "key":
+				{
+					if (ShouldPollCurrentInput(frame))
+					{
+						return coherenceInput.IsProducer ? currentInput.Compressedkey : currentInput.key;
+					}
+
+					inputBuffer.TryGetInput(frame, out TestCube input);
+					return coherenceInput.IsProducer ? input.Compressedkey : input.key;
+				}
 			default:
 				Debug.LogError($"No input button range of name: {name}");
 				break;
@@ -712,16 +657,6 @@ namespace Coherence.Generated
 
 			switch(name)
 			{
-				case "key":
-				{
-					if (ShouldPollCurrentInput(frame))
-					{
-						return currentInput.key;
-					}
-
-					inputBuffer.TryGetInput(frame, out TestCube input);
-					return input.key;
-				}
 				default:
 					Debug.LogError($"No input button of name: {name}");
 					break;

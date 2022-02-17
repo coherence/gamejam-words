@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
@@ -17,8 +20,28 @@ public class Grid : MonoBehaviour
     public Cell[] cells;
 
     public Transform cellPrefab;
+
+    private ArrayList wordDictionary;
+
+    private void LoadDictionary()
+    {
+        wordDictionary = new ArrayList();
+        using (StreamReader reader = new StreamReader("Assets/Resources/words_alpha.txt"))
+        {
+            var line = reader.ReadLine().Trim();
+
+            if (line.Length > 2)
+            {
+                wordDictionary.Add(line);
+                Debug.Log(line);
+            }
+        }
+
+        var contains = wordDictionary.Contains("make");
+        Debug.Log($"Dictionary test: make {contains}");
+    }
     
-    Vector2Int GetGridPosFromLocal(float x, float z)
+    private Vector2Int GetGridPosFromLocal(float x, float z)
     {
         float t = (float) tiling;
         float adjustedX = (x + LocalRadius - posAdjustment) / LocalRadius;
@@ -44,7 +67,6 @@ public class Grid : MonoBehaviour
         return transform.TransformPoint(localPos);
     }
     
-    
     void Awake()
     {
         cells = new Cell[tiling * tiling];
@@ -60,19 +82,119 @@ public class Grid : MonoBehaviour
                 cellGO.parent = transform;
             }
         }
+
+        LoadDictionary();
     }
 
-    public void SetCellContent(int x, int y, string content, int owner)
+    public bool IsWordInDictionary(string word)
+    {
+        return wordDictionary.Contains(word);
+    }
+
+    public void SetCellContentAndCheckWord(int x, int y, string content, int owner)
+    {
+        var cell = GetCellAtXY(x, y);
+
+        if (cell.isSolid) return; // a word already exists intersecting this cell
+        
+        cell.SetState(content, owner, false);
+
+        int score = 0;
+
+        score += EvaluateWordInDirection(x, y, 1, 0, owner);
+        score += EvaluateWordInDirection(x, y, -1, 0, owner);
+        score += EvaluateWordInDirection(x, y, 0, 1, owner);
+        score += EvaluateWordInDirection(x, y, 0, -1, owner);
+
+        if (score > 0)
+        {
+            Debug.Log($"TODO: GIVE Player {owner} score of {score}");
+        }
+    }
+
+    private Cell GetCellAtXY(int x, int y)
+    {
+        return cells[x + tiling * y];
+    }
+    
+    int EvaluateWordInDirection(int ox, int oy, int xdir, int ydir, int clientID)
+    {
+        int score = 0;
+        string content = "";
+        int x = ox;
+        int y = oy;
+        
+        var currentCell = GetCellAtXY(x, y);
+        
+        while (currentCell != null)
+        {
+            var character = currentCell.content;
+            if (string.IsNullOrEmpty(character))
+            {
+                break;
+            }
+
+            content += character.ToLower();
+            x += xdir;
+            y += ydir;
+
+            if (x < 0) break;
+            if (y < 0) break;
+            if (x >= tiling) break;
+            if (y >= tiling) break;
+            
+            currentCell = GetCellAtXY(x, y);
+        }
+
+        var reversedContent = Reverse(content);
+        
+        Debug.Log($"Checking word {content} and {reversedContent}...");
+        
+        if (wordDictionary.Contains(reversedContent) || wordDictionary.Contains(content))
+        {
+            x = ox;
+            y = oy;
+            
+            for (int i = 0; i < content.Length; i++)
+            {
+                var cell = GetCellAtXY(x, y);
+                
+                if(cell.owner != -1) cell.owner = clientID;
+
+                cell.isSolid = true;
+                
+                x += xdir;
+                y += ydir;
+            }
+            
+            return content.Length; // TODO: calculate score based on letter weights
+        }
+        else
+        {
+            Debug.Log("Not found");
+        }
+
+        return score;
+    }
+    
+    public static string Reverse( string s )
+    {
+        char[] charArray = s.ToCharArray();
+        Array.Reverse( charArray );
+        return new string( charArray );
+    }
+
+    public void SetCellSolidState(int x, int y, bool isSolid)
     {
         var cell = cells[x + tiling * y];
-        cell.SetState(content, owner);
+        cell.SetSolidState(isSolid);
     }
     
     public void SetSimulationState(SimulationState.Cell[] state)
     {
         for (var i = 0; i < tiling * tiling; i++)
         {
-            cells[i].SetState(state[i].content, state[i].owner);
+            cells[i].SetState(state[i].content, state[i].owner, state[i].isSolid);
         }
     }
     
@@ -84,7 +206,8 @@ public class Grid : MonoBehaviour
             cellStates[i] = new SimulationState.Cell()
             {
                 content = cells[i].content,
-                owner = cells[i].owner
+                owner = cells[i].owner,
+                isSolid = cells[i].isSolid
             };
         }
 
