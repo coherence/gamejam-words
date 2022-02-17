@@ -744,7 +744,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.08
+  orthographic size: 11.19
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -889,6 +889,7 @@ MonoBehaviour:
   cursorPoxY: 25
   LocalRadius: 5
   posAdjustment: -0.1
+  MaxFramesForTempLetter: 380
   TempObjectToTrack: {fileID: 0}
   cells: []
   cellPrefab: {fileID: 6827767851080214943, guid: eb8345ffccd2296459a3522e4964f53d, type: 3}

@@ -32,25 +32,19 @@ public class Grid : MonoBehaviour
     {
         wordsAlreadyUsed = new ArrayList();
         wordDictionary = new ArrayList();
-        try
+        
+        TextAsset mytxtData=(TextAsset)Resources.Load("words_alpha");
+        string txt=mytxtData.text;
+
+        string[] lines = txt.Split('\n');
+        
+        foreach(var line in lines)    
         {
-            using (StreamReader reader = new StreamReader("Assets/Resources/words_alpha.txt"))
+            var trimLine = line.Trim();
+            if (trimLine.Length >= 4)
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    line = line.Trim();
-                    if (line.Length >= 4)
-                    {
-                        wordDictionary.Add(line);
-                    }
-                }
+                wordDictionary.Add(trimLine);
             }
-        }
-        catch (Exception e)
-        {
-            Debug.LogWarning("The file could not be read:");
-            Debug.LogWarning(e.Message);
         }
 
         var contains = wordDictionary.Contains("make");
@@ -169,7 +163,7 @@ public class Grid : MonoBehaviour
 
         if (score > 0)
         {
-            Debug.Log($"TODO: GIVE Player {clientID} score of {score}");
+            //Debug.Log($"TODO: GIVE Player {clientID} score of {score}");
         }
     }
 
