@@ -257,7 +257,23 @@ MonoBehaviour:
   uniquenessType: 0
   coherenceUUID: 
   destructionBehavior: 0
-  reflectionBindings: []
+  reflectionBindings:
+  - name: playerName
+    memberKind: 1
+    memberAssemblyType: System.String, mscorlib
+    parameterAssemblyTypes: []
+    returnAssemblyType: 
+    compatibility: -1
+    routing: 1
+    interpolationSettings: {fileID: 0}
+    component: {fileID: 694873017490517114}
+    archetypeData:
+      type: 0
+      minRange: 0
+      maxRange: 0
+      scale: 0
+      fields: []
+      sharedBinding: {fileID: 0}
   customBindings:
   - descriptor:
       name: position
@@ -329,41 +345,6 @@ MonoBehaviour:
         precision: 0
         scale: 0
       sharedBinding: {fileID: 0}
-  - descriptor:
-      name: scale
-      displayName: 
-      monoAssemblyType: UnityEngine.Vector3, UnityEngine
-      coherenceAssemblyType: Coherence.Generated.GenericScale, Assembly-CSharp
-      bakedSyncScriptGetter: coherenceLocalScale
-      bakedSyncScriptSetter: coherenceLocalScale
-      bakedSyncScriptFieldName: 
-      bakedSyncScriptCSharpType: 
-      coherenceComponentName: GenericScale
-      coherenceComponentFieldName: value
-      schemaComponentFieldName: value
-      extraData: 
-      required: 0
-      interpolable: 1
-      defaultInterpolationSettings: {fileID: 0}
-      enforcesLODingWhenFieldsOverriden: 1
-    component: {fileID: 5087559671055490318}
-    serializerAssemblyType: Coherence.Toolkit.TransformBindingSerializer, Coherence.Toolkit
-    interpolationSettings: {fileID: 0}
-    coherenceSync: {fileID: 0}
-    interpolates: 1
-    archetypeData:
-      type: 7
-      minRange: 0
-      maxRange: 0
-      scale: 2400
-      fields:
-      - type: 7
-        bits: 23
-        minRange: 0
-        maxRange: 0
-        precision: 0.001
-        scale: 2400
-      sharedBinding: {fileID: 0}
   onNetworkedInstantiation:
     m_PersistentCalls:
       m_Calls: []
@@ -414,4 +395,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76dd0b8d15da42d44a49ef95776a4c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerName: Player
   gridPosition: {x: 25, y: 25}

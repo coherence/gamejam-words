@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
 {
     private FixedUpdateInput fixedUpdateInput;
 
+    public string playerName = "Player";
+    
     public Vector2Int gridPosition = new Vector2Int(25, 25);
    
     private CoherenceInput input;

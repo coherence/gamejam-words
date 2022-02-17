@@ -26,11 +26,12 @@ namespace Coherence.Generated
 
 		// Cached references to MonoBehaviours on this GameObject
 		private Coherence.Toolkit.CoherenceSync _transformViaCoherenceSync;
+		private Player _player;
 
 		// Last sent data for each component (used for diffing)
 		private WorldPosition _transformViaCoherenceSync_WorldPosition_lastSentData = default;
 		private WorldOrientation _transformViaCoherenceSync_WorldOrientation_lastSentData = default;
-		private GenericScale _transformViaCoherenceSync_GenericScale_lastSentData = default;
+		private PlayerCursor_Player _player_PlayerCursor_Player_lastSentData = default;
 
 		private string lastSerializedCoherenceUUID;
 
@@ -42,9 +43,7 @@ namespace Coherence.Generated
 		private InterpolationState<quaternion> InternalWorldOrientation_Rotation_value_InterpolationState;
 		private NativeList<InterpolationSample<quaternion>> InternalWorldOrientation_Rotation_value_InterpolationSamples;
 
-		private IBinding InternalGenericScale_GenericScale_value_Binding;
-		private InterpolationState<float3> InternalGenericScale_GenericScale_value_InterpolationState;
-		private NativeList<InterpolationSample<float3>> InternalGenericScale_GenericScale_value_InterpolationSamples;
+		private IBinding InternalPlayerCursor_Player_PlayerCursor_Player_playerName_Binding;
 
 		private InputBuffer<TestCube> inputBuffer;
 		private TestCube currentInput;
@@ -61,6 +60,7 @@ namespace Coherence.Generated
 			coherenceSync.usingReflection = false;
 			coherenceInput = coherenceSync.Input;
 			_transformViaCoherenceSync = GetComponent<Coherence.Toolkit.CoherenceSync>();
+			_player = GetComponent<Player>();
 
 			bool inputsRequireSubsequentFrames = coherenceSync.simulationType == CoherenceSync.SimulationType.ClientSide;
 			inputBuffer = new InputBuffer<TestCube>(coherenceInput.InitialBufferSize, coherenceInput.InitialBufferDelay, inputsRequireSubsequentFrames);
@@ -75,9 +75,9 @@ namespace Coherence.Generated
 				Debug.LogError("[CoherenceSync] Couldn't find binding (UnityEngine.Transform, UnityEngine).rotation");
 			}
 
-			if (!coherenceSync.TryGetBinding(Type.GetType("UnityEngine.Transform, UnityEngine"), "scale", out InternalGenericScale_GenericScale_value_Binding))
+			if (!coherenceSync.TryGetBinding(Type.GetType("Player, Assembly-CSharp"), "playerName", out InternalPlayerCursor_Player_PlayerCursor_Player_playerName_Binding))
 			{
-				Debug.LogError("[CoherenceSync] Couldn't find binding (UnityEngine.Transform, UnityEngine).scale");
+				Debug.LogError("[CoherenceSync] Couldn't find binding (Player, Assembly-CSharp).playerName");
 			}
 			if (coherenceInput.UseFixedSimulationFrames)
 			{
@@ -109,7 +109,6 @@ namespace Coherence.Generated
 		{
 			coherenceSync.interpolationCollection.float3SampleSet.Release(InternalWorldPosition_Translation_value_InterpolationSamples, InternalWorldPosition_Translation_value_Binding);
 			coherenceSync.interpolationCollection.quaternionSampleSet.Release(InternalWorldOrientation_Rotation_value_InterpolationSamples, InternalWorldOrientation_Rotation_value_Binding);
-			coherenceSync.interpolationCollection.float3SampleSet.Release(InternalGenericScale_GenericScale_value_InterpolationSamples, InternalGenericScale_GenericScale_value_Binding);
 			if (monoBridge != null)
 			{
 				monoBridge.OnLateFixedNetworkUpdate -= SendInputState;
@@ -168,18 +167,6 @@ namespace Coherence.Generated
 			{
 				InternalWorldOrientation_Rotation_value_InterpolationState.velocity = default;
 				InternalWorldOrientation_Rotation_value_InterpolationSamples.Clear();
-			}
-			if (!InternalGenericScale_GenericScale_value_InterpolationSamples.IsCreated)
-			{
-				var binding = InternalGenericScale_GenericScale_value_Binding;
-				InternalGenericScale_GenericScale_value_InterpolationState = coherenceSync.interpolationCollection.float3StateSet.Get(binding);
-				InternalGenericScale_GenericScale_value_InterpolationState.binding = binding;
-				InternalGenericScale_GenericScale_value_InterpolationSamples = coherenceSync.interpolationCollection.float3SampleSet.Get(binding);
-			}
-			else
-			{
-				InternalGenericScale_GenericScale_value_InterpolationState.velocity = default;
-				InternalGenericScale_GenericScale_value_InterpolationSamples.Clear();
 			}
 		}
 
@@ -274,19 +261,19 @@ namespace Coherence.Generated
 					}
 				}
 
-				// Send GenericScale / GenericScale
+				// Send PlayerCursor_Player / PlayerCursor_Player
 				{
-					var update = new GenericScale();
+					var update = new PlayerCursor_Player();
 
-					update.value = (_transformViaCoherenceSync.coherenceLocalScale);
+					update.playerName = (_player.playerName ?? "");
 
-					uint mask = _transformViaCoherenceSync_GenericScale_lastSentData.DiffWith(update);
+					uint mask = _player_PlayerCursor_Player_lastSentData.DiffWith(update);
 
-					if(mask != 0 && coherenceSync.IsReadyToSample(typeof(GenericScale), Time.time))
+					if(mask != 0 && coherenceSync.IsReadyToSample(typeof(PlayerCursor_Player), Time.time))
 					{
 						updates.Add(update);
 						masks.Add(mask);
-						_transformViaCoherenceSync_GenericScale_lastSentData = update;
+						_player_PlayerCursor_Player_lastSentData = update;
 					}
 				}
 
@@ -340,17 +327,6 @@ namespace Coherence.Generated
 					monoBridge.NetworkTime.TimeAsDouble);
 
 				_transformViaCoherenceSync.coherenceRotation = (InternalWorldOrientation_value_target);
-			}
-			if (InternalGenericScale_GenericScale_value_Binding.CanInterpolate)
-			{
-				var InternalGenericScale_value_target = InterpolationSystem.PerformInterpolation(
-					InternalGenericScale_GenericScale_value_InterpolationSamples,
-					ref InternalGenericScale_GenericScale_value_InterpolationState,
-					localFrame,
-					_transformViaCoherenceSync.coherenceLocalScale,
-					monoBridge.NetworkTime.TimeAsDouble);
-
-				_transformViaCoherenceSync.coherenceLocalScale = (InternalGenericScale_value_target);
 			}
 		}
 
@@ -448,35 +424,14 @@ namespace Coherence.Generated
 						break;
 					}
 
-					case 15:
+					case 71:
 					{
-						// GenericScale
-						var data = (GenericScale)change.Data;
+						// PlayerCursor_Player
+						var data = (PlayerCursor_Player)change.Data;
 						var mask = change.Mask;
 						if((mask & 0b00000000000000000000000000000001) != 0)
 						{
-							if (InternalGenericScale_GenericScale_value_Binding.CanInterpolate)
-							{
-								var settings = InternalGenericScale_GenericScale_value_InterpolationState.binding.InterpolationSettings;
-								var buffer = InternalGenericScale_GenericScale_value_InterpolationSamples;
-								var value = data.value;
-								var cleared = InterpolationSystem.UpdateInterpolationSamples(ref buffer, ref InternalGenericScale_GenericScale_value_InterpolationState, value);
-								InterpolationSystem.AppendInterpolationSample(ref buffer, value, (ulong)data.GetSimulationFrame().Frame);
-								var newLatency = InterpolationSystem.CalculateLatency<float3>(buffer, settings);
-								if (newLatency >= 0f)
-								{
-									InternalGenericScale_GenericScale_value_InterpolationState.latency = newLatency;
-								}
-
-								if (cleared)
-								{
-									_transformViaCoherenceSync.coherenceLocalScale = (data.value);
-								}
-							}
-							else
-							{
-								_transformViaCoherenceSync.coherenceLocalScale = (data.value);
-							}
+							_player.playerName = (String)(data.playerName);
 						}
 						break;
 					}

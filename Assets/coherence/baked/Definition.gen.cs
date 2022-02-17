@@ -14,7 +14,7 @@ namespace Coherence.Generated
 
 	public class Definition : IDefinition
 	{
-		public const string schemaId = "0ad3fc2e26bac081d3594c304536dd1aef54b27a";
+		public const string schemaId = "f63a4dbbf173f675a570867376454a6bc59bbb33";
 		public const uint InternalWorldPosition = 0;
 		public const uint InternalWorldOrientation = 1;
 		public const uint InternalLocalUser = 2;
@@ -86,6 +86,7 @@ namespace Coherence.Generated
 		public const uint InternalGenericFieldEntity8 = 68;
 		public const uint InternalGenericFieldEntity9 = 69;
 		public const uint InternalGenericFieldBytes0 = 70;
+		public const uint InternalPlayerCursor_Player = 71;
 		public const uint InternalAuthorityTransfer = 0;
 		public const uint InternalGenericCommand = 1;
 		public const uint InternalTransferAction = 0;
@@ -163,6 +164,7 @@ namespace Coherence.Generated
 			{ 68, "GenericFieldEntity8" },
 			{ 69, "GenericFieldEntity9" },
 			{ 70, "GenericFieldBytes0" },
+			{ 71, "PlayerCursor_Player" },
 		};
 
 		public static string ComponentNameForTypeId(uint typeId)
@@ -326,6 +328,8 @@ namespace Coherence.Generated
 					return GenericFieldEntity9.Deserialize(inProtocolStream);
 				case InternalGenericFieldBytes0:
 					return GenericFieldBytes0.Deserialize(inProtocolStream);
+				case InternalPlayerCursor_Player:
+					return PlayerCursor_Player.Deserialize(inProtocolStream);
 				default:
 					return (null, 0, 0);
 			}
@@ -547,6 +551,9 @@ namespace Coherence.Generated
 					break;
 				case InternalGenericFieldBytes0:
 					GenericFieldBytes0.Serialize((GenericFieldBytes0)data, mask, protocolStream);
+					break;
+				case InternalPlayerCursor_Player:
+					PlayerCursor_Player.Serialize((PlayerCursor_Player)data, mask, protocolStream);
 					break;
 			}
 		}
