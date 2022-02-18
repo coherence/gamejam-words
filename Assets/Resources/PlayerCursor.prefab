@@ -388,11 +388,17 @@ MonoBehaviour:
     interpolationSettings: {fileID: 0}
     component: {fileID: 694873017490517114}
     archetypeData:
-      type: 0
+      type: 2
       minRange: 0
       maxRange: 0
       scale: 0
-      fields: []
+      fields:
+      - type: 2
+        bits: 0
+        minRange: 0
+        maxRange: 0
+        precision: 0
+        scale: 0
       sharedBinding: {fileID: 0}
   customBindings:
   - descriptor:
@@ -493,8 +499,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc97a814921d461188a38ca20db6787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InitialBufferSize: 8
-  InitialBufferDelay: 2
+  InitialBufferSize: 32
+  InitialBufferDelay: 3
   DisconnectOnTimeReset: 0
   UseFixedSimulationFrames: 1
   inputName: TestCube
