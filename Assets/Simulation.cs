@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Coherence.Toolkit;
 using UnityEngine;
 
@@ -75,7 +76,7 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
             player.gridPosition = state.PlayerPositions[i];
         }
 
-        grid.SetSimulationState(state.CellStates);
+        grid.SetSimulationState(state);
     }
 
     protected override SimulationState CreateState()
@@ -87,7 +88,9 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
             simulationState.PlayerPositions[i] = player.gridPosition;
         }
 
-        simulationState.CellStates = grid.GetSimulationState();
+        simulationState.CellStates = grid.GetSimulationState(out ArrayList wordsUsed);
+
+        simulationState.wordsUsed = wordsUsed;
         
         return simulationState;
     }

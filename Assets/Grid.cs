@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using Coherence.Toolkit;
 using Coherence.UI;
@@ -11,6 +12,8 @@ using Network = Coherence.Network;
 
 public class Grid : MonoBehaviour
 {
+    public bool allowCompletingEachOthersWords = true;
+    
     public const int tiling = 50;
     public const int minWordLength = 4;
     public Transform cursor;
@@ -44,7 +47,7 @@ public class Grid : MonoBehaviour
 
     private CoherenceClientConnection tempClientconnection;
     
-    class PlayerData
+    public class PlayerData
     {
         public CoherenceClientConnection clientConnection;
         public CoherenceSync sync;
@@ -76,12 +79,8 @@ public class Grid : MonoBehaviour
     {
         tempClientconnection = client;
         
-        var uigo = Instantiate(playerScoreUIPrefab);
-        uigo.SetParent(playerScoreParent.transform);
-        uigo.transform.position = new Vector3(playerScoreLastX, playerScoreStartY, 0);
-        
-        playerScoreLastX += playerScoreDistanceX;
-        
+        var uigo = CreatePlayerScoreUIElement();
+
         var player = new PlayerData()
         {
             clientConnection = client,
@@ -89,12 +88,21 @@ public class Grid : MonoBehaviour
             name = "",
             score = 0,
             clientID = client.ClientId,
-            ui = uigo.GetComponent<PlayerDataUI>()
+            ui = uigo
         };
 
         players[client.ClientId] = player;
         
         UpdatePlayerUIControls();
+    }
+
+    private PlayerDataUI CreatePlayerScoreUIElement()
+    {
+        var uigo = Instantiate(playerScoreUIPrefab);
+        uigo.SetParent(playerScoreParent.transform);
+        uigo.transform.position = new Vector3(playerScoreLastX, playerScoreStartY, 0);
+        playerScoreLastX += playerScoreDistanceX;
+        return uigo.GetComponent<PlayerDataUI>();
     }
 
     public void RemovePlayer(CoherenceClientConnection client)
@@ -104,15 +112,38 @@ public class Grid : MonoBehaviour
         players.Remove(client.ClientId);
         UpdatePlayerUIControls();
     }
+    
+    public class PlayerDataComparer : IComparer
+    {
+        public int Compare(object _x, object _y)
+        {
+            var a = (PlayerData) _x;
+            var b = (PlayerData) _y;
+            return b.score.CompareTo(a.score);
+        }
+    }
 
     void UpdatePlayerUIControls()
     {
         playerScoreLastX = playerScoreStartX;
-        
+
+        ArrayList order = new ArrayList();
+
         foreach (DictionaryEntry s in players)
         {
-            var player = (PlayerData) s.Value;
+            order.Add((PlayerData) s.Value);
+        }
+        PlayerDataComparer comparer = new PlayerDataComparer();
+        order.Sort(comparer);
 
+        foreach (Transform tr in playerScoreParent)
+        {
+            Destroy(tr.gameObject);
+        }
+        
+        foreach (PlayerData player in order)
+        {
+            player.ui = CreatePlayerScoreUIElement();
             player.ui.transform.position = new Vector3(playerScoreLastX, playerScoreStartY, 0);
             playerScoreLastX += playerScoreDistanceX;
         }
@@ -255,15 +286,21 @@ public class Grid : MonoBehaviour
 
         int score = 0;
 
-        score += EvaluateWordInDirection(x, y, 1, 0, clientID);
-        score += EvaluateWordInDirection(x, y, 0, -1, clientID);
+        score += EvaluateWordInDirection(x, y, 1, 0, clientID, allowCompletingEachOthersWords);
+        score += EvaluateWordInDirection(x, y, 0, -1, clientID, allowCompletingEachOthersWords);
 
         if (score > 0)
         {
-            var player = (PlayerData)players[clientID];
-            player.score += score;
-            player.Update();
+            AddPlayerScore(clientID, score);
         }
+    }
+
+    private void AddPlayerScore(int clientID, int score)
+    {
+        var player = (PlayerData) players[clientID];
+        player.score += score;
+        player.Update();
+        UpdatePlayerUIControls();
     }
 
     private Cell GetCellAtXY(int x, int y)
@@ -281,7 +318,7 @@ public class Grid : MonoBehaviour
         return 1;
     }
 
-    int GetWordBeginningX(int x, int y, int clientID)
+    int GetWordBeginningX(int x, int y, int clientID, bool allowCompleteOthers)
     {
         x--;
         
@@ -291,7 +328,11 @@ public class Grid : MonoBehaviour
         
         while ((cell = GetCellAtXY(x, y)) != null)
         {
-            if (!cell.IsSolid && cell.Owner != clientID) break;
+            if (!allowCompleteOthers)
+            {
+                if (!cell.IsSolid && cell.Owner != clientID) break;
+            }
+
             x--;
         }
 
@@ -300,7 +341,7 @@ public class Grid : MonoBehaviour
         return beginning;
     }
     
-    int GetWordBeginningY(int x, int y, int clientID)
+    int GetWordBeginningY(int x, int y, int clientID, bool allowCompleteOthers)
     {
         y++;
         
@@ -310,7 +351,11 @@ public class Grid : MonoBehaviour
         
         while ((cell = GetCellAtXY(x, y)) != null)
         {
-            if (!cell.IsSolid && cell.Owner != clientID) break;
+            if (!allowCompleteOthers)
+            {
+                if (!cell.IsSolid && cell.Owner != clientID) break;
+            }
+
             y++;
         }
 
@@ -319,7 +364,7 @@ public class Grid : MonoBehaviour
         return beginning;
     }
     
-    int EvaluateWordInDirection(int ox, int oy, int xdir, int ydir, int clientID)
+    int EvaluateWordInDirection(int ox, int oy, int xdir, int ydir, int clientID, bool allowCompleteOthers)
     {
         int score = 0;
         string content = "";
@@ -329,24 +374,24 @@ public class Grid : MonoBehaviour
         
         if (xdir != 0)
         {
-            ox = GetWordBeginningX(ox, oy, clientID);
+            ox = GetWordBeginningX(ox, oy, clientID, allowCompleteOthers);
         }
 
         if (ydir != 0)
         {
-            oy = GetWordBeginningY(ox, oy, clientID);
+            oy = GetWordBeginningY(ox, oy, clientID, allowCompleteOthers);
         }
         
         int x = ox;
         int y = oy;
         
-        content = GetWordInDirection(xdir, ydir, x, y, clientID);
+        content = GetWordInDirection(xdir, ydir, x, y, clientID, allowCompleteOthers);
 
         if (DoesWordExistInDictionaryAndIsUnused(content))
         {
             // Do cross checks as well
 
-            var crossChecksDetectedIssues = PerformCrossChecks(ox, oy, xdir, ydir, clientID, content, horizontal);
+            var crossChecksDetectedIssues = PerformCrossChecks(ox, oy, xdir, ydir, clientID, content, horizontal, allowCompleteOthers);
 
             if (crossChecksDetectedIssues) return 0;
             
@@ -387,7 +432,7 @@ public class Grid : MonoBehaviour
         }
     }
 
-    private bool PerformCrossChecks(int ox, int oy, int xdir, int ydir, int clientID, string content, bool horizontal)
+    private bool PerformCrossChecks(int ox, int oy, int xdir, int ydir, int clientID, string content, bool horizontal, bool allowCompleteOthers)
     {
         int x;
         int y;
@@ -408,8 +453,8 @@ public class Grid : MonoBehaviour
                 // check cross connections - are we creating non-existing words somewhere?
                 if (horizontal)
                 {
-                    int beginningY = GetWordBeginningY(x, y, clientID);
-                    var w = GetWordInDirection(0, -1, x, beginningY, clientID);
+                    int beginningY = GetWordBeginningY(x, y, clientID, allowCompleteOthers);
+                    var w = GetWordInDirection(0, -1, x, beginningY, clientID, allowCompleteOthers);
 
                     Debug.Log($"Checking vertically as well...{beginningY} {w} {w.Length}");
 
@@ -424,8 +469,8 @@ public class Grid : MonoBehaviour
                 }
                 else
                 {
-                    int beginningX = GetWordBeginningX(x, y, clientID);
-                    var w = GetWordInDirection(1, 0, beginningX, y, clientID);
+                    int beginningX = GetWordBeginningX(x, y, clientID, allowCompleteOthers);
+                    var w = GetWordInDirection(1, 0, beginningX, y, clientID, allowCompleteOthers);
 
                     Debug.Log($"Checking horizontally as well...{beginningX} {w} {w.Length}");
 
@@ -447,7 +492,9 @@ public class Grid : MonoBehaviour
         return crossChecksDetectedIssues;
     }
 
-    private string GetWordInDirection(int xdir, int ydir, int x, int y, int clientID)
+    
+    
+    private string GetWordInDirection(int xdir, int ydir, int x, int y, int clientID, bool allowCompleteOthers)
     {
         string content = "";
         
@@ -461,7 +508,10 @@ public class Grid : MonoBehaviour
                 break;
             }
 
-            if (!currentCell.IsSolid && currentCell.Owner != clientID) break;
+            if (!allowCompleteOthers)
+            {
+                if (!currentCell.IsSolid && currentCell.Owner != clientID) break;
+            }
 
             content += character.ToLower();
             x += xdir;
@@ -520,16 +570,24 @@ public class Grid : MonoBehaviour
         return new string( charArray );
     }
 
-    public void SetSimulationState(SimulationState.Cell[] state)
+    public void SetSimulationState(SimulationState state)
     {
+        var c = state.CellStates;
+        
         for (var i = 0; i < tiling * tiling; i++)
         {
-            cells[i].SetState(state[i].content, state[i].owner, state[i].isSolid);
-            cells[i].SetFrame(state[i].frameWhenEntered);
+            cells[i].SetState(c[i].content, c[i].owner, c[i].isSolid);
+            cells[i].SetFrame(c[i].frameWhenEntered);
+        }
+
+        wordsAlreadyUsed.Clear();
+        foreach (var w in state.wordsUsed)
+        {
+            wordsAlreadyUsed.Add(w);
         }
     }
     
-    public SimulationState.Cell[] GetSimulationState()
+    public SimulationState.Cell[] GetSimulationState(out ArrayList wordsUsed)
     {
         SimulationState.Cell[] cellStates = new SimulationState.Cell[tiling * tiling];
         for (var i = 0; i < tiling * tiling; i++)
@@ -543,6 +601,12 @@ public class Grid : MonoBehaviour
             };
         }
 
+        wordsUsed = new ArrayList();
+        foreach (var w in wordsAlreadyUsed)
+        {
+            wordsUsed.Add(w);
+        }
+        
         return cellStates;
     }
 

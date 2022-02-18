@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public struct SimulationState
@@ -5,6 +6,8 @@ public struct SimulationState
     public Vector2Int[] PlayerPositions;
 
     public Cell[] CellStates;
+
+    public ArrayList wordsUsed;
     
     public struct Cell
     {
