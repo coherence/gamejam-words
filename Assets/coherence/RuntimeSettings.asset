@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RuntimeSettings
   m_EditorClassIdentifier: 
   versionInfo: {fileID: 11400000, guid: 2191b6f902c97477baa32a7919010503, type: 2}
-  runtimeKey: 
+  runtimeKey: 5fd9768951104386aaa8361105b7bdfc
   schemaID: f63a4dbbf173f675a570867376454a6bc59bbb33
   simulatorSlug: 
   localHost: 127.0.0.1
@@ -23,6 +23,6 @@ MonoBehaviour:
   roomsUDPPort: 42001
   roomsWebPort: 42002
   remoteWebPort: 443
-  allowLocal: 1
+  allowLocal: 0
   useDebugStreams: 0
   apiEndpoint: https://lb.dev.coherence.io/play/api/v1

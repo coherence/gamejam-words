@@ -14,6 +14,9 @@ EditorUserSettings:
     Coherence.Settings.CustomToolsPath:
       value: 200b683316501b48311a0d26152963341304133e23381a27223b160fe1ef3c3df0e238eae2063a323e0be139493c1436fe0e1a
       flags: 0
+    Coherence.Settings.PortalToken:
+      value: 5a02550453500b085c5e542444725a43174f4b2c2d7127322b284836b1e2656b
+      flags: 0
     Coherence.Settings.UseCustomTools:
       value: 164251
       flags: 0

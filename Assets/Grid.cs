@@ -77,7 +77,7 @@ public class Grid : MonoBehaviour
         tempClientconnection = client;
         
         var uigo = Instantiate(playerScoreUIPrefab);
-        uigo.transform.parent = playerScoreParent.transform;
+        uigo.SetParent(playerScoreParent.transform);
         uigo.transform.position = new Vector3(playerScoreLastX, playerScoreStartY, 0);
         
         playerScoreLastX += playerScoreDistanceX;
