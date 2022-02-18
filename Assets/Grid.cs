@@ -40,12 +40,76 @@ public class Grid : MonoBehaviour
 
     public Transform playerScoreParent;
     public Transform playerScoreUIPrefab;
-    public float playerScoreStartX = 30;
-    public float playerScoreStartY = 30;
+    public float playerScoreStartX = 13.4f;
+    public float playerScoreStartY = 13f;
     public float playerScoreDistanceX = 170;
     public float playerScoreLastX = 30;
 
     private CoherenceClientConnection tempClientconnection;
+
+    public Transform letterScoreUIParent;
+    public Transform letterScoreUIPrefab;
+
+    public SystemMessage systemMessage;
+
+    public long startFrame = 0;
+    
+    public bool IsPaused
+    {
+        get;
+        private set;
+    }
+    
+    public void TogglePaused(bool p)
+    {
+        IsPaused = p;
+        
+        systemMessage.DisplayMessage(p? "PAUSED" : null);
+    }
+    
+    //qwertyuiopasdfghjklzxcvbnm
+    //https://www3.nd.edu/~busiforc/handouts/cryptography/letterfrequencies.html
+    float[] letterFrequencies = new float[]
+    {
+        0.1962f,    //q
+        1.2899f,    //w
+        11.1607f,   //e
+        7.5809f,    //r
+        6.9509f,    //t
+        1.7779f,    //y
+        3.6308f,    //u
+        7.5448f,    //i
+        7.1635f,    //o
+        3.1671f,    //p
+        8.4966f,    //a
+        5.7351f,    //s
+        3.3844f,    //d
+        1.8121f,    //f
+        2.4705f,    //g
+        3.0034f,    //h
+        0.1965f,    //j
+        1.1016f,    //k
+        5.4893f,    //l
+        0.2722f,    //z
+        0.2902f,    //x
+        4.5388f,    //c
+        1.0074f,    //v
+        2.0720f,    //b
+        6.6544f,    //n
+        3.0129f,    //m
+    };
+
+    int GetLetterScoreFromFrequency(float freq)
+    {
+        int score = Mathf.CeilToInt(1 / freq * 10f);
+
+        if (score > 16)
+        {
+            score = 16;
+        }
+        
+        return score;
+    }
     
     public class PlayerData
     {
@@ -144,8 +208,6 @@ public class Grid : MonoBehaviour
         foreach (PlayerData player in order)
         {
             player.ui = CreatePlayerScoreUIElement();
-            player.ui.transform.position = new Vector3(playerScoreLastX, playerScoreStartY, 0);
-            playerScoreLastX += playerScoreDistanceX;
         }
     }
 
@@ -223,6 +285,8 @@ public class Grid : MonoBehaviour
     
     void Awake()
     {
+        IsPaused = true;
+        systemMessage.DisplayMessage(null);
         cells = new Cell[tiling * tiling];
 
         for (var y = 0; y < tiling; y++)
@@ -245,6 +309,28 @@ public class Grid : MonoBehaviour
         {
             playerName = networkDialog.nameInput.text;
         };
+        
+        var alphabet = Player.SupportedAlphabet;
+        int foundLetter = -1;
+
+        float startX = -13.4f;
+        float startY = -8f;
+        
+        for (int i = 0; i < alphabet.Length; i++)
+        {
+            var go = Instantiate(letterScoreUIPrefab);
+            go.SetParent(letterScoreUIParent.transform);
+            var rt = go.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector3(startX, startY);
+            
+            float freq = letterFrequencies[i];
+            
+            var ui = go.GetComponent<LetterScoreUI>();
+            ui.letter.text = alphabet[i].ToString().ToUpper();
+            ui.score.text = GetLetterScoreFromFrequency(freq).ToString();
+            
+            startY -= 31f;
+        }
     }
 
     public bool IsWordInDictionary(string word)
@@ -314,8 +400,24 @@ public class Grid : MonoBehaviour
 
     int GetLetterScore(string letter)
     {
-        // TODO evaluate letters
-        return 1;
+        var alphabet = Player.SupportedAlphabet;
+        int foundLetter = -1;
+        letter = letter.ToLower();
+
+        for (int i = 0; i < alphabet.Length; i++)
+        {
+            if (alphabet[i] == letter[0])
+            {
+                foundLetter = i;
+                break;
+            }
+        }
+
+        if (foundLetter == -1) return 0;
+
+        float freq = letterFrequencies[foundLetter];
+        
+        return GetLetterScoreFromFrequency(freq);
     }
 
     int GetWordBeginningX(int x, int y, int clientID, bool allowCompleteOthers)
@@ -402,16 +504,18 @@ public class Grid : MonoBehaviour
 
             wordsAlreadyUsed.Add(content);
             
-            EvaluateAddedWord(xdir, ydir, clientID, content, x, y, score);
-            
-            return content.Length; // TODO: calculate score based on letter weights
+            score = EvaluateAddedWord(xdir, ydir, clientID, content, x, y);
+
+            return score;
         }
         
         return score;
     }
 
-    private void EvaluateAddedWord(int xdir, int ydir, int clientID, string content, int x, int y, int score)
+    private int EvaluateAddedWord(int xdir, int ydir, int clientID, string content, int x, int y)
     {
+        int score = 0;
+        
         for (int i = 0; i < content.Length; i++)
         {
             var cell = GetCellAtXY(x, y);
@@ -430,6 +534,8 @@ public class Grid : MonoBehaviour
             x += xdir;
             y += ydir;
         }
+
+        return score;
     }
 
     private bool PerformCrossChecks(int ox, int oy, int xdir, int ydir, int clientID, string content, bool horizontal, bool allowCompleteOthers)
@@ -453,33 +559,33 @@ public class Grid : MonoBehaviour
                 // check cross connections - are we creating non-existing words somewhere?
                 if (horizontal)
                 {
-                    int beginningY = GetWordBeginningY(x, y, clientID, allowCompleteOthers);
-                    var w = GetWordInDirection(0, -1, x, beginningY, clientID, allowCompleteOthers);
+                    int beginningY = GetWordBeginningY(x, y, clientID, false);
+                    var w = GetWordInDirection(0, -1, x, beginningY, clientID, false);
 
-                    Debug.Log($"Checking vertically as well...{beginningY} {w} {w.Length}");
+                    //Debug.Log($"Checking vertically as well...{beginningY} {w} {w.Length}");
 
                     if (w.Length > 1 && !DoesWordExistInDictionaryAndIsUnused(w))
                     {
                         crossChecksDetectedIssues = true;
                         ClearNonSolidLettersInDirection(0, -1, x, beginningY, clientID);
                         ClearNonSolidLettersInDirection(1, 0, ox, oy, clientID);
-                        Debug.Log($"Failed vertical xcheck on letter {cell.Content}");
+                        //Debug.Log($"Failed vertical xcheck on letter {cell.Content}");
                         //break;
                     }
                 }
                 else
                 {
-                    int beginningX = GetWordBeginningX(x, y, clientID, allowCompleteOthers);
-                    var w = GetWordInDirection(1, 0, beginningX, y, clientID, allowCompleteOthers);
+                    int beginningX = GetWordBeginningX(x, y, clientID, false);
+                    var w = GetWordInDirection(1, 0, beginningX, y, clientID, false);
 
-                    Debug.Log($"Checking horizontally as well...{beginningX} {w} {w.Length}");
+                    //Debug.Log($"Checking horizontally as well...{beginningX} {w} {w.Length}");
 
                     if (w.Length > 1 && !DoesWordExistInDictionaryAndIsUnused(w))
                     {
                         crossChecksDetectedIssues = true;
                         ClearNonSolidLettersInDirection(1, 0, beginningX, y, clientID);
                         ClearNonSolidLettersInDirection(0, -1, ox, oy, clientID);
-                        Debug.Log($"Failed horizontal xcheck on letter {cell.Content}");
+                        //Debug.Log($"Failed horizontal xcheck on letter {cell.Content}");
                         //break;
                     }
                 }
@@ -623,11 +729,53 @@ public class Grid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        playerName = networkDialog.nameInput.text;
         UpdatePlayerData();
 
+        if (IsPaused && Network.IsConnected)
+        {
+            if (startFrame != 0)
+            {
+                if (currentSimulationFrame-startFrame > 60)
+                {
+                    systemMessage.DisplayMessage("Sorry, game already started. Please use another room.");
+                }
+                else
+                {
+                    if (currentSimulationFrame > startFrame)
+                    {
+                        IsPaused = false;
+                        systemMessage.DisplayMessage(null);
+                    }
+                    else
+                    {
+                        systemMessage.DisplayMessage($"Starting in... {startFrame-currentSimulationFrame}");
+                    }
+                }
+            }
+            else
+            {
+                systemMessage.DisplayMessage("Waiting for the game to start [one player should press SPACE when ready]");
+            }
+        }
+        else
+        {
+            systemMessage.DisplayMessage(null);
+        }
+        
+        systemMessage.UpdateFrame(currentSimulationFrame);
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            AddPlayer(tempClientconnection);
+            if (IsPaused && startFrame == 0)
+            {
+                var pr = FindObjectsOfType<Player>();
+
+                foreach (var p in pr)
+                {
+                    p.startOnFrame = currentSimulationFrame + 350;
+                }
+            }
         }
     }
 }

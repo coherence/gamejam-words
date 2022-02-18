@@ -19,10 +19,11 @@ namespace Coherence.Generated
 	public struct PlayerCursor_Player : ICoherenceComponentData
 	{
 		public string playerName;
+		public long startOnFrame;
 
 		public override string ToString()
 		{
-			return $"PlayerCursor_Player(playerName: {playerName})";
+			return $"PlayerCursor_Player(playerName: {playerName}, startOnFrame: {startOnFrame})";
 		}
 
 		public uint GetComponentType() => Definition.InternalPlayerCursor_Player;
@@ -49,6 +50,11 @@ namespace Coherence.Generated
 				playerName = other.playerName;
 			}
 			mask >>= 1;
+			if ((mask & 0x01) != 0)
+			{
+				startOnFrame = other.startOnFrame;
+			}
+			mask >>= 1;
 			return this;
 		}
 
@@ -59,6 +65,9 @@ namespace Coherence.Generated
 
 			if (playerName.DiffersFrom(newData.playerName)) {
 				mask |= 0b00000000000000000000000000000001;
+			}
+			if (startOnFrame != newData.startOnFrame) {
+				mask |= 0b00000000000000000000000000000010;
 			}
 
 			return mask;
@@ -71,6 +80,11 @@ namespace Coherence.Generated
 				bitStream.WriteShortString(data.playerName);
 			}
 			mask >>= 1;
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				bitStream.WriteInt64(data.startOnFrame);
+			}
+			mask >>= 1;
 		}
 
 		public static (PlayerCursor_Player, uint, uint?) Deserialize(InProtocolBitStream bitStream)
@@ -81,6 +95,11 @@ namespace Coherence.Generated
 			{
 				val.playerName = bitStream.ReadShortString();
 				mask |= 0b00000000000000000000000000000001;
+			}
+			if (bitStream.ReadMask())
+			{
+				val.startOnFrame = bitStream.ReadInt64();
+				mask |= 0b00000000000000000000000000000010;
 			}
 			return (val, mask, null);
 		}

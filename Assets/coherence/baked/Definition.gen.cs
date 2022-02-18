@@ -14,7 +14,7 @@ namespace Coherence.Generated
 
 	public class Definition : IDefinition
 	{
-		public const string schemaId = "f63a4dbbf173f675a570867376454a6bc59bbb33";
+		public const string schemaId = "169729a04abd29661b08152245110f5e440d4e4b";
 		public const uint InternalWorldPosition = 0;
 		public const uint InternalWorldOrientation = 1;
 		public const uint InternalLocalUser = 2;

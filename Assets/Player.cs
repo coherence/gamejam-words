@@ -17,14 +17,18 @@ public class Player : MonoBehaviour
     private CoherenceSync sync;
     private Grid grid;
 
-    private const float inputSamplingDelay = 0.25f;
+    private const float inputSamplingDelay = 0.20f;
 
-    private const string InternalAlphabet = "qwertyuiopasdfghjklzxcvbnm";
+    public const string SupportedAlphabet = "qwertyuiopasdfghjklzxcvbnm";
 
     private Hashtable keyPresses;
     
     private KeyCode[] acceptedAlphabetKeys;
-    
+
+    public Renderer cursor, cursorMine;
+
+    public long startOnFrame = 0;
+
     private void Awake()
     {
         sync = GetComponent<CoherenceSync>();
@@ -45,10 +49,10 @@ public class Player : MonoBehaviour
     
     private void InitAlphabet()
     {
-        acceptedAlphabetKeys = new KeyCode[InternalAlphabet.Length];
-        for (var i = 0; i < InternalAlphabet.Length; i++)
+        acceptedAlphabetKeys = new KeyCode[SupportedAlphabet.Length];
+        for (var i = 0; i < SupportedAlphabet.Length; i++)
         {
-            var key = (KeyCode) System.Enum.Parse(typeof(KeyCode), InternalAlphabet[i].ToString().ToUpper());
+            var key = (KeyCode) System.Enum.Parse(typeof(KeyCode), SupportedAlphabet[i].ToString().ToUpper());
             acceptedAlphabetKeys[i] = key;
             keyPresses[key] = 0f;
         }
@@ -73,6 +77,9 @@ public class Player : MonoBehaviour
         if (sync.isSimulated)
         {
             playerName = grid.playerName;
+
+            cursorMine.enabled = true;
+            cursor.enabled = false;
         }
     }
 

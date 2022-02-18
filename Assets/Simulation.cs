@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Coherence.Toolkit;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Simulation : CoherenceInputSimulation<SimulationState>
@@ -17,6 +18,26 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
     protected override void Simulate(long simulationFrame)
     {
         grid.UpdateSimulationFrame(simulationFrame);
+
+        if (grid.IsPaused)
+        {
+            long startFrame = 0;
+            foreach (CoherenceClientConnection client in AllClients)
+            {
+                var player = client.Sync.GetComponent<Player>();
+                if (player.startOnFrame != 0)
+                {
+                    if (player.startOnFrame > startFrame)
+                    {
+                        startFrame = player.startOnFrame;
+                    }
+                }
+            }
+
+            grid.startFrame = startFrame;
+            
+            return; // TODO
+        }
         
         foreach (CoherenceClientConnection client in AllClients)
         {
@@ -116,6 +137,6 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
     
     protected override void OnPauseChange(bool isPaused)
     {
-        //PauseScreen.SetActive(isPaused);
+        //grid.TogglePaused(isPaused);
     }
 }

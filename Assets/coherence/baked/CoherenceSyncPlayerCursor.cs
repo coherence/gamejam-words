@@ -45,6 +45,8 @@ namespace Coherence.Generated
 
 		private IBinding InternalPlayerCursor_Player_PlayerCursor_Player_playerName_Binding;
 
+		private IBinding InternalPlayerCursor_Player_PlayerCursor_Player_startOnFrame_Binding;
+
 		private InputBuffer<TestCube> inputBuffer;
 		private TestCube currentInput;
 		private long lastAddedFrame = -1;
@@ -78,6 +80,11 @@ namespace Coherence.Generated
 			if (!coherenceSync.TryGetBinding(Type.GetType("Player, Assembly-CSharp"), "playerName", out InternalPlayerCursor_Player_PlayerCursor_Player_playerName_Binding))
 			{
 				Debug.LogError("[CoherenceSync] Couldn't find binding (Player, Assembly-CSharp).playerName");
+			}
+
+			if (!coherenceSync.TryGetBinding(Type.GetType("Player, Assembly-CSharp"), "startOnFrame", out InternalPlayerCursor_Player_PlayerCursor_Player_startOnFrame_Binding))
+			{
+				Debug.LogError("[CoherenceSync] Couldn't find binding (Player, Assembly-CSharp).startOnFrame");
 			}
 			if (coherenceInput.UseFixedSimulationFrames)
 			{
@@ -266,6 +273,7 @@ namespace Coherence.Generated
 					var update = new PlayerCursor_Player();
 
 					update.playerName = (_player.playerName ?? "");
+					update.startOnFrame = (_player.startOnFrame);
 
 					uint mask = _player_PlayerCursor_Player_lastSentData.DiffWith(update);
 
@@ -432,6 +440,10 @@ namespace Coherence.Generated
 						if((mask & 0b00000000000000000000000000000001) != 0)
 						{
 							_player.playerName = (String)(data.playerName);
+						}
+						if((mask & 0b00000000000000000000000000000010) != 0)
+						{
+							_player.startOnFrame = (Int64)(data.startOnFrame);
 						}
 						break;
 					}
