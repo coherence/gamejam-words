@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Coherence.Toolkit;
+using Coherence.UI;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
+using Network = Coherence.Network;
 
 public class Grid : MonoBehaviour
 {
@@ -15,6 +18,8 @@ public class Grid : MonoBehaviour
     public int cursorPoxY = 25;
     public float LocalRadius = 5f;
     public float posAdjustment = -0.1f;
+
+    public string playerName = "";
 
     public long MaxFramesForTempLetter = 380;
     
@@ -27,6 +32,83 @@ public class Grid : MonoBehaviour
     private ArrayList wordDictionary, wordsAlreadyUsed;
 
     private long currentSimulationFrame = 0;
+
+    public NetworkDialog networkDialog;
+
+    public Transform playerScoreParent;
+    public Transform playerScoreUIPrefab;
+    public float playerScoreStartX = 30;
+    public float playerScoreStartY = 30;
+    public float playerScoreDistanceX = 170;
+    public float playerScoreLastX = 30;
+
+    private CoherenceClientConnection tempClientconnection;
+    
+    class PlayerData
+    {
+        public CoherenceClientConnection clientConnection;
+        public CoherenceSync sync;
+        public string name;
+        public int score;
+        public int clientID;
+        public PlayerDataUI ui;
+        
+        public void Update()
+        {
+            ui.playerName.text = name;
+            ui.playerScore.text = score.ToString();
+        }
+    }
+
+    private Hashtable players;
+
+    void UpdatePlayerData()
+    {
+        foreach (DictionaryEntry s in players)
+        {
+            var player = (PlayerData)s.Value;
+            player.name = player.sync.GetComponent<Player>().playerName;
+            player.Update();
+        }
+    }
+    
+    public void AddPlayer(CoherenceClientConnection client)
+    {
+        tempClientconnection = client;
+        
+        var uigo = Instantiate(playerScoreUIPrefab);
+        uigo.transform.parent = playerScoreParent.transform;
+        uigo.transform.position = new Vector3(playerScoreLastX, playerScoreStartY, 0);
+        
+        playerScoreLastX += playerScoreDistanceX;
+        
+        var player = new PlayerData()
+        {
+            clientConnection = client,
+            sync = client.Sync,
+            name = "",
+            score = 0,
+            clientID = client.ClientId,
+            ui = uigo.GetComponent<PlayerDataUI>()
+        };
+
+        players[client.ClientId] = player;
+        
+        UpdatePlayerUI();
+    }
+
+    public void RemovePlayer(CoherenceClientConnection client)
+    {
+        var player = (PlayerData) players[client.ClientId];
+        Destroy(player.ui.gameObject);
+        players.Remove(client.ClientId);
+        UpdatePlayerUI();
+    }
+
+    void UpdatePlayerUI()
+    {
+        
+    }
 
     private void LoadDictionary()
     {
@@ -116,7 +198,14 @@ public class Grid : MonoBehaviour
             }
         }
 
+        players = new Hashtable();
+        
         LoadDictionary();
+
+        Network.OnConnected += () =>
+        {
+            playerName = networkDialog.nameInput.text;
+        };
     }
 
     public bool IsWordInDictionary(string word)
@@ -163,7 +252,9 @@ public class Grid : MonoBehaviour
 
         if (score > 0)
         {
-            //Debug.Log($"TODO: GIVE Player {clientID} score of {score}");
+            var player = (PlayerData)players[clientID];
+            player.score += score;
+            player.Update();
         }
     }
 
@@ -460,20 +551,11 @@ public class Grid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        return;
-        
-        if (TempObjectToTrack == null)
-        {
-            var player = GameObject.FindObjectOfType<Player>();
-            if (player == null) return;
-            TempObjectToTrack = player.transform;
-            return;
-        }
+        UpdatePlayerData();
 
-        TempObjectToTrack.position = GetGlobalPositionFromGrid(cursorPosX, cursorPoxY);
-        
-        var pos = transform.InverseTransformPoint(TempObjectToTrack.position);
-        var gridPos = GetGridPosFromLocal(pos.x, pos.z);
-        //Debug.Log($"Cursor pos: {cursorPosX},{cursorPoxY}, Grid position: {gridPos}");
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            AddPlayer(tempClientconnection);
+        }
     }
 }

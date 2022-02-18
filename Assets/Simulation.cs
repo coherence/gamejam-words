@@ -100,10 +100,14 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
             // Lets us rejoin the same simulation without restarting the app.
             StateStore.Clear();
         }
+
+        grid.AddPlayer(client);
     }
 
     protected override void OnClientLeft(CoherenceClientConnection client)
     {
+        grid.RemovePlayer(client);
+        
         SimulationEnabled = AllClients.Count >= InternalMinClientNumberToPlay;
     }
     

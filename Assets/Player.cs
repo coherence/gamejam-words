@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public Vector2Int gridPosition = new Vector2Int(25, 25);
    
     private CoherenceInput input;
+    private CoherenceSync sync;
     private Grid grid;
 
     private const float inputSamplingDelay = 0.25f;
@@ -23,12 +24,13 @@ public class Player : MonoBehaviour
     private Hashtable keyPresses;
     
     private KeyCode[] acceptedAlphabetKeys;
-
+    
     private void Awake()
     {
-        var coherenceSync = GetComponent<CoherenceSync>();
-        fixedUpdateInput = coherenceSync.MonoBridge.FixedUpdateInput;
-        input = coherenceSync.Input;
+        sync = GetComponent<CoherenceSync>();
+        
+        fixedUpdateInput = sync.MonoBridge.FixedUpdateInput;
+        input = sync.Input;
         grid = FindObjectOfType<Grid>();
 
         keyPresses = new Hashtable();
@@ -67,6 +69,11 @@ public class Player : MonoBehaviour
     void Update()
     {
         transform.position = grid.GetGlobalPositionFromGrid(gridPosition.x, gridPosition.y);
+
+        if (sync.isSimulated)
+        {
+            playerName = grid.playerName;
+        }
     }
 
     public Vector2 GetNetworkInputMovement(long frame)

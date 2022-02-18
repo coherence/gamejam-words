@@ -43,6 +43,7 @@
       <Path>Logs</Path>
       <Path>Temp</Path>
       <Path>UserSettings</Path>
+      <Path>Videos-StreamingAssets</Path>
       <Path>builds</Path>
       <Path>obj</Path>
     </explicitExcludes>
