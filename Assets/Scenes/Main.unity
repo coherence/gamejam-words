@@ -907,7 +907,7 @@ MonoBehaviour:
   cells: []
   cellPrefab: {fileID: 6827767851080214943, guid: eb8345ffccd2296459a3522e4964f53d, type: 3}
   networkDialog: {fileID: 395529686}
-  playerScoreParent: {fileID: 0}
+  playerScoreParent: {fileID: 1993642910}
   playerScoreUIPrefab: {fileID: 7206164048573089372, guid: 2cc3826831b852b4880942a9b1104a84, type: 3}
   playerScoreStartX: 30
   playerScoreStartY: 30

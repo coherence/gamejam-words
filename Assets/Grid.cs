@@ -94,7 +94,7 @@ public class Grid : MonoBehaviour
 
         players[client.ClientId] = player;
         
-        UpdatePlayerUI();
+        UpdatePlayerUIControls();
     }
 
     public void RemovePlayer(CoherenceClientConnection client)
@@ -102,12 +102,20 @@ public class Grid : MonoBehaviour
         var player = (PlayerData) players[client.ClientId];
         Destroy(player.ui.gameObject);
         players.Remove(client.ClientId);
-        UpdatePlayerUI();
+        UpdatePlayerUIControls();
     }
 
-    void UpdatePlayerUI()
+    void UpdatePlayerUIControls()
     {
+        playerScoreLastX = playerScoreStartX;
         
+        foreach (DictionaryEntry s in players)
+        {
+            var player = (PlayerData) s.Value;
+
+            player.ui.transform.position = new Vector3(playerScoreLastX, playerScoreStartY, 0);
+            playerScoreLastX += playerScoreDistanceX;
+        }
     }
 
     private void LoadDictionary()
