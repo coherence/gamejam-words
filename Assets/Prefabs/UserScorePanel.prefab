@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Tadej
+  m_text: '[player]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3afe751450d691f48a68e0d04112d88e, type: 2}
   m_sharedMaterial: {fileID: 1409150335917079096, guid: 3afe751450d691f48a68e0d04112d88e, type: 2}
@@ -291,7 +291,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 5467
+  m_text: '[score]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3afe751450d691f48a68e0d04112d88e, type: 2}
   m_sharedMaterial: {fileID: 1409150335917079096, guid: 3afe751450d691f48a68e0d04112d88e, type: 2}
