@@ -12,7 +12,10 @@ public class Player : MonoBehaviour
     public string playerName = "Player";
     
     public Vector2Int gridPosition = new Vector2Int(25, 25);
-   
+
+    public int score = 0;
+    public int clientID = 0;
+    
     private CoherenceInput input;
     private CoherenceSync sync;
     private Grid grid;

@@ -109,9 +109,11 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
             simulationState.PlayerPositions[i] = player.gridPosition;
         }
 
-        simulationState.CellStates = grid.GetSimulationState(out ArrayList wordsUsed);
-
+        simulationState.CellStates = grid.GetSimulationState(out ArrayList wordsUsed, out Hashtable playerScores);
+        
         simulationState.wordsUsed = wordsUsed;
+
+        simulationState.PlayerScores = playerScores;
         
         return simulationState;
     }

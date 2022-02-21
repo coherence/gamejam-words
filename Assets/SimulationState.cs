@@ -5,6 +5,8 @@ public struct SimulationState
 {
     public Vector2Int[] PlayerPositions;
 
+    public Hashtable PlayerScores;
+
     public Cell[] CellStates;
 
     public ArrayList wordsUsed;

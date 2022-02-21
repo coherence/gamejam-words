@@ -115,15 +115,14 @@ public class Grid : MonoBehaviour
     {
         public CoherenceClientConnection clientConnection;
         public CoherenceSync sync;
-        public string name;
-        public int score;
         public int clientID;
+        public Player player;
         public PlayerDataUI ui;
         
         public void Update()
         {
-            ui.playerName.text = name;
-            ui.playerScore.text = score.ToString();
+            ui.playerName.text = player.playerName;
+            ui.playerScore.text = player.score.ToString();
         }
     }
 
@@ -134,7 +133,6 @@ public class Grid : MonoBehaviour
         foreach (DictionaryEntry s in players)
         {
             var player = (PlayerData)s.Value;
-            player.name = player.sync.GetComponent<Player>().playerName;
             player.Update();
         }
     }
@@ -149,10 +147,9 @@ public class Grid : MonoBehaviour
         {
             clientConnection = client,
             sync = client.Sync,
-            name = "",
-            score = 0,
             clientID = client.ClientId,
-            ui = uigo
+            ui = uigo,
+            player = client.Sync.GetComponent<Player>()
         };
 
         players[client.ClientId] = player;
@@ -183,7 +180,7 @@ public class Grid : MonoBehaviour
         {
             var a = (PlayerData) _x;
             var b = (PlayerData) _y;
-            return b.score.CompareTo(a.score);
+            return b.player.score.CompareTo(a.player.score);
         }
     }
 
@@ -384,7 +381,7 @@ public class Grid : MonoBehaviour
     private void AddPlayerScore(int clientID, int score)
     {
         var player = (PlayerData) players[clientID];
-        player.score += score;
+        player.player.score += score;
         player.Update();
         UpdatePlayerUIControls();
     }
@@ -691,9 +688,15 @@ public class Grid : MonoBehaviour
         {
             wordsAlreadyUsed.Add(w);
         }
+        
+        foreach (DictionaryEntry s in players)
+        {
+            var pl = (PlayerData)s.Value;
+            pl.player.score = (int) state.PlayerScores[pl.clientID];
+        }
     }
     
-    public SimulationState.Cell[] GetSimulationState(out ArrayList wordsUsed)
+    public SimulationState.Cell[] GetSimulationState(out ArrayList wordsUsed, out Hashtable playerScores)
     {
         SimulationState.Cell[] cellStates = new SimulationState.Cell[tiling * tiling];
         for (var i = 0; i < tiling * tiling; i++)
@@ -711,6 +714,13 @@ public class Grid : MonoBehaviour
         foreach (var w in wordsAlreadyUsed)
         {
             wordsUsed.Add(w);
+        }
+
+        playerScores = new Hashtable();
+
+        foreach (DictionaryEntry s in players)
+        {
+            playerScores[(int) ((PlayerData)s.Value).clientID] = ((PlayerData) s.Value).player.score;
         }
         
         return cellStates;
