@@ -73,7 +73,7 @@ namespace Coherence.Generated
 			mask >>= 1;
 		}
 
-		public static (GenericFieldBool5, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldBool5, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldBool5();
@@ -82,7 +82,7 @@ namespace Coherence.Generated
 				val.number = bitStream.ReadBool();
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

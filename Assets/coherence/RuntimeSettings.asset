@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   versionInfo: {fileID: 11400000, guid: 2191b6f902c97477baa32a7919010503, type: 2}
   runtimeKey: 5fd9768951104386aaa8361105b7bdfc
-  schemaID: 169729a04abd29661b08152245110f5e440d4e4b
+  schemaID: 3bfb723e34378047913c84ebe1e7dfb2294d352d
   simulatorSlug: 
   localHost: 127.0.0.1
   localPort: 32001
@@ -24,5 +24,4 @@ MonoBehaviour:
   roomsWebPort: 42002
   remoteWebPort: 443
   allowLocal: 1
-  useDebugStreams: 0
   apiEndpoint: https://lb.dev.coherence.io/play/api/v1

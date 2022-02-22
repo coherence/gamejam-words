@@ -18,7 +18,7 @@ namespace Coherence.Generated
 
 	public struct Tag : ICoherenceComponentData
 	{
-		public string tag;
+		public FixedString64 tag;
 
 		public override string ToString()
 		{
@@ -68,21 +68,21 @@ namespace Coherence.Generated
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
-				bitStream.WriteShortString(data.tag);
+				bitStream.WriteShortString(CoherenceToUnityConverters.FromUnityFixedString64(data.tag));
 			}
 			mask >>= 1;
 		}
 
-		public static (Tag, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (Tag, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new Tag();
 			if (bitStream.ReadMask())
 			{
-				val.tag = bitStream.ReadShortString();
+				val.tag = CoherenceToUnityConverters.ToUnityFixedString64(bitStream.ReadShortString());
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

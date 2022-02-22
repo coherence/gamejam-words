@@ -80,7 +80,7 @@ namespace Coherence.Generated
 			mask >>= 1;
 		}
 
-		public static (GenericField2dVector2, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericField2dVector2, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericField2dVector2();
@@ -89,7 +89,7 @@ namespace Coherence.Generated
 				val.Value = CoherenceToUnityConverters.ToUnityfloat2(bitStream.ReadVector2f(24, 2400));
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace Coherence.Generated
 
 	public struct GenericFieldBytes0 : ICoherenceComponentData
 	{
-		public byte[] bytes;
+		public FixedListByte4096 bytes;
 
 		public override string ToString()
 		{
@@ -68,21 +68,21 @@ namespace Coherence.Generated
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
-				bitStream.WriteBytesList(data.bytes);
+				bitStream.WriteBytesList(CoherenceToUnityConverters.FromUnityFixedListByte4096(data.bytes));
 			}
 			mask >>= 1;
 		}
 
-		public static (GenericFieldBytes0, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldBytes0, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldBytes0();
 			if (bitStream.ReadMask())
 			{
-				val.bytes = bitStream.ReadBytesList();
+				val.bytes = CoherenceToUnityConverters.ToUnityFixedListByte4096(bitStream.ReadBytesList());
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

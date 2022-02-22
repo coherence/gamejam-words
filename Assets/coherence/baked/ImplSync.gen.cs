@@ -25,6 +25,7 @@ namespace Coherence.Toolkit
 			CoherenceSync.SendGenericCommand = SendGenericCommand;
 			CoherenceSync.CreateConnectedEntityUpdateInternal = CreateConnectedEntityUpdateInternal;
 			CoherenceSync.GetConnectedEntityComponentIdInternal = GetConnectedEntityComponentIdInternal;
+			CoherenceSync.CreateTag = CreateTag;
 			CoherenceSync.UpdateTag = UpdateTag;
 			CoherenceSync.RemoveTag = RemoveTag;
 		}
@@ -50,7 +51,7 @@ namespace Coherence.Toolkit
 
 			if (!string.IsNullOrEmpty(self.remoteVersionPrefabName))
 			{
-				comps.Add(new GenericPrefabReference() { prefab = self.remoteVersionPrefabName });
+				comps.Add(new GenericPrefabReference() { prefab = new FixedString64(self.remoteVersionPrefabName) });
 			}
 
 			if (!string.IsNullOrEmpty(self.coherenceUUID))
@@ -116,7 +117,7 @@ namespace Coherence.Toolkit
 				paramEntity4 = paramEntity[3],
 
 				paramString = String.IsNullOrEmpty(paramString[0]) ? "" : paramString[0],
-				paramBytes = paramBytes[0] != null && paramBytes[0].Length > 0 ? paramBytes[0] : new byte[0],
+				paramBytes = paramBytes[0] != null && paramBytes[0].Length > 0 ? CoherenceToUnityConverters.ToUnityFixedListByte4096(paramBytes[0]) : new FixedListByte4096()
 			};
 
 			return genericCommand;
@@ -161,7 +162,7 @@ namespace Coherence.Toolkit
 				ParamEntity4 = command.paramEntity4,
 
 				ParamString = command.paramString.ToString(),
-				ParamBytes = command.paramBytes,
+				ParamBytes = CoherenceToUnityConverters.FromUnityFixedListByte4096(command.paramBytes)
 			};
 		}
 
@@ -192,6 +193,17 @@ namespace Coherence.Toolkit
 		private static uint GetConnectedEntityComponentIdInternal()
 		{
 			return Definition.InternalConnectedEntity;
+		}
+
+		private static void CreateTag(IClient client, SerializeEntityID liveQuery, string tag) {
+			var components = new ICoherenceComponentData[] {
+				new Tag
+				{
+					tag = tag 
+				}
+			};
+			
+			client.CreateComponents(liveQuery, components);
 		}
 
 		private static void UpdateTag(IClient client, SerializeEntityID liveQuery, string tag)

@@ -15,8 +15,20 @@ namespace Coherence.Toolkit
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 		static void OnRuntimeMethodLoad()
 		{
+			CoherenceTagQuery.CreateTagQuery = CreateTagQuery;
 			CoherenceTagQuery.UpdateTagQuery = UpdateTagQuery;
 			CoherenceTagQuery.RemoveTagQuery = RemoveTagQuery;
+		}
+
+		private static void CreateTagQuery(IClient client, SerializeEntityID liveQuery, string tag) {
+			var components = new ICoherenceComponentData[] {
+				new TagQuery
+				{
+					tag = tag 
+				}
+			};
+			
+			client.CreateComponents(liveQuery, components);
 		}
 
 		private static void UpdateTagQuery(IClient client, SerializeEntityID liveQuery, string tag)

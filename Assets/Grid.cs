@@ -783,7 +783,7 @@ public class Grid : MonoBehaviour
 
                 foreach (var p in pr)
                 {
-                    p.startOnFrame = currentSimulationFrame + 350;
+                    p.startOnFrame = currentSimulationFrame + 50;
                 }
             }
         }

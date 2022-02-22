@@ -73,7 +73,7 @@ namespace Coherence.Generated
 			mask >>= 1;
 		}
 
-		public static (GenericFieldEntity1, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldEntity1, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldEntity1();
@@ -82,7 +82,7 @@ namespace Coherence.Generated
 				val.Value = bitStream.ReadEntity();
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

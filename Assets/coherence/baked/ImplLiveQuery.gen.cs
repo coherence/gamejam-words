@@ -24,11 +24,11 @@ namespace Coherence.Toolkit
 			var components = new ICoherenceComponentData[] {
 				new WorldPosition
 				{
-					value = pos
+					value = pos // TODO WHICH ONE IS IT?
 				},
 				new WorldPositionQuery
 				{
-					position = pos,
+					position = pos, // TODO WHICH ONE IS IT?
 					radius = radius
 				}
 			};

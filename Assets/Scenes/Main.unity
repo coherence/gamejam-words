@@ -1538,8 +1538,7 @@ MonoBehaviour:
   debugStreams: 0
   adjustSimulationFrameByPing: 1
   globalQueryOn: 1
-  ClientConnectionPrefab: {fileID: -7650936128428568788, guid: 94a5ba242d36ffd449a774ea4e84f0b5, type: 3}
-  SimulatorConnectionPrefab: {fileID: 0}
+  ClientConnectionPrefab: {fileID: 694873017490517114, guid: 94a5ba242d36ffd449a774ea4e84f0b5, type: 3}
   IsSingleton: 1
   controlTimeScale: 1
 --- !u!114 &1558409230

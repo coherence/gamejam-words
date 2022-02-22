@@ -18,7 +18,7 @@ namespace Coherence.Generated
 
 	public struct GenericFieldString4 : ICoherenceComponentData
 	{
-		public string name;
+		public FixedString64 name;
 
 		public override string ToString()
 		{
@@ -68,21 +68,21 @@ namespace Coherence.Generated
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
-				bitStream.WriteShortString(data.name);
+				bitStream.WriteShortString(CoherenceToUnityConverters.FromUnityFixedString64(data.name));
 			}
 			mask >>= 1;
 		}
 
-		public static (GenericFieldString4, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldString4, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldString4();
 			if (bitStream.ReadMask())
 			{
-				val.name = bitStream.ReadShortString();
+				val.name = CoherenceToUnityConverters.ToUnityFixedString64(bitStream.ReadShortString());
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

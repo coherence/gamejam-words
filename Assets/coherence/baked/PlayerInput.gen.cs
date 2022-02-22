@@ -12,7 +12,7 @@ namespace Coherence.Generated
 	using Unity.Collections;
 	using Unity.Mathematics;
 
-	public struct TestCube : IEntityInput
+	public struct PlayerInput : IEntityInput
 	{
 		public float key;
 		public float2 Mov;
@@ -20,11 +20,11 @@ namespace Coherence.Generated
 		public float Compressedkey => ValueCompressor.Compressfloat(key, 24, 2400);
 		public float2 CompressedMov => ValueCompressor.Compressfloat2(Mov, 24, 2400);
 
-		public uint GetComponentType() => Definition.InternalTestCube;
+		public uint GetComponentType() => Definition.InternalPlayerInput;
 
 		private readonly bool isRemoteInput;
 
-		public TestCube
+		public PlayerInput
 		(
 			float datakey,
 			float2 dataMov,
@@ -43,7 +43,7 @@ namespace Coherence.Generated
 				: $"{nameof(key)}:{Compressedkey}, {nameof(Mov)}:{CompressedMov}";
 		}
 
-		public static void Serialize(TestCube inputData, IOutProtocolBitStream bitStream)
+		public static void Serialize(PlayerInput inputData, IOutProtocolBitStream bitStream)
 		{
 			var converted_key = CoherenceToUnityConverters.FromUnityfloat(inputData.key);
 			bitStream.WriteFixedPoint(converted_key, 24, 2400);
@@ -51,14 +51,14 @@ namespace Coherence.Generated
 			bitStream.WriteVector2f(converted_Mov, 24, 2400);
 		}
 
-		public static TestCube Deserialize(IInProtocolBitStream bitStream)
+		public static PlayerInput Deserialize(IInProtocolBitStream bitStream)
 		{
 			var converted_key = bitStream.ReadFixedPoint(24, 2400);
 			var datakey = CoherenceToUnityConverters.ToUnityfloat(converted_key);
 			var converted_Mov = bitStream.ReadVector2f(24, 2400);
 			var dataMov = CoherenceToUnityConverters.ToUnityfloat2(converted_Mov);
 
-			return new TestCube
+			return new PlayerInput
 			(
 				datakey,
 				dataMov,

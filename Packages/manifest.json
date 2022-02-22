@@ -10,7 +10,7 @@
     "com.unity.toolchain.win-x86_64-linux-x86_64": "1.0.0",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.6.1",
-    "io.coherence.sdk": "file:../../unity",
+    "io.coherence.sdk": "0.7.4",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",

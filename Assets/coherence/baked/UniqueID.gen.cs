@@ -18,7 +18,7 @@ namespace Coherence.Generated
 
 	public struct UniqueID : ICoherenceComponentData
 	{
-		public string uuid;
+		public FixedString64 uuid;
 
 		public override string ToString()
 		{
@@ -68,21 +68,21 @@ namespace Coherence.Generated
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
-				bitStream.WriteShortString(data.uuid);
+				bitStream.WriteShortString(CoherenceToUnityConverters.FromUnityFixedString64(data.uuid));
 			}
 			mask >>= 1;
 		}
 
-		public static (UniqueID, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (UniqueID, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new UniqueID();
 			if (bitStream.ReadMask())
 			{
-				val.uuid = bitStream.ReadShortString();
+				val.uuid = CoherenceToUnityConverters.ToUnityFixedString64(bitStream.ReadShortString());
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

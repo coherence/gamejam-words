@@ -31,10 +31,10 @@
       <Path>Library/PackageCache/com.unity.timeline@1.5.6</Path>
       <Path>Library/PackageCache/com.unity.toolchain.win-x86_64-linux-x86_64@1.0.0</Path>
       <Path>Library/PackageCache/com.unity.visualscripting@1.6.1</Path>
+      <Path>Library/PackageCache/io.coherence.sdk@0.7.4</Path>
       <Path>Library/PackageCache/nuget.mono-cecil@0.1.6-preview</Path>
       <Path>Packages</Path>
       <Path>ProjectSettings</Path>
-      <Path>../unity</Path>
     </explicitIncludes>
     <explicitExcludes>
       <Path>.git</Path>

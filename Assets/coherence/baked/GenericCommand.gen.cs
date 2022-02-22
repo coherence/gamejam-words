@@ -15,7 +15,7 @@ namespace Coherence.Generated
 
 	public struct GenericCommand : IEntityCommand
 	{
-		public string name;
+		public FixedString64 name;
 		public int paramInt1;
 		public int paramInt2;
 		public int paramInt3;
@@ -32,15 +32,15 @@ namespace Coherence.Generated
 		public SerializeEntityID paramEntity2;
 		public SerializeEntityID paramEntity3;
 		public SerializeEntityID paramEntity4;
-		public string paramString;
-		public byte[] paramBytes;
+		public FixedString64 paramString;
+		public FixedListByte4096 paramBytes;
 
 		public MessageTarget Routing => MessageTarget.All;
 		public uint GetComponentType() => Definition.InternalGenericCommand;
 
 		public GenericCommand
 		(
-			string dataname,
+			FixedString64 dataname,
 			int dataparamInt1,
 			int dataparamInt2,
 			int dataparamInt3,
@@ -57,8 +57,8 @@ namespace Coherence.Generated
 			SerializeEntityID dataparamEntity2,
 			SerializeEntityID dataparamEntity3,
 			SerializeEntityID dataparamEntity4,
-			string dataparamString,
-			byte[] dataparamBytes
+			FixedString64 dataparamString,
+			FixedListByte4096 dataparamBytes
 		)
 		{
 			name = dataname;
@@ -84,7 +84,8 @@ namespace Coherence.Generated
 
 		public static void Serialize(GenericCommand commandData, IOutProtocolBitStream bitStream)
 		{
-			bitStream.WriteShortString(commandData.name);
+			var converted_name = CoherenceToUnityConverters.FromUnityFixedString64(commandData.name);
+			bitStream.WriteShortString(converted_name);
 			bitStream.WriteIntegerRange(commandData.paramInt1, 15, -9999);
 			bitStream.WriteIntegerRange(commandData.paramInt2, 15, -9999);
 			bitStream.WriteIntegerRange(commandData.paramInt3, 15, -9999);
@@ -105,13 +106,16 @@ namespace Coherence.Generated
 			bitStream.WriteEntity(commandData.paramEntity2);
 			bitStream.WriteEntity(commandData.paramEntity3);
 			bitStream.WriteEntity(commandData.paramEntity4);
-			bitStream.WriteShortString(commandData.paramString);
-			bitStream.WriteBytesList(commandData.paramBytes);
+			var converted_paramString = CoherenceToUnityConverters.FromUnityFixedString64(commandData.paramString);
+			bitStream.WriteShortString(converted_paramString);
+			var converted_paramBytes = CoherenceToUnityConverters.FromUnityFixedListByte4096(commandData.paramBytes);
+			bitStream.WriteBytesList(converted_paramBytes);
 		}
 
 		public static GenericCommand Deserialize(IInProtocolBitStream bitStream)
 		{
-			var dataname = bitStream.ReadShortString();
+			var converted_name = bitStream.ReadShortString();
+			var dataname = CoherenceToUnityConverters.ToUnityFixedString64(converted_name);
 			var dataparamInt1 = bitStream.ReadIntegerRange(15, -9999);
 			var dataparamInt2 = bitStream.ReadIntegerRange(15, -9999);
 			var dataparamInt3 = bitStream.ReadIntegerRange(15, -9999);
@@ -132,8 +136,10 @@ namespace Coherence.Generated
 			var dataparamEntity2 = bitStream.ReadEntity();
 			var dataparamEntity3 = bitStream.ReadEntity();
 			var dataparamEntity4 = bitStream.ReadEntity();
-			var dataparamString = bitStream.ReadShortString();
-			var dataparamBytes = bitStream.ReadBytesList();
+			var converted_paramString = bitStream.ReadShortString();
+			var dataparamString = CoherenceToUnityConverters.ToUnityFixedString64(converted_paramString);
+			var converted_paramBytes = bitStream.ReadBytesList();
+			var dataparamBytes = CoherenceToUnityConverters.ToUnityFixedListByte4096(converted_paramBytes);
 
 			return new GenericCommand
 			(

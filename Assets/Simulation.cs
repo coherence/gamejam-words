@@ -4,15 +4,14 @@ using Coherence.Toolkit;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Simulation : CoherenceInputSimulation<SimulationState>
+public class Simulation : CoherenceInputSimulation<SimulationState, Player>
 {
     public Grid grid;
     
     const int InternalMinClientNumberToPlay = 1; 
-    protected override void SetInputs(CoherenceClientConnection client)
+    protected override void SetInputs(Player client)
     {
-        var player = client.GameObject.GetComponent<Player>();
-        player.ApplyLocalInputs();
+        client.ApplyLocalInputs();
     }
 
     protected override void Simulate(long simulationFrame)
@@ -39,12 +38,14 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
             return; // TODO
         }
         
-        foreach (CoherenceClientConnection client in AllClients)
+        foreach (Player client in AllClients)
         {
-            var player = client.GameObject.GetComponent<Player>();
+            var player = client;
             var movement = (Vector3)player.GetNetworkInputMovement(simulationFrame);
             var alphabetInt = Mathf.Ceil(player.GetNetworkInputString(simulationFrame));
 
+            Debug.Log($"{alphabetInt} {movement}");
+            
             var hasMovement = false;
             
             if (movement.x > 0)
@@ -93,7 +94,7 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
     {
         for (var i = 0; i < AllClients.Count; i++)
         {
-            var player = AllClients[i].GameObject.GetComponent<Player>();
+            var player = AllClients[i];
             player.gridPosition = state.PlayerPositions[i];
         }
 
@@ -105,7 +106,7 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
         var simulationState = new SimulationState { PlayerPositions = new Vector2Int[AllClients.Count]};
         for (var i = 0; i < AllClients.Count; i++)
         {
-            var player = AllClients[i].GameObject.GetComponent<Player>();
+            var player = AllClients[i];
             simulationState.PlayerPositions[i] = player.gridPosition;
         }
 
@@ -118,8 +119,10 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
         return simulationState;
     }
 
-    protected override void OnClientJoined(CoherenceClientConnection client)
+    protected override void OnClientJoined(Player client)
     {
+        Debug.Log($"Client joined: {client}");
+        
         SimulationEnabled = AllClients.Count >= InternalMinClientNumberToPlay;
         if (SimulationEnabled)
         {
@@ -130,8 +133,10 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
         grid.AddPlayer(client);
     }
 
-    protected override void OnClientLeft(CoherenceClientConnection client)
+    protected override void OnClientLeft(Player client)
     {
+        Debug.Log($"Client left: {client}");
+        
         grid.RemovePlayer(client);
         
         SimulationEnabled = AllClients.Count >= InternalMinClientNumberToPlay;

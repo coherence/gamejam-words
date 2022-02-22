@@ -14,7 +14,6 @@ namespace Coherence.Generated
 
 	public class Definition : IDefinition
 	{
-		public const string schemaId = "169729a04abd29661b08152245110f5e440d4e4b";
 		public const uint InternalWorldPosition = 0;
 		public const uint InternalWorldOrientation = 1;
 		public const uint InternalLocalUser = 2;
@@ -90,7 +89,7 @@ namespace Coherence.Generated
 		public const uint InternalAuthorityTransfer = 0;
 		public const uint InternalGenericCommand = 1;
 		public const uint InternalTransferAction = 0;
-		public const uint InternalTestCube = 0;
+		public const uint InternalPlayerInput = 0;
 
 		private static readonly Dictionary<uint, string> componentNamesForTypeIds = new Dictionary<uint, string>() {
 			{ 0, "WorldPosition" },
@@ -179,7 +178,7 @@ namespace Coherence.Generated
 			}
 		}
 
-		public (ICoherenceComponentData, uint, uint?) ReadComponentUpdate(uint componentType, IInBitStream bitStream)
+		public (ICoherenceComponentData, uint, uint) ReadComponentUpdate(uint componentType, IInBitStream bitStream)
 		{
 			_ = Deserialize.ReadComponentOwnership(bitStream); // Read and discard unused bit from stream.
 			var inProtocolStream = new InProtocolBitStream(bitStream);
@@ -590,8 +589,8 @@ namespace Coherence.Generated
 		{
 			switch (inputType)
 			{
-				case Definition.InternalTestCube:
-					return TestCube.Deserialize(bitStream);
+				case Definition.InternalPlayerInput:
+					return PlayerInput.Deserialize(bitStream);
 				default:
 					break;
 			}
@@ -690,8 +689,8 @@ namespace Coherence.Generated
 
 			switch (inputType)
 			{
-				case Definition.InternalTestCube:
-					TestCube.Serialize((TestCube)inputData.Input, bitStream);
+				case Definition.InternalPlayerInput:
+					PlayerInput.Serialize((PlayerInput)inputData.Input, bitStream);
 					break;
 				default:
 					break;
@@ -740,7 +739,7 @@ namespace Coherence.Generated
 		public ICoherenceComponentData GenerateCoherenceUUIDData(string uuid)
 		{
 			var uniqueID = new UniqueID();
-			uniqueID.uuid = uuid;
+			uniqueID.uuid = CoherenceToUnityConverters.ToUnityFixedString64(uuid);
 
 			return uniqueID;
 		}
@@ -761,7 +760,7 @@ namespace Coherence.Generated
 		public string ExtractCoherenceUUID(ICoherenceComponentData data)
 		{
 			var uniqueID = (UniqueID)data;
-			return uniqueID.uuid;
+			return CoherenceToUnityConverters.FromUnityFixedString64(uniqueID.uuid);
 		}
 
 		public bool IsConnectedEntity(ICoherenceComponentData data)
@@ -779,7 +778,7 @@ namespace Coherence.Generated
 		public string ExtractCoherenceTag(ICoherenceComponentData data)
 		{
 			var tag = (Tag)data;
-			return tag.tag;
+			return CoherenceToUnityConverters.FromUnityFixedString64(tag.tag);
 		}
 	}
 }

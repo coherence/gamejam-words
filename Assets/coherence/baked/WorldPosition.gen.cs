@@ -82,7 +82,7 @@ namespace Coherence.Generated
 			mask >>= 1;
 		}
 
-		public static (WorldPosition, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (WorldPosition, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new WorldPosition();
@@ -91,7 +91,7 @@ namespace Coherence.Generated
 				val.value = CoherenceToUnityConverters.ToUnityfloat3(bitStream.ReadVector3f(24, 2400));
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

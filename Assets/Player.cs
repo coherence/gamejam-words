@@ -5,10 +5,8 @@ using UnityEngine;
 
 [RequireComponent(typeof(CoherenceSync))]
 [RequireComponent(typeof(CoherenceInput))]
-public class Player : MonoBehaviour
+public class Player : CoherenceClientConnection
 {
-    private FixedUpdateInput fixedUpdateInput;
-
     public string playerName = "Player";
     
     public Vector2Int gridPosition = new Vector2Int(25, 25);
@@ -36,7 +34,6 @@ public class Player : MonoBehaviour
     {
         sync = GetComponent<CoherenceSync>();
         
-        fixedUpdateInput = sync.MonoBridge.FixedUpdateInput;
         input = sync.Input;
         grid = FindObjectOfType<Grid>();
 

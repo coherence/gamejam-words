@@ -59,11 +59,11 @@ namespace Coherence.Generated
 		{
 		}
 
-		public static (Global, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (Global, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new Global();
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

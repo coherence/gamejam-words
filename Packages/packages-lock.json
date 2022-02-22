@@ -276,16 +276,17 @@
       "url": "https://packages.unity.com"
     },
     "io.coherence.sdk": {
-      "version": "file:../../unity",
+      "version": "0.7.4",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.24",
         "com.unity.platforms": "0.10.0-preview.10",
         "com.unity.platforms.linux": "0.10.0-preview.10",
         "com.unity.platforms.macos": "0.10.0-preview.10",
         "com.unity.platforms.windows": "0.10.0-preview.10"
-      }
+      },
+      "url": "https://registry.npmjs.org"
     },
     "nuget.mono-cecil": {
       "version": "0.1.6-preview",

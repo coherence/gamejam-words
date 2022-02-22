@@ -19,11 +19,10 @@ namespace Coherence.Generated
 	public struct Connection : ICoherenceComponentData
 	{
 		public int id;
-		public int type;
 
 		public override string ToString()
 		{
-			return $"Connection(id: {id}, type: {type})";
+			return $"Connection(id: {id})";
 		}
 
 		public uint GetComponentType() => Definition.InternalConnection;
@@ -36,8 +35,6 @@ namespace Coherence.Generated
 
 		private static readonly int _id_Min = 0;
 		private static readonly int _id_Max = 2147483647;
-		private static readonly int _type_Min = 0;
-		private static readonly int _type_Max = 8;
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -54,11 +51,6 @@ namespace Coherence.Generated
 				id = other.id;
 			}
 			mask >>= 1;
-			if ((mask & 0x01) != 0)
-			{
-				type = other.type;
-			}
-			mask >>= 1;
 			return this;
 		}
 
@@ -69,9 +61,6 @@ namespace Coherence.Generated
 
 			if (id != newData.id) {
 				mask |= 0b00000000000000000000000000000001;
-			}
-			if (type != newData.type) {
-				mask |= 0b00000000000000000000000000000010;
 			}
 
 			return mask;
@@ -86,16 +75,9 @@ namespace Coherence.Generated
 				bitStream.WriteIntegerRange(data.id, 31, 0);
 			}
 			mask >>= 1;
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				Coherence.Utils.Bounds.Check(data.type, _type_Min, _type_Max, "Connection.type");
-
-				bitStream.WriteIntegerRange(data.type, 3, 0);
-			}
-			mask >>= 1;
 		}
 
-		public static (Connection, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (Connection, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new Connection();
@@ -104,12 +86,7 @@ namespace Coherence.Generated
 				val.id = bitStream.ReadIntegerRange(31, 0);
 				mask |= 0b00000000000000000000000000000001;
 			}
-			if (bitStream.ReadMask())
-			{
-				val.type = bitStream.ReadIntegerRange(3, 0);
-				mask |= 0b00000000000000000000000000000010;
-			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }

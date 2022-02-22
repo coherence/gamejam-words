@@ -12,7 +12,6 @@ namespace Coherence.Toolkit
 	using Coherence.Entity;
 	using Coherence.Generated;
 	using Coherence.ProtocolDef;
-	using ConnectionType = Coherence.Connection.ConnectionType;
 
 	public class CoherenceMonoBridgeImpl
 	{
@@ -35,7 +34,7 @@ namespace Coherence.Toolkit
 			var gotPosition = false;
 			var gotPrefabReference = false;
 
-			foreach (var comp in entityUpdate.Components.Updates.Store)
+			foreach (var comp in entityUpdate.Components.Creates.Store)
 			{
 				switch(comp.Value.Data)
 				{
@@ -55,7 +54,6 @@ namespace Coherence.Toolkit
 						break;
 					case Connection con:
 						info.clientId = con.id;
-						info.connectionType = (ConnectionType)con.type;
 						break;
 					case UniqueID uid:
 					    info.uniqueId = uid.uuid;

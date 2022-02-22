@@ -6,10 +6,10 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     Coherence.CodeGen.LastInstallation:
-      value: 15011a57541b58
+      value: 15011a5f4b0459
       flags: 0
     Coherence.LastInstallation:
-      value: 531f0c48551819490818052707
+      value: 531f034851
       flags: 0
     Coherence.Settings.ActiveSchemas.Hash:
       value: 52520655510358085b580d2640775e47434f4a787f2a77627c7d4f6bbbb2613c

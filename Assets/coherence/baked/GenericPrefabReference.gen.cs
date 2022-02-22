@@ -18,7 +18,7 @@ namespace Coherence.Generated
 
 	public struct GenericPrefabReference : ICoherenceComponentData
 	{
-		public string prefab;
+		public FixedString64 prefab;
 
 		public override string ToString()
 		{
@@ -68,21 +68,21 @@ namespace Coherence.Generated
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
-				bitStream.WriteShortString(data.prefab);
+				bitStream.WriteShortString(CoherenceToUnityConverters.FromUnityFixedString64(data.prefab));
 			}
 			mask >>= 1;
 		}
 
-		public static (GenericPrefabReference, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericPrefabReference, uint, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericPrefabReference();
 			if (bitStream.ReadMask())
 			{
-				val.prefab = bitStream.ReadShortString();
+				val.prefab = CoherenceToUnityConverters.ToUnityFixedString64(bitStream.ReadShortString());
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask, 0);
 		}
 	}
 }
