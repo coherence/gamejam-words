@@ -86,7 +86,7 @@
     },
     "com.unity.nuget.newtonsoft-json": {
       "version": "2.0.0",
-      "depth": 4,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -280,6 +280,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.0",
         "com.unity.test-framework": "1.1.24",
         "com.unity.platforms": "0.10.0-preview.10",
         "com.unity.platforms.linux": "0.10.0-preview.10",

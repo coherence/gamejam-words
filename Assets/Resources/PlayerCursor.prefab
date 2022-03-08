@@ -523,6 +523,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerName: Player
   gridPosition: {x: 25, y: 25}
+  score: 0
+  clientID: 0
+  inputSamplingDelay: 0
   cursor: {fileID: 1914339650}
   cursorMine: {fileID: 6711004801423553829}
   startOnFrame: 0
+  timeBetweenDemoKeys: 0.1

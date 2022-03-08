@@ -25,6 +25,7 @@ public class Grid : MonoBehaviour
     public string playerName = "";
 
     public long MaxFramesForTempLetter = 380;
+    public long framesToWaitBeforeStart = 180;
     
     public Transform TempObjectToTrack;
 
@@ -783,7 +784,7 @@ public class Grid : MonoBehaviour
 
                 foreach (var p in pr)
                 {
-                    p.startOnFrame = currentSimulationFrame + 350;
+                    p.startOnFrame = currentSimulationFrame + framesToWaitBeforeStart;
                 }
             }
         }
