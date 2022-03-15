@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SystemMessage : MonoBehaviour
 {
-    public TMP_Text messageText, frame;
+    public TMP_Text messageText, frame, serverFrame, timeScale, hashLabel;
     public Transform panel;
 
     public void DisplayMessage(string msg)
@@ -21,8 +21,11 @@ public class SystemMessage : MonoBehaviour
         messageText.text = msg;
     }
 
-    public void UpdateFrame(long frame)
+    public void UpdateFrame(long localFixedFrame, long localFrame, long serverFrame, string hash)
     {
-        this.frame.text = frame.ToString();
+        frame.text = localFixedFrame.ToString();
+        this.serverFrame.text = $"{localFrame} / {serverFrame} ({localFrame - serverFrame})";
+        timeScale.text = Time.timeScale.ToString("F6");
+        hashLabel.text = hash;
     }
 }

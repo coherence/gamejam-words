@@ -483,7 +483,7 @@ MonoBehaviour:
   remoteVersionPrefabName: PlayerCursor
   selectedSynchronizedPrefabOption: 0
   usingReflection: 0
-  tag: 
+  coherenceTag: 
   componentActions: []
   references:
     version: 1
@@ -501,7 +501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InitialBufferSize: 32
   InitialBufferDelay: 3
-  DisconnectOnTimeReset: 0
+  DisconnectOnTimeReset: 1
   UseFixedSimulationFrames: 1
   inputName: TestCube
   fields:
@@ -529,4 +529,3 @@ MonoBehaviour:
   cursor: {fileID: 1914339650}
   cursorMine: {fileID: 6711004801423553829}
   startOnFrame: 0
-  timeBetweenDemoKeys: 0.1

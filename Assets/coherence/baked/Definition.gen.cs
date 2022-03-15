@@ -14,7 +14,7 @@ namespace Coherence.Generated
 
 	public class Definition : IDefinition
 	{
-		public const string schemaId = "169729a04abd29661b08152245110f5e440d4e4b";
+		public const string schemaId = "86149435388a9e45bd9bbdd3e42c74c398c95e5a";
 		public const uint InternalWorldPosition = 0;
 		public const uint InternalWorldOrientation = 1;
 		public const uint InternalLocalUser = 2;
@@ -86,7 +86,11 @@ namespace Coherence.Generated
 		public const uint InternalGenericFieldEntity8 = 68;
 		public const uint InternalGenericFieldEntity9 = 69;
 		public const uint InternalGenericFieldBytes0 = 70;
-		public const uint InternalPlayerCursor_Player = 71;
+		public const uint InternalGenericFieldLong0 = 71;
+		public const uint InternalGenericFieldLong1 = 72;
+		public const uint InternalGenericFieldLong2 = 73;
+		public const uint InternalGenericFieldLong3 = 74;
+		public const uint InternalPlayerCursor_Player = 75;
 		public const uint InternalAuthorityTransfer = 0;
 		public const uint InternalGenericCommand = 1;
 		public const uint InternalTransferAction = 0;
@@ -164,7 +168,11 @@ namespace Coherence.Generated
 			{ 68, "GenericFieldEntity8" },
 			{ 69, "GenericFieldEntity9" },
 			{ 70, "GenericFieldBytes0" },
-			{ 71, "PlayerCursor_Player" },
+			{ 71, "GenericFieldLong0" },
+			{ 72, "GenericFieldLong1" },
+			{ 73, "GenericFieldLong2" },
+			{ 74, "GenericFieldLong3" },
+			{ 75, "PlayerCursor_Player" },
 		};
 
 		public static string ComponentNameForTypeId(uint typeId)
@@ -328,6 +336,14 @@ namespace Coherence.Generated
 					return GenericFieldEntity9.Deserialize(inProtocolStream);
 				case InternalGenericFieldBytes0:
 					return GenericFieldBytes0.Deserialize(inProtocolStream);
+				case InternalGenericFieldLong0:
+					return GenericFieldLong0.Deserialize(inProtocolStream);
+				case InternalGenericFieldLong1:
+					return GenericFieldLong1.Deserialize(inProtocolStream);
+				case InternalGenericFieldLong2:
+					return GenericFieldLong2.Deserialize(inProtocolStream);
+				case InternalGenericFieldLong3:
+					return GenericFieldLong3.Deserialize(inProtocolStream);
 				case InternalPlayerCursor_Player:
 					return PlayerCursor_Player.Deserialize(inProtocolStream);
 				default:
@@ -551,6 +567,18 @@ namespace Coherence.Generated
 					break;
 				case InternalGenericFieldBytes0:
 					GenericFieldBytes0.Serialize((GenericFieldBytes0)data, mask, protocolStream);
+					break;
+				case InternalGenericFieldLong0:
+					GenericFieldLong0.Serialize((GenericFieldLong0)data, mask, protocolStream);
+					break;
+				case InternalGenericFieldLong1:
+					GenericFieldLong1.Serialize((GenericFieldLong1)data, mask, protocolStream);
+					break;
+				case InternalGenericFieldLong2:
+					GenericFieldLong2.Serialize((GenericFieldLong2)data, mask, protocolStream);
+					break;
+				case InternalGenericFieldLong3:
+					GenericFieldLong3.Serialize((GenericFieldLong3)data, mask, protocolStream);
 					break;
 				case InternalPlayerCursor_Player:
 					PlayerCursor_Player.Serialize((PlayerCursor_Player)data, mask, protocolStream);

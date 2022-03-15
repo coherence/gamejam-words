@@ -1,24 +1,31 @@
 using System;
 using System.Collections;
+using Coherence;
 using Coherence.Toolkit;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Simulation : CoherenceInputSimulation<SimulationState>
 {
-    public Grid grid;
+    const int InternalMinClientNumberToPlay = 1;
     
-    const int InternalMinClientNumberToPlay = 1; 
+    public Grid grid;
+    public string hash;
+    public long Frame => CurrentSimulationFrame;
+    
     protected override void SetInputs(CoherenceClientConnection client)
     {
         var player = client.GameObject.GetComponent<Player>();
         player.ApplyLocalInputs();
     }
 
-    protected override void Simulate(long simulationFrame)
+    protected override void OnStart()
     {
-        grid.UpdateSimulationFrame(simulationFrame);
+        SimulationEnabled = false;
+    }
 
+    protected override void OnBeforeSimulate()
+    {
         if (grid.IsPaused)
         {
             long startFrame = 0;
@@ -35,9 +42,18 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
             }
 
             grid.startFrame = startFrame;
+            if (startFrame > 0 && CurrentSimulationFrame >= grid.startFrame)
+            {
+                SimulationEnabled = true;
+            }
             
             return; // TODO
         }
+    }
+
+    protected override void Simulate(long simulationFrame)
+    {
+        grid.UpdateSimulationFrame(simulationFrame);
         
         foreach (CoherenceClientConnection client in AllClients)
         {
@@ -114,31 +130,25 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
         simulationState.wordsUsed = wordsUsed;
 
         simulationState.PlayerScores = playerScores;
+
+        hash = simulationState.ComputeHash().ToString();
         
         return simulationState;
     }
 
     protected override void OnClientJoined(CoherenceClientConnection client)
     {
-        SimulationEnabled = AllClients.Count >= InternalMinClientNumberToPlay;
-        if (SimulationEnabled)
-        {
-            // Lets us rejoin the same simulation without restarting the app.
-            StateStore.Clear();
-        }
-
         grid.AddPlayer(client);
     }
 
     protected override void OnClientLeft(CoherenceClientConnection client)
     {
         grid.RemovePlayer(client);
-        
-        SimulationEnabled = AllClients.Count >= InternalMinClientNumberToPlay;
     }
     
     protected override void OnPauseChange(bool isPaused)
     {
+        Debug.Log($"[{CurrentSimulationFrame}] Pause: {isPaused}");
         //grid.TogglePaused(isPaused);
     }
 }

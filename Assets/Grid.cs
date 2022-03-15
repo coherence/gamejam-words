@@ -52,6 +52,8 @@ public class Grid : MonoBehaviour
     public Transform letterScoreUIPrefab;
 
     public SystemMessage systemMessage;
+    public CoherenceMonoBridge monoBridge;
+    public Simulation simulation;
 
     public long startFrame = 0;
     
@@ -676,12 +678,17 @@ public class Grid : MonoBehaviour
 
     public void SetSimulationState(SimulationState state)
     {
-        var c = state.CellStates;
-        
         for (var i = 0; i < tiling * tiling; i++)
         {
-            cells[i].SetState(c[i].content, c[i].owner, c[i].isSolid);
-            cells[i].SetFrame(c[i].frameWhenEntered);
+            cells[i].SetState(null, 0, false);
+            cells[i].SetFrame(0);
+        }
+        
+        foreach (var cell in state.CellStates)
+        {
+            var i = cell.y * tiling + cell.x;
+            cells[i].SetState(cell.content, cell.owner, cell.isSolid);
+            cells[i].SetFrame(cell.frameWhenEntered);
         }
 
         wordsAlreadyUsed.Clear();
@@ -697,18 +704,28 @@ public class Grid : MonoBehaviour
         }
     }
     
-    public SimulationState.Cell[] GetSimulationState(out ArrayList wordsUsed, out Hashtable playerScores)
+    public List<SimulationState.Cell> GetSimulationState(out ArrayList wordsUsed, out Hashtable playerScores)
     {
-        SimulationState.Cell[] cellStates = new SimulationState.Cell[tiling * tiling];
-        for (var i = 0; i < tiling * tiling; i++)
+        var cellStates = new List<SimulationState.Cell>();
+        for (int y = 0; y < tiling; y++)
         {
-            cellStates[i] = new SimulationState.Cell()
+            for (int x = 0; x < tiling; x++)
             {
-                content = cells[i].Content,
-                owner = cells[i].Owner,
-                isSolid = cells[i].IsSolid,
-                frameWhenEntered = cells[i].frameWhenEntered
-            };
+                var i = y * tiling + x;
+                var cell = new SimulationState.Cell()
+                {
+                    x = x,
+                    y = y,
+                    content = cells[i].Content,
+                    owner = cells[i].Owner,
+                    isSolid = cells[i].IsSolid,
+                    frameWhenEntered = cells[i].frameWhenEntered
+                };
+                if (cell.content != null || cell.owner != 0 || cell.isSolid || cell.frameWhenEntered != 0)
+                {
+                    cellStates.Add(cell);
+                }
+            }
         }
 
         wordsUsed = new ArrayList();
@@ -760,7 +777,7 @@ public class Grid : MonoBehaviour
                     }
                     else
                     {
-                        systemMessage.DisplayMessage($"Starting in... {startFrame-currentSimulationFrame}");
+                        systemMessage.DisplayMessage($"Starting in... {startFrame-simulation.Frame}");
                     }
                 }
             }
@@ -774,7 +791,7 @@ public class Grid : MonoBehaviour
             systemMessage.DisplayMessage(null);
         }
         
-        systemMessage.UpdateFrame(currentSimulationFrame);
+        systemMessage.UpdateFrame(currentSimulationFrame, monoBridge.NetworkTime.ClientSimulationFrame, monoBridge.NetworkTime.ServerSimulationFrame, simulation.hash);
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -784,7 +801,7 @@ public class Grid : MonoBehaviour
 
                 foreach (var p in pr)
                 {
-                    p.startOnFrame = currentSimulationFrame + framesToWaitBeforeStart;
+                    p.startOnFrame = simulation.Frame + framesToWaitBeforeStart;
                 }
             }
         }
