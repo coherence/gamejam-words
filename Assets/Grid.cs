@@ -7,6 +7,7 @@ using Coherence.Toolkit;
 using Coherence.UI;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.SocialPlatforms;
 using Network = Coherence.Network;
 
@@ -14,13 +15,13 @@ public class Grid : MonoBehaviour
 {
     public bool allowCompletingEachOthersWords = true;
     
-    public const int tiling = 50;
-    public const int minWordLength = 4;
-    public Transform cursor;
-    public int cursorPosX = 25;
-    public int cursorPoxY = 25;
+    public const int tilesX = 80;
+    public const int tilesY = 50;
+    
     public float LocalRadius = 5f;
-    public float posAdjustment = -0.1f;
+    
+    float posAdjustmentX = -0.1f;
+    float posAdjustmentY = -0.1f;
 
     public string playerName = "";
 
@@ -259,12 +260,11 @@ public class Grid : MonoBehaviour
     
     private Vector2Int GetGridPosFromLocal(float x, float z)
     {
-        float t = (float) tiling;
-        float adjustedX = (x + LocalRadius - posAdjustment) / LocalRadius;
-        float adjustedY = (z + LocalRadius - posAdjustment) / LocalRadius;
+        float adjustedX = (x + LocalRadius - posAdjustmentX) / LocalRadius;
+        float adjustedY = (z + LocalRadius - posAdjustmentY) / LocalRadius;
 
-        adjustedX *= 0.5f * tiling;
-        adjustedY *= 0.5f * tiling;
+        adjustedX *= 0.5f * tilesX;
+        adjustedY *= 0.5f * tilesY;
         
         return new Vector2Int((int)adjustedX-1, (int)adjustedY-1);
     }
@@ -273,30 +273,34 @@ public class Grid : MonoBehaviour
     {
         x += 1;
         y += 1;
-        float originX = -LocalRadius + posAdjustment;
-        float originY = -LocalRadius + posAdjustment;
-        float t = tiling;
-        float d = 1f / t * LocalRadius * 2f;
-        float localX = originX + (float) x * d;
-        float localY = originY + (float) y * d;
+        float originX = -LocalRadius + posAdjustmentX;
+        float originY = -LocalRadius + posAdjustmentY;
+        
+        float dx = 1f / tilesX * LocalRadius * 2f;
+        float dy = 1f / tilesY * LocalRadius * 2f;
+        float localX = originX + (float) x * dx;
+        float localY = originY + (float) y * dy;
         Vector3 localPos = new Vector3(localX, 0, localY);
         return transform.TransformPoint(localPos);
     }
     
     void Awake()
     {
+        posAdjustmentX = -0.1f * 50f / tilesX;
+        posAdjustmentY = -0.1f * 50f / tilesY;
+        
         IsPaused = true;
         systemMessage.DisplayMessage(null);
-        cells = new Cell[tiling * tiling];
+        cells = new Cell[tilesX * tilesY];
 
-        for (var y = 0; y < tiling; y++)
+        for (var y = 0; y < tilesY; y++)
         {
-            for (var x = 0; x < tiling; x++)
+            for (var x = 0; x < tilesX; x++)
             {
                 var cellGO = Instantiate(cellPrefab);
                 var cell = cellGO.GetComponent<Cell>();
                 cell.Initialise(this, x, y);
-                cells[x + tiling * y] = cell;
+                cells[x + tilesX * y] = cell;
                 cellGO.parent = transform;
             }
         }
@@ -340,9 +344,9 @@ public class Grid : MonoBehaviour
 
     public void UpdatePlayerPositionAndClearNonSolidCells(int clientID, int xp, int yp)
     {
-        for (var y = 0; y < tiling; y++)
+        for (var y = 0; y < tilesY; y++)
         {
-            for (var x = 0; x < tiling; x++)
+            for (var x = 0; x < tilesX; x++)
             {
                 var cell = GetCellAtXY(x, y);
 
@@ -393,9 +397,9 @@ public class Grid : MonoBehaviour
     {
         if (x < 0) return null;
         if (y < 0) return null;
-        if (x >= tiling) return null;
-        if (y >= tiling) return null;
-        return cells[x + tiling * y];
+        if (x >= tilesX) return null;
+        if (y >= tilesY) return null;
+        return cells[x + tilesX * y];
     }
 
     int GetLetterScore(string letter)
@@ -625,8 +629,8 @@ public class Grid : MonoBehaviour
 
             if (x < 0) break;
             if (y < 0) break;
-            if (x >= tiling) break;
-            if (y >= tiling) break;
+            if (x >= tilesX) break;
+            if (y >= tilesY) break;
 
             currentCell = GetCellAtXY(x, y);
         }
@@ -657,8 +661,8 @@ public class Grid : MonoBehaviour
 
             if (x < 0) break;
             if (y < 0) break;
-            if (x >= tiling) break;
-            if (y >= tiling) break;
+            if (x >= tilesX) break;
+            if (y >= tilesY) break;
 
             currentCell = GetCellAtXY(x, y);
         }
@@ -678,7 +682,7 @@ public class Grid : MonoBehaviour
 
     public void SetSimulationState(SimulationState state)
     {
-        for (var i = 0; i < tiling * tiling; i++)
+        for (var i = 0; i < tilesX * tilesY; i++)
         {
             cells[i].SetState(null, 0, false);
             cells[i].SetFrame(0);
@@ -686,7 +690,7 @@ public class Grid : MonoBehaviour
         
         foreach (var cell in state.CellStates)
         {
-            var i = cell.y * tiling + cell.x;
+            var i = cell.y * tilesX + cell.x;
             cells[i].SetState(cell.content, cell.owner, cell.isSolid);
             cells[i].SetFrame(cell.frameWhenEntered);
         }
@@ -707,11 +711,11 @@ public class Grid : MonoBehaviour
     public List<SimulationState.Cell> GetSimulationState(out ArrayList wordsUsed, out Hashtable playerScores)
     {
         var cellStates = new List<SimulationState.Cell>();
-        for (int y = 0; y < tiling; y++)
+        for (int y = 0; y < tilesY; y++)
         {
-            for (int x = 0; x < tiling; x++)
+            for (int x = 0; x < tilesX; x++)
             {
-                var i = y * tiling + x;
+                var i = y * tilesX + x;
                 var cell = new SimulationState.Cell()
                 {
                     x = x,
@@ -742,16 +746,6 @@ public class Grid : MonoBehaviour
         }
         
         return cellStates;
-    }
-
-    IEnumerator TestProc()
-    {
-        while (true)
-        {
-            cursorPosX++;
-            if (cursorPosX >= 50) cursorPosX = 0;
-            yield return new WaitForSeconds(0.2f);
-        }
     }
 
     // Update is called once per frame

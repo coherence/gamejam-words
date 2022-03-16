@@ -8,13 +8,12 @@ public class Cell : MonoBehaviour
     public int Owner { get; private set; }
     public bool IsSolid { get; private set; }
 
-    public Vector2Int gridPosition = new Vector2Int(25, 25);
+    public Vector2Int gridPosition = new Vector2Int(40, 25);
     public Grid grid;
     public TMPro.TMP_Text textControl, debugText;
     public Renderer solidBackground, tentativeBackground;
 
     public Renderer tentativeTimerUI; 
-    
     public long frameWhenEntered;
     
     public void Initialise(Grid grid, int x, int y)

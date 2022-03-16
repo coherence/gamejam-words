@@ -58,9 +58,15 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
         foreach (CoherenceClientConnection client in AllClients)
         {
             var player = client.GameObject.GetComponent<Player>();
-            var movement = (Vector3)player.GetNetworkInputMovement(simulationFrame);
             var alphabetInt = Mathf.Ceil(player.GetNetworkInputString(simulationFrame));
-
+            var movement = (Vector3)player.GetNetworkInputMovement(simulationFrame);
+            
+            if (alphabetInt != 0)
+            {
+                var key = (KeyCode) alphabetInt;
+                grid.SetCellContentAndCheckWord(player.gridPosition.x, player.gridPosition.y, key.ToString(), client.ClientId, simulationFrame);
+            }
+            
             var hasMovement = false;
             
             if (movement.x > 0)
@@ -86,22 +92,18 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
                 hasMovement = true;
                 player.gridPosition.y -= 1;
             }
-
+            
             if (hasMovement)
             {
-                if (player.gridPosition.x < 0) player.gridPosition.x = Grid.tiling - 1;
-                if (player.gridPosition.y < 0) player.gridPosition.y = Grid.tiling - 1;
-                if (player.gridPosition.x >= Grid.tiling) player.gridPosition.x = 0;
-                if (player.gridPosition.y >= Grid.tiling) player.gridPosition.y = 0;
+                if (player.gridPosition.x < 0) player.gridPosition.x = Grid.tilesX - 1;
+                if (player.gridPosition.y < 0) player.gridPosition.y = Grid.tilesY - 1;
+                if (player.gridPosition.x >= Grid.tilesX) player.gridPosition.x = 0;
+                if (player.gridPosition.y >= Grid.tilesY) player.gridPosition.y = 0;
 
                 //grid.UpdatePlayerPositionAndClearNonSolidCells(client.ClientId, player.gridPosition.x, player.gridPosition.y);
             }
 
-            if (alphabetInt != 0)
-            {
-                var key = (KeyCode) alphabetInt;
-                grid.SetCellContentAndCheckWord(player.gridPosition.x, player.gridPosition.y, key.ToString(), client.ClientId, simulationFrame);
-            }
+           
         }
     }
 

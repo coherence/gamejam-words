@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
 
     public string playerName = "Player";
     
-    public Vector2Int gridPosition = new Vector2Int(25, 25);
+    public Vector2Int gridPosition = new Vector2Int(40, 25);
 
     public int score;
     public int clientID;
@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
     
     private KeyCode[] acceptedAlphabetKeys;
 
-    public Renderer cursor, cursorMine;
+    public Renderer cursor, cursorMine, cursorDirRight, cursorDirDown;
     public long startOnFrame;
     
     ArrayList tmpKeyRecorder = new ArrayList();
@@ -50,6 +50,17 @@ public class Player : MonoBehaviour
     private bool demoKeysReplaying;
     private long demoStartFrame;
     private long demoPauseFrame;
+
+    public bool lastTypedWasLetter = false;
+    public TypingDirection lastTypingDirection = TypingDirection.RIGHT;
+    public enum TypingDirection
+    {
+        RIGHT = 0,
+        DOWN = 1,
+        UP = 2,
+        LEFT = 3,
+        NONE = 100
+    };
 
     private static DemoKey[] BuildDemo(KeyCode[] keys, int delay)
     {
@@ -96,7 +107,7 @@ public class Player : MonoBehaviour
         input = sync.Input;
         grid = FindObjectOfType<Grid>();
 
-        keyPresses = new Hashtable {[KeyCode.UpArrow] = 0f, [KeyCode.DownArrow] = 0f, [KeyCode.LeftArrow] = 0f, [KeyCode.RightArrow] = 0f};
+        keyPresses = new Hashtable {[KeyCode.UpArrow] = 0f, [KeyCode.DownArrow] = 0f, [KeyCode.LeftArrow] = 0f, [KeyCode.RightArrow] = 0f, [KeyCode.Backspace] = 0f};
 
         InitAlphabet();
     }
@@ -134,6 +145,9 @@ public class Player : MonoBehaviour
 
             cursorMine.enabled = true;
             cursor.enabled = false;
+
+            cursorDirDown.enabled = lastTypingDirection == TypingDirection.DOWN;
+            cursorDirRight.enabled = lastTypingDirection == TypingDirection.RIGHT;
         }
 
         if (Input.GetKeyDown(KeyCode.F2))
@@ -193,8 +207,8 @@ public class Player : MonoBehaviour
 
     public void ApplyLocalInputs()
     {
-        ApplyMovement();
         ApplyAlphabet();
+        ApplyMovement();
     }
 
     private void ApplyAlphabet()
@@ -223,6 +237,7 @@ public class Player : MonoBehaviour
                 RecordKeyTime(key);
                 canType = true;
                 tmpKeyRecorder.Add(key);
+                lastTypedWasLetter = true;
                 break;
             }
         }
@@ -233,8 +248,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    void TryTypeKey(KeyCode key, int x0, int y0, ref int x, ref int y)
+    bool TryTypeKey(KeyCode key, int x0, int y0, ref int x, ref int y)
     {
+        bool pressed = false;
+        
         if (demoKeysReplaying)
         {
             if (IsNextDemoKey(key))
@@ -243,6 +260,7 @@ public class Player : MonoBehaviour
                 {
                     x = x0;
                     y = y0;
+                    pressed = true;
                     GetCurrentDemoKey(true); // just advance
                     RecordKeyTime(key);
                 }
@@ -260,6 +278,7 @@ public class Player : MonoBehaviour
             {
                 x = x0;
                 y = y0;
+                pressed = true;
                 RecordKeyTime(key);
                 
                 tmpKeyRecorder.Add(key);
@@ -270,6 +289,8 @@ public class Player : MonoBehaviour
                 if (y0 != 0) y = 0;
             }
         }
+
+        return pressed;
     }
     
     private void ApplyMovement()
@@ -281,6 +302,60 @@ public class Player : MonoBehaviour
         TryTypeKey(KeyCode.DownArrow, 0, -1, ref x, ref y);
         TryTypeKey(KeyCode.RightArrow, 1, 0, ref x, ref y);
         TryTypeKey(KeyCode.LeftArrow, -1, 0, ref x, ref y);
+
+        bool backspace = false;
+        
+        if (lastTypingDirection == TypingDirection.RIGHT)
+        {
+            backspace = TryTypeKey(KeyCode.Backspace, -1, 0, ref x, ref y);
+        }
+        
+        if (lastTypingDirection == TypingDirection.DOWN)
+        {
+            backspace = TryTypeKey(KeyCode.Backspace, 0, 1, ref x, ref y);
+        }
+        
+        if (x == 0 && y == 0)
+        {
+            if (lastTypedWasLetter)
+            {
+                if (lastTypingDirection != TypingDirection.NONE)
+                {
+                    x = lastTypingDirection == TypingDirection.RIGHT ? 1 : 0;
+                    y = lastTypingDirection == TypingDirection.DOWN ? -1 : 0;
+
+                    lastTypedWasLetter = false;
+                }
+            }
+        }
+        else
+        {
+            if (lastTypedWasLetter)
+            {
+                if (x > 0)
+                {
+                    lastTypingDirection = TypingDirection.RIGHT;
+                }
+                else
+                if (y < 0)
+                {
+                    lastTypingDirection = TypingDirection.DOWN;
+                }
+                else
+                {
+                    if (!backspace)
+                    {
+                        lastTypingDirection = TypingDirection.NONE;
+                    }
+                }
+            }
+            else
+            {
+                lastTypingDirection = TypingDirection.NONE;
+            }
+            
+            lastTypedWasLetter = false;
+        }
         
         var movement = new Vector2(x, y).normalized;
         input.SetAxisState("Mov", movement);
