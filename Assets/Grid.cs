@@ -138,8 +138,7 @@ public class Grid : MonoBehaviour
     {
         foreach (DictionaryEntry s in players)
         {
-            var player = (PlayerData)s.Value;
-            player.Update();
+            ((PlayerData)s.Value).Update();
         }
     }
     

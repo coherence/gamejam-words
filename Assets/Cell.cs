@@ -60,23 +60,18 @@ public class Cell : MonoBehaviour
         
         textControl.text = Content;
     }
+
+    private int frame = 0;
     
     void Update()
     {
+        if (frame++ % 10 != 0) return;
+        
         solidBackground.enabled = IsSolid && !string.IsNullOrEmpty(Content);
         tentativeBackground.enabled = !IsSolid && !string.IsNullOrEmpty(Content);
-
         tentativeTimerUI.enabled = !IsSolid && !string.IsNullOrEmpty(Content);
-
-        float maxFrames = grid.MaxFramesForTempLetter;
-        float framesElapsed = grid.GetSimulationFrame() - frameWhenEntered;
         
-        float timerScale = 0.08f * (maxFrames-framesElapsed)/maxFrames;
-
-        var tr = tentativeTimerUI.transform;
-        var sc = tentativeTimerUI.transform.localScale;
-        
-        tr.localScale = new Vector3(timerScale, sc.y,
-            sc.z);
+        tentativeTimerUI.transform.localScale = new Vector3(0.08f * (grid.MaxFramesForTempLetter-(grid.GetSimulationFrame() - frameWhenEntered))/grid.MaxFramesForTempLetter, tentativeTimerUI.transform.localScale.y,
+            tentativeTimerUI.transform.localScale.z);
     }
 }
