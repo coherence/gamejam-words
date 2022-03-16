@@ -20,6 +20,10 @@ public class Cell : MonoBehaviour
     {
         this.grid = grid;
         gridPosition = new Vector2Int(x, y);
+        
+        transform.position = grid.GetGlobalPositionFromGrid(gridPosition.x, gridPosition.y);
+        
+        textControl.text = Content;
     }
 
     public void SetFrame(long frame)
@@ -30,6 +34,8 @@ public class Cell : MonoBehaviour
     public void SetContent(string content)
     {
         this.Content = content;
+        
+        textControl.text = Content;
     }
 
     public void SetOwner(int owner)
@@ -51,12 +57,12 @@ public class Cell : MonoBehaviour
         {
             this.IsSolid = (bool)isSolid;
         }
+        
+        textControl.text = Content;
     }
     
     void Update()
     {
-        transform.position = grid.GetGlobalPositionFromGrid(gridPosition.x, gridPosition.y);
-        textControl.text = Content;
         solidBackground.enabled = IsSolid && !string.IsNullOrEmpty(Content);
         tentativeBackground.enabled = !IsSolid && !string.IsNullOrEmpty(Content);
 
@@ -72,7 +78,5 @@ public class Cell : MonoBehaviour
         
         tr.localScale = new Vector3(timerScale, sc.y,
             sc.z);
-
-        debugText.text = "";//(!IsSolid && !string.IsNullOrEmpty(Content)) ? $"{grid.MaxFramesForTempLetter - (grid.GetSimulationFrame()-frameWhenEntered)}" : "";
     }
 }
