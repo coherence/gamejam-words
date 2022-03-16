@@ -2308,7 +2308,7 @@ MonoBehaviour:
   monoBridge: {fileID: 1558409229}
   PauseAutomatically: 1
   grid: {fileID: 994830145}
-  Hash: 
+  hash: 
 --- !u!1 &1720635744
 GameObject:
   m_ObjectHideFlags: 0

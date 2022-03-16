@@ -21,7 +21,9 @@ MonoBehaviour:
   roomsWebPort: 42002
   schemaBakeFolderGuid: f7a54f0fcf2a8e14b8221633078b3c2b
   runtimeSettingsGuid: 42178759f38ce9a46821e14ecbb48966
+  prefabMapperGuid: f523075aec581684ebb1b1a2754eb2a3
   schemaBakeGenerateAsmdef: 0
+  prefabSyncingDefault: 2
   useToolkit: 1
   useCustomSchemas: 0
   worldSize: 2400

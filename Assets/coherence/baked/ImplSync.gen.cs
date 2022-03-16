@@ -45,15 +45,29 @@ namespace Coherence.Toolkit
 
 		private static ICoherenceComponentData[] CreateInitialComponents(CoherenceSync self)
 		{
-			//Debug.Log($"[CoherenceImplSync.CreateInitialComponents] {self} ({self.remoteVersionPrefabName})");
-
 			var comps = new List<ICoherenceComponentData>();
 			comps.Add(new WorldPosition() { value = self.coherencePosition });
 
-			if (!string.IsNullOrEmpty(self.remoteVersionPrefabName))
+			if (self.SelectedSynchronizedPrefabOption == CoherenceSync.SynchronizedPrefabOptions.UsePrefabMapper)
+			{
+				PrefabId prefabId = PrefabMapper.instance.GetPrefabId(self.PrefabGuid);
+				comps.Add(new GenericPrefabId() { value = (int)prefabId.Value });
+			}
+#if COHERENCE_DISABLE_NAME_BASED_PREFAB_LOADING
+			else
+			{
+				Debug.LogWarning($"{self} is using SelectedSynchronizedPrefabOption '{self.SelectedSynchronizedPrefabOption}', but name-based prefab loading has been disabled in this project. No remote prefab will be instantiated.");
+			}
+#else
+			else if (!string.IsNullOrEmpty(self.remoteVersionPrefabName))
 			{
 				comps.Add(new GenericPrefabReference() { prefab = self.remoteVersionPrefabName });
 			}
+			else
+			{
+				Debug.LogWarning($"{self} is missing remoteVersionPrefabName, SelectedSynchronizedPrefabOption={self.SelectedSynchronizedPrefabOption}");
+			}
+#endif
 
 			if (!string.IsNullOrEmpty(self.coherenceUUID))
 			{

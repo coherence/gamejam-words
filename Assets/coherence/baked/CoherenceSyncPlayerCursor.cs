@@ -432,7 +432,7 @@ namespace Coherence.Generated
 						break;
 					}
 
-					case 75:
+					case 76:
 					{
 						// PlayerCursor_Player
 						var data = (PlayerCursor_Player)change.Data;

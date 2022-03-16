@@ -20,6 +20,7 @@ namespace Coherence.Toolkit
 		static void OnRuntimeMethodLoad()
 		{
 			CoherenceMonoBridge.GenericPrefabReferenceTypeID = GenericPrefabReferenceTypeID;
+			CoherenceMonoBridge.GenericPrefabIdTypeID = GenericPrefabIdTypeID;
 			CoherenceMonoBridge.GetSpawnInfo = GetSpawnInfo;
 			CoherenceMonoBridge.GetRootDefinition = GetRootDefinition;
 		}
@@ -29,11 +30,16 @@ namespace Coherence.Toolkit
 			return Definition.InternalGenericPrefabReference;
 		}
 
+		private static uint GenericPrefabIdTypeID()
+		{
+			return Definition.InternalGenericPrefabId;
+		}
+
 		static (bool, CoherenceMonoBridge.SpawnInfo) GetSpawnInfo(IClient client, EntityUpdate entityUpdate)
 		{
 			var info = new CoherenceMonoBridge.SpawnInfo();
 			var gotPosition = false;
-			var gotPrefabReference = false;
+			var gotPrefab = false;
 
 			foreach (var comp in entityUpdate.Components.Updates.Store)
 			{
@@ -46,9 +52,15 @@ namespace Coherence.Toolkit
 					case WorldOrientation rot:
 						info.rotation = rot.value;
 						break;
+#if !COHERENCE_DISABLE_NAME_BASED_PREFAB_LOADING
 					case GenericPrefabReference prefabRef:
 						info.prefabName = prefabRef.prefab;
-						gotPrefabReference = true;
+						gotPrefab = true;
+						break;
+#endif
+					case GenericPrefabId prefabId:
+						info.prefabId = new PrefabId(prefabId.value);
+						gotPrefab = true;
 						break;
 					case ConnectedEntity connectedEntity:
 						info.connectedEntity = connectedEntity.value;
@@ -58,12 +70,12 @@ namespace Coherence.Toolkit
 						info.connectionType = (ConnectionType)con.type;
 						break;
 					case UniqueID uid:
-					    info.uniqueId = uid.uuid;
-					    break;
+						info.uniqueId = uid.uuid;
+						break;
 				}
 			}
 
-			var shouldSpawn = (gotPosition && gotPrefabReference) || info.clientId.HasValue;
+			var shouldSpawn = (gotPosition && gotPrefab) || info.clientId.HasValue;
 
 			return (shouldSpawn, info);
 		}

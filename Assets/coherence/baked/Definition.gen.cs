@@ -14,7 +14,7 @@ namespace Coherence.Generated
 
 	public class Definition : IDefinition
 	{
-		public const string schemaId = "86149435388a9e45bd9bbdd3e42c74c398c95e5a";
+		public const string schemaId = "4dd898b480f5e1a60fbf378c49c7de01d985356d";
 		public const uint InternalWorldPosition = 0;
 		public const uint InternalWorldOrientation = 1;
 		public const uint InternalLocalUser = 2;
@@ -30,67 +30,68 @@ namespace Coherence.Generated
 		public const uint InternalTagQuery = 12;
 		public const uint InternalInputOwnerComponent = 13;
 		public const uint InternalGenericPrefabReference = 14;
-		public const uint InternalGenericScale = 15;
-		public const uint InternalGenericFieldInt0 = 16;
-		public const uint InternalGenericFieldInt1 = 17;
-		public const uint InternalGenericFieldInt2 = 18;
-		public const uint InternalGenericFieldInt3 = 19;
-		public const uint InternalGenericFieldInt4 = 20;
-		public const uint InternalGenericFieldInt5 = 21;
-		public const uint InternalGenericFieldInt6 = 22;
-		public const uint InternalGenericFieldInt7 = 23;
-		public const uint InternalGenericFieldInt8 = 24;
-		public const uint InternalGenericFieldInt9 = 25;
-		public const uint InternalGenericFieldBool0 = 26;
-		public const uint InternalGenericFieldBool1 = 27;
-		public const uint InternalGenericFieldBool2 = 28;
-		public const uint InternalGenericFieldBool3 = 29;
-		public const uint InternalGenericFieldBool4 = 30;
-		public const uint InternalGenericFieldBool5 = 31;
-		public const uint InternalGenericFieldBool6 = 32;
-		public const uint InternalGenericFieldBool7 = 33;
-		public const uint InternalGenericFieldBool8 = 34;
-		public const uint InternalGenericFieldBool9 = 35;
-		public const uint InternalGenericFieldFloat0 = 36;
-		public const uint InternalGenericFieldFloat1 = 37;
-		public const uint InternalGenericFieldFloat2 = 38;
-		public const uint InternalGenericFieldFloat3 = 39;
-		public const uint InternalGenericFieldFloat4 = 40;
-		public const uint InternalGenericFieldFloat5 = 41;
-		public const uint InternalGenericFieldFloat6 = 42;
-		public const uint InternalGenericFieldFloat7 = 43;
-		public const uint InternalGenericFieldFloat8 = 44;
-		public const uint InternalGenericFieldFloat9 = 45;
-		public const uint InternalGenericFieldVector0 = 46;
-		public const uint InternalGenericFieldVector1 = 47;
-		public const uint InternalGenericFieldVector2 = 48;
-		public const uint InternalGenericFieldVector3 = 49;
-		public const uint InternalGenericField2dVector0 = 50;
-		public const uint InternalGenericField2dVector1 = 51;
-		public const uint InternalGenericField2dVector2 = 52;
-		public const uint InternalGenericField2dVector3 = 53;
-		public const uint InternalGenericFieldString0 = 54;
-		public const uint InternalGenericFieldString1 = 55;
-		public const uint InternalGenericFieldString2 = 56;
-		public const uint InternalGenericFieldString3 = 57;
-		public const uint InternalGenericFieldString4 = 58;
-		public const uint InternalGenericFieldQuaternion0 = 59;
-		public const uint InternalGenericFieldEntity0 = 60;
-		public const uint InternalGenericFieldEntity1 = 61;
-		public const uint InternalGenericFieldEntity2 = 62;
-		public const uint InternalGenericFieldEntity3 = 63;
-		public const uint InternalGenericFieldEntity4 = 64;
-		public const uint InternalGenericFieldEntity5 = 65;
-		public const uint InternalGenericFieldEntity6 = 66;
-		public const uint InternalGenericFieldEntity7 = 67;
-		public const uint InternalGenericFieldEntity8 = 68;
-		public const uint InternalGenericFieldEntity9 = 69;
-		public const uint InternalGenericFieldBytes0 = 70;
-		public const uint InternalGenericFieldLong0 = 71;
-		public const uint InternalGenericFieldLong1 = 72;
-		public const uint InternalGenericFieldLong2 = 73;
-		public const uint InternalGenericFieldLong3 = 74;
-		public const uint InternalPlayerCursor_Player = 75;
+		public const uint InternalGenericPrefabId = 15;
+		public const uint InternalGenericScale = 16;
+		public const uint InternalGenericFieldInt0 = 17;
+		public const uint InternalGenericFieldInt1 = 18;
+		public const uint InternalGenericFieldInt2 = 19;
+		public const uint InternalGenericFieldInt3 = 20;
+		public const uint InternalGenericFieldInt4 = 21;
+		public const uint InternalGenericFieldInt5 = 22;
+		public const uint InternalGenericFieldInt6 = 23;
+		public const uint InternalGenericFieldInt7 = 24;
+		public const uint InternalGenericFieldInt8 = 25;
+		public const uint InternalGenericFieldInt9 = 26;
+		public const uint InternalGenericFieldBool0 = 27;
+		public const uint InternalGenericFieldBool1 = 28;
+		public const uint InternalGenericFieldBool2 = 29;
+		public const uint InternalGenericFieldBool3 = 30;
+		public const uint InternalGenericFieldBool4 = 31;
+		public const uint InternalGenericFieldBool5 = 32;
+		public const uint InternalGenericFieldBool6 = 33;
+		public const uint InternalGenericFieldBool7 = 34;
+		public const uint InternalGenericFieldBool8 = 35;
+		public const uint InternalGenericFieldBool9 = 36;
+		public const uint InternalGenericFieldFloat0 = 37;
+		public const uint InternalGenericFieldFloat1 = 38;
+		public const uint InternalGenericFieldFloat2 = 39;
+		public const uint InternalGenericFieldFloat3 = 40;
+		public const uint InternalGenericFieldFloat4 = 41;
+		public const uint InternalGenericFieldFloat5 = 42;
+		public const uint InternalGenericFieldFloat6 = 43;
+		public const uint InternalGenericFieldFloat7 = 44;
+		public const uint InternalGenericFieldFloat8 = 45;
+		public const uint InternalGenericFieldFloat9 = 46;
+		public const uint InternalGenericFieldVector0 = 47;
+		public const uint InternalGenericFieldVector1 = 48;
+		public const uint InternalGenericFieldVector2 = 49;
+		public const uint InternalGenericFieldVector3 = 50;
+		public const uint InternalGenericField2dVector0 = 51;
+		public const uint InternalGenericField2dVector1 = 52;
+		public const uint InternalGenericField2dVector2 = 53;
+		public const uint InternalGenericField2dVector3 = 54;
+		public const uint InternalGenericFieldString0 = 55;
+		public const uint InternalGenericFieldString1 = 56;
+		public const uint InternalGenericFieldString2 = 57;
+		public const uint InternalGenericFieldString3 = 58;
+		public const uint InternalGenericFieldString4 = 59;
+		public const uint InternalGenericFieldQuaternion0 = 60;
+		public const uint InternalGenericFieldEntity0 = 61;
+		public const uint InternalGenericFieldEntity1 = 62;
+		public const uint InternalGenericFieldEntity2 = 63;
+		public const uint InternalGenericFieldEntity3 = 64;
+		public const uint InternalGenericFieldEntity4 = 65;
+		public const uint InternalGenericFieldEntity5 = 66;
+		public const uint InternalGenericFieldEntity6 = 67;
+		public const uint InternalGenericFieldEntity7 = 68;
+		public const uint InternalGenericFieldEntity8 = 69;
+		public const uint InternalGenericFieldEntity9 = 70;
+		public const uint InternalGenericFieldBytes0 = 71;
+		public const uint InternalGenericFieldLong0 = 72;
+		public const uint InternalGenericFieldLong1 = 73;
+		public const uint InternalGenericFieldLong2 = 74;
+		public const uint InternalGenericFieldLong3 = 75;
+		public const uint InternalPlayerCursor_Player = 76;
 		public const uint InternalAuthorityTransfer = 0;
 		public const uint InternalGenericCommand = 1;
 		public const uint InternalTransferAction = 0;
@@ -112,67 +113,68 @@ namespace Coherence.Generated
 			{ 12, "TagQuery" },
 			{ 13, "InputOwnerComponent" },
 			{ 14, "GenericPrefabReference" },
-			{ 15, "GenericScale" },
-			{ 16, "GenericFieldInt0" },
-			{ 17, "GenericFieldInt1" },
-			{ 18, "GenericFieldInt2" },
-			{ 19, "GenericFieldInt3" },
-			{ 20, "GenericFieldInt4" },
-			{ 21, "GenericFieldInt5" },
-			{ 22, "GenericFieldInt6" },
-			{ 23, "GenericFieldInt7" },
-			{ 24, "GenericFieldInt8" },
-			{ 25, "GenericFieldInt9" },
-			{ 26, "GenericFieldBool0" },
-			{ 27, "GenericFieldBool1" },
-			{ 28, "GenericFieldBool2" },
-			{ 29, "GenericFieldBool3" },
-			{ 30, "GenericFieldBool4" },
-			{ 31, "GenericFieldBool5" },
-			{ 32, "GenericFieldBool6" },
-			{ 33, "GenericFieldBool7" },
-			{ 34, "GenericFieldBool8" },
-			{ 35, "GenericFieldBool9" },
-			{ 36, "GenericFieldFloat0" },
-			{ 37, "GenericFieldFloat1" },
-			{ 38, "GenericFieldFloat2" },
-			{ 39, "GenericFieldFloat3" },
-			{ 40, "GenericFieldFloat4" },
-			{ 41, "GenericFieldFloat5" },
-			{ 42, "GenericFieldFloat6" },
-			{ 43, "GenericFieldFloat7" },
-			{ 44, "GenericFieldFloat8" },
-			{ 45, "GenericFieldFloat9" },
-			{ 46, "GenericFieldVector0" },
-			{ 47, "GenericFieldVector1" },
-			{ 48, "GenericFieldVector2" },
-			{ 49, "GenericFieldVector3" },
-			{ 50, "GenericField2dVector0" },
-			{ 51, "GenericField2dVector1" },
-			{ 52, "GenericField2dVector2" },
-			{ 53, "GenericField2dVector3" },
-			{ 54, "GenericFieldString0" },
-			{ 55, "GenericFieldString1" },
-			{ 56, "GenericFieldString2" },
-			{ 57, "GenericFieldString3" },
-			{ 58, "GenericFieldString4" },
-			{ 59, "GenericFieldQuaternion0" },
-			{ 60, "GenericFieldEntity0" },
-			{ 61, "GenericFieldEntity1" },
-			{ 62, "GenericFieldEntity2" },
-			{ 63, "GenericFieldEntity3" },
-			{ 64, "GenericFieldEntity4" },
-			{ 65, "GenericFieldEntity5" },
-			{ 66, "GenericFieldEntity6" },
-			{ 67, "GenericFieldEntity7" },
-			{ 68, "GenericFieldEntity8" },
-			{ 69, "GenericFieldEntity9" },
-			{ 70, "GenericFieldBytes0" },
-			{ 71, "GenericFieldLong0" },
-			{ 72, "GenericFieldLong1" },
-			{ 73, "GenericFieldLong2" },
-			{ 74, "GenericFieldLong3" },
-			{ 75, "PlayerCursor_Player" },
+			{ 15, "GenericPrefabId" },
+			{ 16, "GenericScale" },
+			{ 17, "GenericFieldInt0" },
+			{ 18, "GenericFieldInt1" },
+			{ 19, "GenericFieldInt2" },
+			{ 20, "GenericFieldInt3" },
+			{ 21, "GenericFieldInt4" },
+			{ 22, "GenericFieldInt5" },
+			{ 23, "GenericFieldInt6" },
+			{ 24, "GenericFieldInt7" },
+			{ 25, "GenericFieldInt8" },
+			{ 26, "GenericFieldInt9" },
+			{ 27, "GenericFieldBool0" },
+			{ 28, "GenericFieldBool1" },
+			{ 29, "GenericFieldBool2" },
+			{ 30, "GenericFieldBool3" },
+			{ 31, "GenericFieldBool4" },
+			{ 32, "GenericFieldBool5" },
+			{ 33, "GenericFieldBool6" },
+			{ 34, "GenericFieldBool7" },
+			{ 35, "GenericFieldBool8" },
+			{ 36, "GenericFieldBool9" },
+			{ 37, "GenericFieldFloat0" },
+			{ 38, "GenericFieldFloat1" },
+			{ 39, "GenericFieldFloat2" },
+			{ 40, "GenericFieldFloat3" },
+			{ 41, "GenericFieldFloat4" },
+			{ 42, "GenericFieldFloat5" },
+			{ 43, "GenericFieldFloat6" },
+			{ 44, "GenericFieldFloat7" },
+			{ 45, "GenericFieldFloat8" },
+			{ 46, "GenericFieldFloat9" },
+			{ 47, "GenericFieldVector0" },
+			{ 48, "GenericFieldVector1" },
+			{ 49, "GenericFieldVector2" },
+			{ 50, "GenericFieldVector3" },
+			{ 51, "GenericField2dVector0" },
+			{ 52, "GenericField2dVector1" },
+			{ 53, "GenericField2dVector2" },
+			{ 54, "GenericField2dVector3" },
+			{ 55, "GenericFieldString0" },
+			{ 56, "GenericFieldString1" },
+			{ 57, "GenericFieldString2" },
+			{ 58, "GenericFieldString3" },
+			{ 59, "GenericFieldString4" },
+			{ 60, "GenericFieldQuaternion0" },
+			{ 61, "GenericFieldEntity0" },
+			{ 62, "GenericFieldEntity1" },
+			{ 63, "GenericFieldEntity2" },
+			{ 64, "GenericFieldEntity3" },
+			{ 65, "GenericFieldEntity4" },
+			{ 66, "GenericFieldEntity5" },
+			{ 67, "GenericFieldEntity6" },
+			{ 68, "GenericFieldEntity7" },
+			{ 69, "GenericFieldEntity8" },
+			{ 70, "GenericFieldEntity9" },
+			{ 71, "GenericFieldBytes0" },
+			{ 72, "GenericFieldLong0" },
+			{ 73, "GenericFieldLong1" },
+			{ 74, "GenericFieldLong2" },
+			{ 75, "GenericFieldLong3" },
+			{ 76, "PlayerCursor_Player" },
 		};
 
 		public static string ComponentNameForTypeId(uint typeId)
@@ -224,6 +226,8 @@ namespace Coherence.Generated
 					return InputOwnerComponent.Deserialize(inProtocolStream);
 				case InternalGenericPrefabReference:
 					return GenericPrefabReference.Deserialize(inProtocolStream);
+				case InternalGenericPrefabId:
+					return GenericPrefabId.Deserialize(inProtocolStream);
 				case InternalGenericScale:
 					return GenericScale.Deserialize(inProtocolStream);
 				case InternalGenericFieldInt0:
@@ -399,6 +403,9 @@ namespace Coherence.Generated
 					break;
 				case InternalGenericPrefabReference:
 					GenericPrefabReference.Serialize((GenericPrefabReference)data, mask, protocolStream);
+					break;
+				case InternalGenericPrefabId:
+					GenericPrefabId.Serialize((GenericPrefabId)data, mask, protocolStream);
 					break;
 				case InternalGenericScale:
 					GenericScale.Serialize((GenericScale)data, mask, protocolStream);
