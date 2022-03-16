@@ -183,6 +183,14 @@ public class Player : MonoBehaviour
             cursorDirDown.enabled = lastTypingDirection == TypingDirection.DOWN;
             cursorDirRight.enabled = lastTypingDirection == TypingDirection.RIGHT;
         }
+        else
+        {
+            cursorMine.enabled = false;
+            cursor.enabled = true;
+
+            cursorDirDown.enabled = false;
+            cursorDirRight.enabled = false;
+        }
         
         if (Input.GetKeyDown(KeyCode.F2))
         {
