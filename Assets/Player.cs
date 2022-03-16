@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Coherence.Toolkit;
 using UnityEngine;
@@ -52,7 +53,7 @@ public class Player : MonoBehaviour
     private long demoPauseFrame;
 
     public bool lastTypedWasLetter = false;
-    public TypingDirection lastTypingDirection = TypingDirection.RIGHT;
+    public TypingDirection lastTypingDirection = TypingDirection.NONE;
     public enum TypingDirection
     {
         RIGHT = 0,
@@ -61,6 +62,16 @@ public class Player : MonoBehaviour
         LEFT = 3,
         NONE = 100
     };
+
+    public enum TypingMode
+    {
+        AUTOMATIC = 0,
+        ALWAYS_RIGHT = 1,
+        ALWAYS_DOWN = 2,
+        MANUAL = 3
+    }
+
+    public TypingMode typingMode = TypingMode.AUTOMATIC;
 
     private static DemoKey[] BuildDemo(KeyCode[] keys, int delay)
     {
@@ -141,6 +152,27 @@ public class Player : MonoBehaviour
 
         if (sync.isSimulated)
         {
+            if(!grid.IsPaused)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    int tdi = (int)typingMode;
+                    tdi++;
+                    if (tdi >= Enum.GetNames(typeof(TypingMode)).Length)
+                    {
+                        tdi = 0;
+                    }
+
+                    typingMode = (TypingMode) tdi;
+                    ChangeTypingDirectionBasedOnMode();
+                }
+            }
+
+            if (grid)
+            {
+                grid.typingModeCaption.text = $"Direction: {typingMode.ToString().Replace("_"," ")}";
+            }
+            
             playerName = grid.playerName;
 
             cursorMine.enabled = true;
@@ -149,7 +181,7 @@ public class Player : MonoBehaviour
             cursorDirDown.enabled = lastTypingDirection == TypingDirection.DOWN;
             cursorDirRight.enabled = lastTypingDirection == TypingDirection.RIGHT;
         }
-
+        
         if (Input.GetKeyDown(KeyCode.F2))
         {
             string output = "KeyCode[] demoKeys = new KeyCode[] {";
@@ -330,34 +362,66 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (lastTypedWasLetter)
+            if (typingMode == TypingMode.AUTOMATIC)
             {
-                if (x > 0)
-                {
-                    lastTypingDirection = TypingDirection.RIGHT;
-                }
-                else
-                if (y < 0)
-                {
-                    lastTypingDirection = TypingDirection.DOWN;
-                }
-                else
-                {
-                    if (!backspace)
-                    {
-                        lastTypingDirection = TypingDirection.NONE;
-                    }
-                }
+                DetectAutomaticTypingDirection(x, y, backspace);
             }
             else
             {
-                lastTypingDirection = TypingDirection.NONE;
+                ChangeTypingDirectionBasedOnMode();
             }
-            
+
             lastTypedWasLetter = false;
         }
         
         var movement = new Vector2(x, y).normalized;
         input.SetAxisState("Mov", movement);
+    }
+
+    private void ChangeTypingDirectionBasedOnMode()
+    {
+        switch (typingMode)
+        {
+            case TypingMode.AUTOMATIC:
+                break;
+                
+            case TypingMode.MANUAL:
+                lastTypingDirection = TypingDirection.NONE;
+                break;
+                
+            case TypingMode.ALWAYS_DOWN:
+                lastTypingDirection = TypingDirection.DOWN;
+                break;
+                
+            case TypingMode.ALWAYS_RIGHT:
+                lastTypingDirection = TypingDirection.RIGHT;
+                break;
+        }
+    }
+
+    private void DetectAutomaticTypingDirection(int x, int y, bool backspace)
+    {
+        if (lastTypedWasLetter)
+        {
+            if (x > 0)
+            {
+                lastTypingDirection = TypingDirection.RIGHT;
+            }
+            else if (y < 0)
+            {
+                lastTypingDirection = TypingDirection.DOWN;
+            }
+            else
+            {
+                if (!backspace)
+                {
+                    lastTypingDirection = TypingDirection.NONE;
+                }
+            }
+        }
+        else
+        {
+            lastTypingDirection = TypingDirection.NONE;
+        }
     }
 }

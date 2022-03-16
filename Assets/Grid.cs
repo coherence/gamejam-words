@@ -56,6 +56,8 @@ public class Grid : MonoBehaviour
     public CoherenceMonoBridge monoBridge;
     public Simulation simulation;
 
+    public TMPro.TMP_Text typingModeCaption;
+
     public long startFrame = 0;
     
     public bool IsPaused

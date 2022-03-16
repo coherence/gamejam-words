@@ -35,11 +35,11 @@ public class CameraFollow : MonoBehaviour
         {
             var playerPos = player.transform.position;
             playerPos.z = transform.position.z;
-            targetPosition = playerPos;
+            targetPosition = Vector3.Lerp(targetPosition, playerPos, Time.deltaTime * 0.6f);
             
             if (Vector3.SqrMagnitude(transform.position - targetPosition) > 0.5f)
             {
-                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 0.2f);
+                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 0.5f);
             }
         }
         
