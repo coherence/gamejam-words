@@ -729,4 +729,5 @@ MonoBehaviour:
   cursorDirDown: {fileID: 2658476097354269915}
   startOnFrame: 0
   lastTypedWasLetter: 0
-  lastTypingDirection: 0
+  lastTypingDirection: 100
+  typingMode: 0

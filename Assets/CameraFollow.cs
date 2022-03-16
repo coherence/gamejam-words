@@ -9,13 +9,35 @@ public class CameraFollow : MonoBehaviour
 
     private Vector3 targetPosition;
 
+    public bool cameraNear = true;
+    public float nearSize = 10f, farSize = 20f;
+
+    private Vector3 originalCameraPos;
+    
     void Awake()
     {
-        targetPosition = transform.position;
+        originalCameraPos = targetPosition = transform.position;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            cameraNear = !cameraNear;
+
+            Camera.main.orthographicSize = cameraNear ? nearSize : farSize;
+        }
     }
 
     void LateUpdate()
     {
+        if (cameraNear == false)
+        {
+            transform.position = originalCameraPos;
+            Camera.main.orthographicSize = cameraNear ? nearSize : farSize;
+            return;
+        }
+        
         if (player == null)
         {
             var objs = FindObjectsOfType<Player>();

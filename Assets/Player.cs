@@ -121,6 +121,8 @@ public class Player : MonoBehaviour
         keyPresses = new Hashtable {[KeyCode.UpArrow] = 0f, [KeyCode.DownArrow] = 0f, [KeyCode.LeftArrow] = 0f, [KeyCode.RightArrow] = 0f, [KeyCode.Backspace] = 0f};
 
         InitAlphabet();
+        
+        ChangeTypingDirectionBasedOnMode();
     }
     
     private void InitAlphabet()
