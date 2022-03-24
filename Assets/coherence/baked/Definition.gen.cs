@@ -14,7 +14,7 @@ namespace Coherence.Generated
 
 	public class Definition : IDefinition
 	{
-		public const string schemaId = "4dd898b480f5e1a60fbf378c49c7de01d985356d";
+		public const string schemaId = "95ceebd9de69a5d2aa95e297e20b439e0e87b5eb";
 		public const uint InternalWorldPosition = 0;
 		public const uint InternalWorldOrientation = 1;
 		public const uint InternalLocalUser = 2;
@@ -91,7 +91,9 @@ namespace Coherence.Generated
 		public const uint InternalGenericFieldLong1 = 73;
 		public const uint InternalGenericFieldLong2 = 74;
 		public const uint InternalGenericFieldLong3 = 75;
-		public const uint InternalPlayerCursor_Player = 76;
+		public const uint InternalGenericFieldColor0 = 76;
+		public const uint InternalGenericFieldColor1 = 77;
+		public const uint InternalPlayerCursor_Player = 78;
 		public const uint InternalAuthorityTransfer = 0;
 		public const uint InternalGenericCommand = 1;
 		public const uint InternalTransferAction = 0;
@@ -174,7 +176,9 @@ namespace Coherence.Generated
 			{ 73, "GenericFieldLong1" },
 			{ 74, "GenericFieldLong2" },
 			{ 75, "GenericFieldLong3" },
-			{ 76, "PlayerCursor_Player" },
+			{ 76, "GenericFieldColor0" },
+			{ 77, "GenericFieldColor1" },
+			{ 78, "PlayerCursor_Player" },
 		};
 
 		public static string ComponentNameForTypeId(uint typeId)
@@ -348,6 +352,10 @@ namespace Coherence.Generated
 					return GenericFieldLong2.Deserialize(inProtocolStream);
 				case InternalGenericFieldLong3:
 					return GenericFieldLong3.Deserialize(inProtocolStream);
+				case InternalGenericFieldColor0:
+					return GenericFieldColor0.Deserialize(inProtocolStream);
+				case InternalGenericFieldColor1:
+					return GenericFieldColor1.Deserialize(inProtocolStream);
 				case InternalPlayerCursor_Player:
 					return PlayerCursor_Player.Deserialize(inProtocolStream);
 				default:
@@ -586,6 +594,12 @@ namespace Coherence.Generated
 					break;
 				case InternalGenericFieldLong3:
 					GenericFieldLong3.Serialize((GenericFieldLong3)data, mask, protocolStream);
+					break;
+				case InternalGenericFieldColor0:
+					GenericFieldColor0.Serialize((GenericFieldColor0)data, mask, protocolStream);
+					break;
+				case InternalGenericFieldColor1:
+					GenericFieldColor1.Serialize((GenericFieldColor1)data, mask, protocolStream);
 					break;
 				case InternalPlayerCursor_Player:
 					PlayerCursor_Player.Serialize((PlayerCursor_Player)data, mask, protocolStream);

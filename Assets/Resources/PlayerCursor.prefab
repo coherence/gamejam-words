@@ -512,9 +512,6 @@ MonoBehaviour:
   OnAuthorityTransferRejected:
     m_PersistentCalls:
       m_Calls: []
-  OnAuthorityRequested:
-    m_PersistentCalls:
-      m_Calls: []
   OnConnectedEntityChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -595,6 +592,44 @@ MonoBehaviour:
         maxRange: 0
         precision: 0
         scale: 0
+      sharedBinding: {fileID: 0}
+  - name: ping
+    memberKind: 1
+    memberAssemblyType: System.Int32, mscorlib
+    parameterAssemblyTypes: []
+    returnAssemblyType: 
+    compatibility: -1
+    routing: 1
+    interpolationSettings: {fileID: 0}
+    component: {fileID: 694873017490517114}
+    archetypeData:
+      type: 1
+      minRange: 0
+      maxRange: 22768
+      scale: 0
+      fields:
+      - type: 1
+        bits: 15
+        minRange: 0
+        maxRange: 22768
+        precision: 0
+        scale: 0
+      sharedBinding: {fileID: 0}
+  - name: fps
+    memberKind: 1
+    memberAssemblyType: System.Single, mscorlib
+    parameterAssemblyTypes: []
+    returnAssemblyType: 
+    compatibility: -1
+    routing: 1
+    interpolationSettings: {fileID: 0}
+    component: {fileID: 694873017490517114}
+    archetypeData:
+      type: 0
+      minRange: 0
+      maxRange: 0
+      scale: 0
+      fields: []
       sharedBinding: {fileID: 0}
   customBindings:
   - descriptor:
@@ -722,6 +757,8 @@ MonoBehaviour:
   gridPosition: {x: 40, y: 25}
   score: 0
   clientID: 0
+  ping: 0
+  fps: 0
   inputSamplingDelay: 0
   cursor: {fileID: 1914339650}
   cursorMine: {fileID: 6711004801423553829}

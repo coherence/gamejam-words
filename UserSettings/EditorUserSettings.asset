@@ -6,13 +6,13 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     Coherence.CodeGen.LastInstallation:
-      value: 15011a57541b5d
+      value: 15011a57571b58
       flags: 0
     Coherence.LastInstallation:
       value: 531f0c48551819490818052707
       flags: 0
     Coherence.Settings.ActiveSchemas.Hash:
-      value: 52520655510358085b580d2640775e47434f4a787f2a77627c7d4f6bbbb2613c
+      value: 5005055f5200580258570f75157109434f411d782d717367797c456ae6b7643d
       flags: 0
     Coherence.Settings.CustomToolsPath:
       value: 200b68110a4702670e01042702265113132b1a3f25242223
@@ -21,7 +21,7 @@ EditorUserSettings:
       value: 5a02550453500b085c5e542444725a43174f4b2c2d7127322b284836b1e2656b
       flags: 0
     Coherence.Settings.UseCustomTools:
-      value: 164251
+      value: 
       flags: 0
     RecentlyUsedScenePath-0:
       value: 22424703114646680e0b0227036c6c111b07142f1f2b233e2867083debf42d

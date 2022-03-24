@@ -1,9 +1,9 @@
-using System;
 using System.Collections;
-using Coherence;
+using System.Collections.Generic;
+using Coherence.Log;
 using Coherence.Toolkit;
-using Unity.VisualScripting;
 using UnityEngine;
+using Logger = Coherence.Log.Logger;
 
 public class Simulation : CoherenceInputSimulation<SimulationState>
 {
@@ -12,7 +12,28 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
     public Grid grid;
     public string hash;
     public long Frame => CurrentSimulationFrame;
-    
+
+    private Logger logger = Log.GetLogger<Simulation>();
+    private List<(string, object)> logCache = new List<(string, object)>();
+
+    private void PrintSnapshot(string context)
+    {
+        logCache.Clear();
+        logCache.Add(("Context", context));
+        logCache.Add(("FrameDiff", monoBridge.NetworkTime.ClientSimulationFrame.Frame - monoBridge.NetworkTime.ServerSimulationFrame.Frame));
+        logCache.Add(("AckFrame", inputManager.AcknowledgedFrame));
+        logCache.Add(("SimFrame", CurrentSimulationFrame));
+        logCache.Add(("RecvFrame", inputManager.CommonReceivedFrame));
+        logCache.Add(("Pause", inputManager.ShouldPause));
+        foreach (ICoherenceInput input in inputManager.AllInputs)
+        {
+            logCache.Add((input.Owner.ToString(),
+                $"Ack: {input.LastAcknowledgedFrame}, Recv: {input.LastReceivedFrame}, Sent: {input.LastSentFrame}"));
+        }
+
+        logger.Debug($"Input snapshot", logCache.ToArray());
+    }
+
     protected override void SetInputs(CoherenceClientConnection client)
     {
         var player = client.GameObject.GetComponent<Player>();
@@ -22,6 +43,12 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
     protected override void OnStart()
     {
         SimulationEnabled = false;
+        monoBridge.OnTimeReset += () => PrintSnapshot("TimeReset");
+    }
+
+    protected override void OnDisconnected()
+    {
+        PrintSnapshot("OnDisconnected");
     }
 
     protected override void OnBeforeSimulate()
@@ -141,16 +168,19 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
     protected override void OnClientJoined(CoherenceClientConnection client)
     {
         grid.AddPlayer(client);
+        PrintSnapshot("ClientJoined");
     }
 
     protected override void OnClientLeft(CoherenceClientConnection client)
     {
         grid.RemovePlayer(client);
+        PrintSnapshot("ClientLeft");
     }
     
     protected override void OnPauseChange(bool isPaused)
     {
-        Debug.Log($"[{CurrentSimulationFrame}] Pause: {isPaused}");
+        PrintSnapshot($"Pause:{isPaused}");
+        //Debug.Log($"[{CurrentSimulationFrame}] Pause: {isPaused}");
         //grid.TogglePaused(isPaused);
     }
 }

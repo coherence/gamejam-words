@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Coherence.Runtime;
 using Coherence.Toolkit;
 using UnityEngine;
 
@@ -27,6 +28,10 @@ public class Player : MonoBehaviour
 
     public int score;
     public int clientID;
+    public int ping;
+    public float fps;
+    public long lastFrame => input.IsProducer ? input.LastSentFrame : input.LastReceivedFrame;
+    public long currentFrame => input.CurrentSimulationFrame;
     
     private CoherenceInput input;
     private CoherenceSync sync;
@@ -51,6 +56,10 @@ public class Player : MonoBehaviour
     private bool demoKeysReplaying;
     private long demoStartFrame;
     private long demoPauseFrame;
+
+    private float pingUpdateTime;
+    private int frames;
+    private float fpsUpdateTime;
 
     public bool lastTypedWasLetter = false;
     public TypingDirection lastTypingDirection = TypingDirection.NONE;
@@ -154,6 +163,22 @@ public class Player : MonoBehaviour
 
         if (sync.isSimulated)
         {
+            float now = Time.unscaledTime;
+            
+            frames++;
+            if (now - fpsUpdateTime > 1f)
+            {
+                fps = frames / (now - fpsUpdateTime);
+                fpsUpdateTime = now;
+                frames = 0;
+            }
+            
+            if (now - pingUpdateTime > 1f)
+            {
+                pingUpdateTime = now;
+                ping = grid.monoBridge.Client?.Ping.RoundTripMs ?? 0;
+            }
+            
             if(!grid.IsPaused)
             {
                 if (Input.GetKeyDown(KeyCode.Space))

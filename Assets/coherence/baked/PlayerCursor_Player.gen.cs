@@ -20,10 +20,12 @@ namespace Coherence.Generated
 	{
 		public string playerName;
 		public long startOnFrame;
+		public int ping;
+		public float fps;
 
 		public override string ToString()
 		{
-			return $"PlayerCursor_Player(playerName: {playerName}, startOnFrame: {startOnFrame})";
+			return $"PlayerCursor_Player(playerName: {playerName}, startOnFrame: {startOnFrame}, ping: {ping}, fps: {fps})";
 		}
 
 		public uint GetComponentType() => Definition.InternalPlayerCursor_Player;
@@ -34,6 +36,11 @@ namespace Coherence.Generated
 
 		public AbsoluteSimulationFrame Frame;
 
+		private static readonly int _ping_Min = -9999;
+		private static readonly int _ping_Max = 9999;
+		private static readonly float _fps_Min = -2400f;
+		private static readonly float _fps_Max = 2400f;
+		private static readonly float _fps_Epsilon = 0.000286102294921875f;
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -55,6 +62,16 @@ namespace Coherence.Generated
 				startOnFrame = other.startOnFrame;
 			}
 			mask >>= 1;
+			if ((mask & 0x01) != 0)
+			{
+				ping = other.ping;
+			}
+			mask >>= 1;
+			if ((mask & 0x01) != 0)
+			{
+				fps = other.fps;
+			}
+			mask >>= 1;
 			return this;
 		}
 
@@ -68,6 +85,12 @@ namespace Coherence.Generated
 			}
 			if (startOnFrame != newData.startOnFrame) {
 				mask |= 0b00000000000000000000000000000010;
+			}
+			if (ping != newData.ping) {
+				mask |= 0b00000000000000000000000000000100;
+			}
+			if (fps.DiffersFrom(newData.fps, _fps_Epsilon)) {
+				mask |= 0b00000000000000000000000000001000;
 			}
 
 			return mask;
@@ -85,6 +108,20 @@ namespace Coherence.Generated
 				bitStream.WriteInt64(data.startOnFrame);
 			}
 			mask >>= 1;
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				Coherence.Utils.Bounds.Check(data.ping, _ping_Min, _ping_Max, "PlayerCursor_Player.ping");
+
+				bitStream.WriteIntegerRange(data.ping, 15, -9999);
+			}
+			mask >>= 1;
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				Coherence.Utils.Bounds.Check(data.fps, _fps_Min, _fps_Max, "PlayerCursor_Player.fps");
+
+				bitStream.WriteFixedPoint(CoherenceToUnityConverters.FromUnityfloat(data.fps), 24, 2400);
+			}
+			mask >>= 1;
 		}
 
 		public static (PlayerCursor_Player, uint, uint?) Deserialize(InProtocolBitStream bitStream)
@@ -100,6 +137,16 @@ namespace Coherence.Generated
 			{
 				val.startOnFrame = bitStream.ReadInt64();
 				mask |= 0b00000000000000000000000000000010;
+			}
+			if (bitStream.ReadMask())
+			{
+				val.ping = bitStream.ReadIntegerRange(15, -9999);
+				mask |= 0b00000000000000000000000000000100;
+			}
+			if (bitStream.ReadMask())
+			{
+				val.fps = CoherenceToUnityConverters.ToUnityfloat(bitStream.ReadFixedPoint(24, 2400));
+				mask |= 0b00000000000000000000000000001000;
 			}
 			return (val, mask, null);
 		}

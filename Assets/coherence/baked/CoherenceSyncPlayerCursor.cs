@@ -47,6 +47,12 @@ namespace Coherence.Generated
 
 		private IBinding InternalPlayerCursor_Player_PlayerCursor_Player_startOnFrame_Binding;
 
+		private IBinding InternalPlayerCursor_Player_PlayerCursor_Player_ping_Binding;
+
+		private IBinding InternalPlayerCursor_Player_PlayerCursor_Player_fps_Binding;
+		private InterpolationState<float> InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationState;
+		private NativeList<InterpolationSample<float>> InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationSamples;
+
 		private InputBuffer<TestCube> inputBuffer;
 		private TestCube currentInput;
 		private long lastAddedFrame = -1;
@@ -55,6 +61,8 @@ namespace Coherence.Generated
 		private CoherenceMonoBridge monoBridge => coherenceSync.MonoBridge;
 		private long currentSimulationFrame => coherenceInput.CurrentSimulationFrame;
 		private CoherenceInput coherenceInput;
+
+		private Dictionary<SerializeEntityID, EntityData> delayedEntityReferences;
 
 		protected void Awake()
 		{
@@ -86,6 +94,16 @@ namespace Coherence.Generated
 			{
 				Debug.LogError("[CoherenceSync] Couldn't find binding (Player, Assembly-CSharp).startOnFrame");
 			}
+
+			if (!coherenceSync.TryGetBinding(Type.GetType("Player, Assembly-CSharp"), "ping", out InternalPlayerCursor_Player_PlayerCursor_Player_ping_Binding))
+			{
+				Debug.LogError("[CoherenceSync] Couldn't find binding (Player, Assembly-CSharp).ping");
+			}
+
+			if (!coherenceSync.TryGetBinding(Type.GetType("Player, Assembly-CSharp"), "fps", out InternalPlayerCursor_Player_PlayerCursor_Player_fps_Binding))
+			{
+				Debug.LogError("[CoherenceSync] Couldn't find binding (Player, Assembly-CSharp).fps");
+			}
 			if (coherenceInput.UseFixedSimulationFrames)
 			{
 				monoBridge.OnLateFixedNetworkUpdate += SendInputState;
@@ -116,6 +134,7 @@ namespace Coherence.Generated
 		{
 			coherenceSync.interpolationCollection.float3SampleSet.Release(InternalWorldPosition_Translation_value_InterpolationSamples, InternalWorldPosition_Translation_value_Binding);
 			coherenceSync.interpolationCollection.quaternionSampleSet.Release(InternalWorldOrientation_Rotation_value_InterpolationSamples, InternalWorldOrientation_Rotation_value_Binding);
+			coherenceSync.interpolationCollection.floatSampleSet.Release(InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationSamples, InternalPlayerCursor_Player_PlayerCursor_Player_fps_Binding);
 			if (monoBridge != null)
 			{
 				monoBridge.OnLateFixedNetworkUpdate -= SendInputState;
@@ -124,11 +143,11 @@ namespace Coherence.Generated
 
 		public override void Initialize(CoherenceSync sync)
 		{
-            if (coherenceSync == null)
-            { 
-                coherenceSync = sync;
-            }
-            
+			if (coherenceSync == null)
+			{
+				coherenceSync = sync;
+			}
+
 			lastSerializedCoherenceUUID = coherenceSync.coherenceUUID;
 
 			sync.Input.internalSetButtonState = SetButtonState;
@@ -174,6 +193,18 @@ namespace Coherence.Generated
 			{
 				InternalWorldOrientation_Rotation_value_InterpolationState.velocity = default;
 				InternalWorldOrientation_Rotation_value_InterpolationSamples.Clear();
+			}
+			if (!InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationSamples.IsCreated)
+			{
+				var binding = InternalPlayerCursor_Player_PlayerCursor_Player_fps_Binding;
+				InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationState = coherenceSync.interpolationCollection.floatStateSet.Get(binding);
+				InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationState.binding = binding;
+				InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationSamples = coherenceSync.interpolationCollection.floatSampleSet.Get(binding);
+			}
+			else
+			{
+				InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationState.velocity = default;
+				InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationSamples.Clear();
 			}
 		}
 
@@ -274,6 +305,8 @@ namespace Coherence.Generated
 
 					update.playerName = (_player.playerName ?? "");
 					update.startOnFrame = (_player.startOnFrame);
+					update.ping = (_player.ping);
+					update.fps = (_player.fps);
 
 					uint mask = _player_PlayerCursor_Player_lastSentData.DiffWith(update);
 
@@ -336,6 +369,17 @@ namespace Coherence.Generated
 
 				_transformViaCoherenceSync.coherenceRotation = (InternalWorldOrientation_value_target);
 			}
+			if (InternalPlayerCursor_Player_PlayerCursor_Player_fps_Binding.CanInterpolate)
+			{
+				var InternalPlayerCursor_Player_fps_target = InterpolationSystem.PerformInterpolation(
+					InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationSamples,
+					ref InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationState,
+					localFrame,
+					_player.fps,
+					monoBridge.NetworkTime.TimeAsDouble);
+
+				_player.fps = (Single)(InternalPlayerCursor_Player_fps_target);
+			}
 		}
 
 		private void SendComponentUpdates()
@@ -395,6 +439,7 @@ namespace Coherence.Generated
 							{
 								_transformViaCoherenceSync.coherencePosition = (data.value);
 							}
+
 						}
 						break;
 					}
@@ -428,11 +473,12 @@ namespace Coherence.Generated
 							{
 								_transformViaCoherenceSync.coherenceRotation = (data.value);
 							}
+
 						}
 						break;
 					}
 
-					case 76:
+					case 78:
 					{
 						// PlayerCursor_Player
 						var data = (PlayerCursor_Player)change.Data;
@@ -440,10 +486,43 @@ namespace Coherence.Generated
 						if((mask & 0b00000000000000000000000000000001) != 0)
 						{
 							_player.playerName = (String)(data.playerName);
+
 						}
 						if((mask & 0b00000000000000000000000000000010) != 0)
 						{
 							_player.startOnFrame = (Int64)(data.startOnFrame);
+
+						}
+						if((mask & 0b00000000000000000000000000000100) != 0)
+						{
+							_player.ping = (Int32)(data.ping);
+
+						}
+						if((mask & 0b00000000000000000000000000001000) != 0)
+						{
+							if (InternalPlayerCursor_Player_PlayerCursor_Player_fps_Binding.CanInterpolate)
+							{
+								var settings = InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationState.binding.InterpolationSettings;
+								var buffer = InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationSamples;
+								var value = data.fps;
+								var cleared = InterpolationSystem.UpdateInterpolationSamples(ref buffer, ref InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationState, value);
+								InterpolationSystem.AppendInterpolationSample(ref buffer, value, (ulong)data.GetSimulationFrame().Frame);
+								var newLatency = InterpolationSystem.CalculateLatency<float>(buffer, settings);
+								if (newLatency >= 0f)
+								{
+									InternalPlayerCursor_Player_PlayerCursor_Player_fps_InterpolationState.latency = newLatency;
+								}
+
+								if (cleared)
+								{
+									_player.fps = (Single)(data.fps);
+								}
+							}
+							else
+							{
+								_player.fps = (Single)(data.fps);
+							}
+
 						}
 						break;
 					}
@@ -477,6 +556,34 @@ namespace Coherence.Generated
 						Debug.LogWarning($"Unhandled component type ID: {componentType}", this);
 						break;
 					}
+			}
+		}
+
+		private void AddDelayedEntityReference(SerializeEntityID id, ComponentChange componentChange)
+		{
+			if (delayedEntityReferences == null)
+			{
+				delayedEntityReferences = new Dictionary<SerializeEntityID, EntityData>();
+			}
+
+			EntityData entityData;
+
+			if (!delayedEntityReferences.TryGetValue(id, out entityData))
+			{
+				entityData = EntityData.New();
+			}
+
+			entityData.Update(componentChange);
+			delayedEntityReferences[id] = entityData;
+		}
+
+		public override void ResolveDelayedEntityReference(SerializeEntityID id)
+		{
+			if (delayedEntityReferences != null &&
+				delayedEntityReferences.TryGetValue(id, out EntityData entityData))
+			{
+				ApplyComponentUpdates(entityData);
+				delayedEntityReferences.Remove(id);
 			}
 		}
 

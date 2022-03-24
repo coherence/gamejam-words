@@ -1,14 +1,11 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
+using Coherence.Common;
 using Coherence.Toolkit;
 using Coherence.UI;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.SocialPlatforms;
 using Network = Coherence.Network;
 
 public class Grid : MonoBehaviour
@@ -59,6 +56,10 @@ public class Grid : MonoBehaviour
     public TMPro.TMP_Text typingModeCaption;
 
     public long startFrame = 0;
+    
+    private bool debugUIEnabled;
+    private bool debugFpsLimit;
+    private float debugTargetFps = 60f;
     
     public bool IsPaused
     {
@@ -119,16 +120,56 @@ public class Grid : MonoBehaviour
     
     public class PlayerData
     {
+        private const string Green = "\"green\"";
+        private const string Yellow = "\"yellow\"";
+        private const string Red = "\"red\"";
+        private const string Magenta = "#FF00FF";
+
         public CoherenceClientConnection clientConnection;
         public CoherenceSync sync;
         public int clientID;
         public Player player;
         public PlayerDataUI ui;
+
+        private float frameUpdateTime;
         
         public void Update()
         {
             ui.playerName.text = player.playerName;
             ui.playerScore.text = player.score.ToString();
+            ui.playerPing.text = $"<color={ColorForPing(player.ping)}>PING: {player.ping,4}</color>";
+            ui.playerFps.text = $"<color={ColorForFPS(player.fps)}>FPS: {player.fps,3:F0}</color>";
+
+            if (Time.unscaledTime - frameUpdateTime > 0.25f)
+            {
+                frameUpdateTime = Time.unscaledTime;
+                long frameDiff = player.currentFrame - player.lastFrame;
+                ui.playerFrame.text = $"{player.lastFrame} <color={ColorForFrameDiff(frameDiff)}>({frameDiff})</color>";
+            }
+        }
+
+        private string ColorForPing(int ping)
+        {
+            if (ping < 100) return Green;
+            if (ping < 200) return Yellow;
+            if (ping < 300) return Red;
+            return Magenta;
+        }
+        
+        private string ColorForFPS(float fps)
+        {
+            if (fps >= 55f) return Green;
+            if (fps >= 29f) return Yellow;
+            if (fps >= 5f) return Red;
+            return Magenta;
+        }
+        
+        private string ColorForFrameDiff(long frameDiff)
+        {
+            if (frameDiff <= 10) return Green;
+            if (frameDiff <= 20) return Yellow;
+            if (frameDiff <= 30) return Red;
+            return Magenta;
         }
     }
 
@@ -141,7 +182,7 @@ public class Grid : MonoBehaviour
             ((PlayerData)s.Value).Update();
         }
     }
-    
+
     public void AddPlayer(CoherenceClientConnection client)
     {
         tempClientconnection = client;
@@ -287,6 +328,8 @@ public class Grid : MonoBehaviour
     
     void Awake()
     {
+        ConnectionSettings.Default.Ping.PingPeriodically = true;
+        
         posAdjustmentX = -0.1f * 50f / tilesX;
         posAdjustmentY = -0.1f * 50f / tilesY;
         
@@ -749,9 +792,49 @@ public class Grid : MonoBehaviour
         return cellStates;
     }
 
+    private void OnGUI()
+    {
+        if (!debugUIEnabled)
+        {
+            return;
+        }
+        
+        GUILayout.BeginArea(new Rect(0f, Screen.height * 0.3f, Screen.width * 0.25f, Screen.height * 0.4f));
+        {
+            debugFpsLimit = GUILayout.Toggle(debugFpsLimit, "FPS limiter");
+            if (debugFpsLimit)
+            {
+                GUILayout.Label($"Target FPS: {debugTargetFps}");
+                debugTargetFps = GUILayout.HorizontalSlider(debugTargetFps, 1f, 60f);
+                Application.targetFrameRate = Mathf.RoundToInt(debugTargetFps);
+
+            }
+            else
+            {
+                Application.targetFrameRate = Int32.MaxValue;
+            }
+            
+            monoBridge.controlTimeScale = GUILayout.Toggle(monoBridge.controlTimeScale, "Auto time scale");
+            if (!monoBridge.controlTimeScale)
+            {
+                Time.timeScale = 1f;
+            }
+            
+            monoBridge.adjustSimulationFrameByPing = GUILayout.Toggle(monoBridge.adjustSimulationFrameByPing, "Adjust frame by ping");
+            monoBridge.NetworkTime.AutoResync = GUILayout.Toggle(monoBridge.NetworkTime.AutoResync, "Reset on out of sync");
+        }
+        GUILayout.EndArea();
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.BackQuote) && !Input.GetKey(KeyCode.LeftShift))
+        {
+            debugUIEnabled = !debugUIEnabled;
+            Debug.Log($"DEBUG: {debugUIEnabled}");
+        }
+        
         playerName = networkDialog.nameInput.text;
         UpdatePlayerData();
 
