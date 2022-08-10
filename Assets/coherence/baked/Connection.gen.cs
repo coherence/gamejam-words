@@ -11,10 +11,9 @@ namespace Coherence.Generated
 	using Coherence.SimulationFrame;
 	using Coherence.Entity;
 	using Coherence.Utils;
+	using Coherence.Brook;
 	using Coherence.Toolkit;
 	using UnityEngine;
-	using Unity.Collections;
-	using Unity.Mathematics;
 
 	public struct Connection : ICoherenceComponentData
 	{
@@ -82,14 +81,14 @@ namespace Coherence.Generated
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
 				Coherence.Utils.Bounds.Check(data.id, _id_Min, _id_Max, "Connection.id");
-
+	
 				bitStream.WriteIntegerRange(data.id, 31, 0);
 			}
 			mask >>= 1;
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
 				Coherence.Utils.Bounds.Check(data.type, _type_Min, _type_Max, "Connection.type");
-
+	
 				bitStream.WriteIntegerRange(data.type, 3, 0);
 			}
 			mask >>= 1;
@@ -110,6 +109,18 @@ namespace Coherence.Generated
 				mask |= 0b00000000000000000000000000000010;
 			}
 			return (val, mask, null);
+		}
+
+		/// <summary>
+		/// Resets byte array references to the local array instance that is kept in the lastSentData.
+		/// If the array content has changed but remains of same length, the new content is copied into the local array instance.
+		/// If the array length has changed, the array is cloned and overwrites the local instance.
+		/// If the array has not changed, the reference is reset to the local array instance.
+		/// Otherwise, changes to other fields on the component might cause the local array instance reference to become permanently lost.
+		/// </summary>
+		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
+		{
+			var last = lastSent as Connection?;
 		}
 	}
 }

@@ -11,10 +11,9 @@ namespace Coherence.Generated
 	using Coherence.SimulationFrame;
 	using Coherence.Entity;
 	using Coherence.Utils;
+	using Coherence.Brook;
 	using Coherence.Toolkit;
 	using UnityEngine;
-	using Unity.Collections;
-	using Unity.Mathematics;
 
 	public struct GenericFieldInt5 : ICoherenceComponentData
 	{
@@ -33,8 +32,8 @@ namespace Coherence.Generated
 
 		public AbsoluteSimulationFrame Frame;
 
-		private static readonly int _number_Min = -9999;
-		private static readonly int _number_Max = 9999;
+		private static readonly int _number_Min = -2147483648;
+		private static readonly int _number_Max = 2147483647;
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -71,8 +70,8 @@ namespace Coherence.Generated
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
 				Coherence.Utils.Bounds.Check(data.number, _number_Min, _number_Max, "GenericFieldInt5.number");
-
-				bitStream.WriteIntegerRange(data.number, 15, -9999);
+	
+				bitStream.WriteIntegerRange(data.number, 32, -2147483648);
 			}
 			mask >>= 1;
 		}
@@ -83,10 +82,22 @@ namespace Coherence.Generated
 			var val = new GenericFieldInt5();
 			if (bitStream.ReadMask())
 			{
-				val.number = bitStream.ReadIntegerRange(15, -9999);
+				val.number = bitStream.ReadIntegerRange(32, -2147483648);
 				mask |= 0b00000000000000000000000000000001;
 			}
 			return (val, mask, null);
+		}
+
+		/// <summary>
+		/// Resets byte array references to the local array instance that is kept in the lastSentData.
+		/// If the array content has changed but remains of same length, the new content is copied into the local array instance.
+		/// If the array length has changed, the array is cloned and overwrites the local instance.
+		/// If the array has not changed, the reference is reset to the local array instance.
+		/// Otherwise, changes to other fields on the component might cause the local array instance reference to become permanently lost.
+		/// </summary>
+		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
+		{
+			var last = lastSent as GenericFieldInt5?;
 		}
 	}
 }

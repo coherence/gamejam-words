@@ -8,44 +8,49 @@ namespace Coherence.Generated
 {
 	using Coherence.ProtocolDef;
 	using Coherence.Serializer;
+	using Coherence.Brook;
 	using UnityEngine;
-	using Unity.Collections;
-	using Unity.Mathematics;
 	using Coherence.Entity;
 
 	public struct AuthorityTransfer : IEntityCommand
 	{
-		public int participant;
-		public int authorityMode;
+		public int newAuthority;
+		public bool accepted;
+		public int authorityType;
 
 		public MessageTarget Routing => MessageTarget.All;
 		public uint GetComponentType() => Definition.InternalAuthorityTransfer;
 
 		public AuthorityTransfer
 		(
-			int dataparticipant,
-			int dataauthorityMode
+			int datanewAuthority,
+			bool dataaccepted,
+			int dataauthorityType
 		)
 		{
-			participant = dataparticipant;
-			authorityMode = dataauthorityMode;
+			newAuthority = datanewAuthority;
+			accepted = dataaccepted;
+			authorityType = dataauthorityType;
 		}
 
 		public static void Serialize(AuthorityTransfer commandData, IOutProtocolBitStream bitStream)
 		{
-			bitStream.WriteIntegerRange(commandData.participant, 15, -9999);
-			bitStream.WriteIntegerRange(commandData.authorityMode, 2, 0);
+			bitStream.WriteIntegerRange(commandData.newAuthority, 32, -2147483648);
+			bitStream.WriteBool(commandData.accepted);
+			bitStream.WriteIntegerRange(commandData.authorityType, 2, 0);
 		}
 
 		public static AuthorityTransfer Deserialize(IInProtocolBitStream bitStream)
 		{
-			var dataparticipant = bitStream.ReadIntegerRange(15, -9999);
-			var dataauthorityMode = bitStream.ReadIntegerRange(2, 0);
+			var datanewAuthority = bitStream.ReadIntegerRange(32, -2147483648);
+			var dataaccepted = bitStream.ReadBool();
+			var dataauthorityType = bitStream.ReadIntegerRange(2, 0);
 
 			return new AuthorityTransfer
 			(
-				dataparticipant,
-				dataauthorityMode
+				datanewAuthority,
+				dataaccepted,
+				dataauthorityType
 			){};
 		}
 	}

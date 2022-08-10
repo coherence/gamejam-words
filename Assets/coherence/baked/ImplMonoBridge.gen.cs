@@ -7,7 +7,6 @@
 namespace Coherence.Toolkit
 {
 	using UnityEngine;
-	using Unity.Collections;
 	using System;
 	using Coherence.Entity;
 	using Coherence.Generated;
@@ -19,10 +18,10 @@ namespace Coherence.Toolkit
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 		static void OnRuntimeMethodLoad()
 		{
-			CoherenceMonoBridge.GenericPrefabReferenceTypeID = GenericPrefabReferenceTypeID;
-			CoherenceMonoBridge.GenericPrefabIdTypeID = GenericPrefabIdTypeID;
-			CoherenceMonoBridge.GetSpawnInfo = GetSpawnInfo;
-			CoherenceMonoBridge.GetRootDefinition = GetRootDefinition;
+			Impl.GenericPrefabReferenceTypeID = GenericPrefabReferenceTypeID;
+			Impl.GenericPrefabIdTypeID = GenericPrefabIdTypeID;
+			Impl.GetSpawnInfo = GetSpawnInfo;
+			Impl.GetRootDefinition = GetRootDefinition;
 		}
 
 		private static uint GenericPrefabReferenceTypeID()

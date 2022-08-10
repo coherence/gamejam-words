@@ -5,11 +5,23 @@ EditorUserSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 4
   m_ConfigSettings:
+    Coherence.BakeOnBuild:
+      value: 52
+      flags: 0
+    Coherence.BakeOnEnterPlayMode:
+      value: 52
+      flags: 0
     Coherence.CodeGen.LastInstallation:
-      value: 15011a57541b5d
+      value: 15011a54551b59
+      flags: 0
+    Coherence.CoherenceSyncSchemasDirty:
+      value: 53
+      flags: 0
+    Coherence.GatherOnBake:
+      value: 52
       flags: 0
     Coherence.LastInstallation:
-      value: 531f0c48551819490818052707
+      value: 531f0d485518194908180527076d0e43
       flags: 0
     Coherence.Settings.ActiveSchemas.Hash:
       value: 52520655510358085b580d2640775e47434f4a787f2a77627c7d4f6bbbb2613c
@@ -21,7 +33,10 @@ EditorUserSettings:
       value: 5a02550453500b085c5e542444725a43174f4b2c2d7127322b284836b1e2656b
       flags: 0
     Coherence.Settings.UseCustomTools:
-      value: 164251
+      value: 
+      flags: 0
+    RecentlyUsedSceneGuid-0:
+      value: 5a5757560101590a5d0c0e24427b5d44434e4c7a7b7a23677f2b4565b7b5353a
       flags: 0
     RecentlyUsedScenePath-0:
       value: 22424703114646680e0b0227036c6c111b07142f1f2b233e2867083debf42d
@@ -37,9 +52,13 @@ EditorUserSettings:
   m_VCDebugCmd: 0
   m_VCDebugOut: 0
   m_SemanticMergeMode: 2
+  m_DesiredImportWorkerCount: 2
+  m_StandbyImportWorkerCount: 2
+  m_IdleImportWorkerShutdownDelay: 60000
   m_VCShowFailedCheckout: 1
   m_VCOverwriteFailedCheckoutAssets: 1
   m_VCProjectOverlayIcons: 1
   m_VCHierarchyOverlayIcons: 1
   m_VCOtherOverlayIcons: 1
   m_VCAllowAsyncUpdate: 1
+  m_ArtifactGarbageCollection: 1

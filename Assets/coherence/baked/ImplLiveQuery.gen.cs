@@ -7,7 +7,6 @@
 namespace Coherence.Toolkit
 {
 	using UnityEngine;
-	using Unity.Mathematics;
 	using global::Coherence.Generated;
 	using Coherence.Entity;
 
@@ -16,11 +15,11 @@ namespace Coherence.Toolkit
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 		static void OnRuntimeMethodLoad()
 		{
-			CoherenceLiveQuery.CreateLiveQuery = CreateLiveQuery;
-			CoherenceLiveQuery.UpdateLiveQuery = UpdateLiveQuery;
+			Impl.CreateLiveQuery = CreateLiveQuery;
+			Impl.UpdateLiveQuery = UpdateLiveQuery;
 		}
 
-		private static SerializeEntityID CreateLiveQuery(IClient client, float radius, float3 pos) {
+		private static SerializeEntityID CreateLiveQuery(IClient client, float radius, Vector3 pos) {
 			var components = new ICoherenceComponentData[] {
 				new WorldPosition
 				{
@@ -36,7 +35,7 @@ namespace Coherence.Toolkit
 			return client.CreateEntity(components, false);
 		}
 
-		private static void UpdateLiveQuery(IClient client, SerializeEntityID liveQuery, float radius, float3 pos)
+		private static void UpdateLiveQuery(IClient client, SerializeEntityID liveQuery, float radius, Vector3 pos)
 		{
 			var newWorldPosition = new WorldPosition
 			{
@@ -46,7 +45,7 @@ namespace Coherence.Toolkit
 			var newWorldPositionQuery = new WorldPositionQuery
 			{
 				position = pos,
-				radius = radius
+				radius = radius,
 			};
 
 			var components = new ICoherenceComponentData[]
@@ -57,8 +56,8 @@ namespace Coherence.Toolkit
 
 			var masks = new uint[]
 			{
-				0x11,
-				0x11
+				0xff,
+				0xff,
 			};
 
 			client.UpdateComponents(liveQuery, components, masks);

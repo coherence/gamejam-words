@@ -8,9 +8,8 @@ namespace Coherence.Generated
 {
 	using Coherence.ProtocolDef;
 	using Coherence.Serializer;
+	using Coherence.Brook;
 	using UnityEngine;
-	using Unity.Collections;
-	using Unity.Mathematics;
 	using Coherence.Entity;
 
 	public struct GenericCommand : IEntityCommand

@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 0.08, y: 1, z: 0.080000006}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5087559671055490318}
   m_RootOrder: 0
@@ -126,6 +127,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 0.08, y: 1, z: 0.080000006}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5087559671055490318}
   m_RootOrder: 3
@@ -223,6 +225,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 0.08, y: 1, z: 0.080000006}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5087559671055490318}
   m_RootOrder: 2
@@ -320,6 +323,7 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: -0.1}
   m_LocalScale: {x: 0.08, y: 1, z: 0.080000006}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5087559671055490318}
   m_RootOrder: 1
@@ -420,6 +424,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1914339652}
   - {fileID: 7880336322823251560}
@@ -506,13 +511,25 @@ MonoBehaviour:
   OnAuthorityGained:
     m_PersistentCalls:
       m_Calls: []
+  OnStateAuthorityGained:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInputAuthorityGained:
+    m_PersistentCalls:
+      m_Calls: []
   OnAuthorityLost:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStateAuthorityLost:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInputAuthorityLost:
     m_PersistentCalls:
       m_Calls: []
   OnAuthorityTransferRejected:
     m_PersistentCalls:
       m_Calls: []
-  OnAuthorityRequested:
+  OnAuthorityRequestRejected:
     m_PersistentCalls:
       m_Calls: []
   OnConnectedEntityChanged:
@@ -536,11 +553,42 @@ MonoBehaviour:
       lodStepsActive: 1
     - component: {fileID: 694873017490517114}
       lodStepsActive: 1
+    - component: {fileID: 1914339652}
+      lodStepsActive: 1
+    - component: {fileID: 1914339651}
+      lodStepsActive: 1
+    - component: {fileID: 1914339650}
+      lodStepsActive: 1
+    - component: {fileID: 1914339649}
+      lodStepsActive: 1
+    - component: {fileID: 7880336322823251560}
+      lodStepsActive: 1
+    - component: {fileID: 3982533850698228851}
+      lodStepsActive: 1
+    - component: {fileID: 6711004801423553829}
+      lodStepsActive: 1
+    - component: {fileID: 7742849559090721799}
+      lodStepsActive: 1
+    - component: {fileID: 7925468770702445515}
+      lodStepsActive: 1
+    - component: {fileID: 8933738915861746823}
+      lodStepsActive: 1
+    - component: {fileID: 1021549587378385522}
+      lodStepsActive: 1
+    - component: {fileID: 6294838709763212788}
+      lodStepsActive: 1
+    - component: {fileID: 2488274318189538431}
+      lodStepsActive: 1
+    - component: {fileID: 1646832269422040842}
+      lodStepsActive: 1
+    - component: {fileID: 2658476097354269915}
+      lodStepsActive: 1
+    - component: {fileID: 2448685815625227444}
+      lodStepsActive: 1
     lodLevels:
     - distance: 0
     archetypeName: PlayerCursor
-    GeneratesArchetypeDefinition: 0
-  ManualPositionUpdate: 1
+    GeneratesArchetypeDefinition: 1
   InterpolationLocation: 1
   bakedScriptType: Coherence.Generated.CoherenceSyncPlayerCursor, Assembly-CSharp
   approveAuthorityTransferRequests: 1
@@ -559,20 +607,25 @@ MonoBehaviour:
     returnAssemblyType: 
     compatibility: -1
     routing: 1
+    required: 0
     interpolationSettings: {fileID: 0}
     component: {fileID: 694873017490517114}
+    coherenceSync: {fileID: 0}
+    isPredicted: 0
+    guid: 12a1df85-ce79-4383-a2ee-acbf14b231a8
     archetypeData:
       type: 5
       minRange: 0
       maxRange: 0
-      scale: 0
+      sampleRate: 0
+      floatCompression: 0
       fields:
       - type: 5
         bits: 518
         minRange: 0
         maxRange: 0
         precision: 0
-        scale: 0
+        floatCompression: 0
       sharedBinding: {fileID: 0}
   - name: startOnFrame
     memberKind: 1
@@ -581,20 +634,25 @@ MonoBehaviour:
     returnAssemblyType: 
     compatibility: -1
     routing: 1
+    required: 0
     interpolationSettings: {fileID: 0}
     component: {fileID: 694873017490517114}
+    coherenceSync: {fileID: 0}
+    isPredicted: 0
+    guid: 2d004627-0964-48b3-8864-8be5e9bee8c6
     archetypeData:
       type: 2
       minRange: 0
       maxRange: 0
-      scale: 0
+      sampleRate: 0
+      floatCompression: 0
       fields:
       - type: 2
         bits: 0
         minRange: 0
         maxRange: 0
         precision: 0
-        scale: 0
+        floatCompression: 0
       sharedBinding: {fileID: 0}
   customBindings:
   - descriptor:
@@ -605,32 +663,35 @@ MonoBehaviour:
       bakedSyncScriptGetter: coherencePosition
       bakedSyncScriptSetter: coherencePosition
       bakedSyncScriptFieldName: 
-      bakedSyncScriptCSharpType: 
+      bakedSyncScriptCSharpType: UnityEngine.Vector3
       coherenceComponentName: WorldPosition
       coherenceComponentFieldName: value
       schemaComponentFieldName: value
       extraData: 
+      extraFlags: 0
       required: 1
       interpolable: 1
       defaultInterpolationSettings: {fileID: 11400000, guid: ae4419d1d9a8643709bf5f6b90c584a5, type: 2}
       enforcesLODingWhenFieldsOverriden: 1
     component: {fileID: 5087559671055490318}
     serializerAssemblyType: Coherence.Toolkit.TransformBindingSerializer, Coherence.Toolkit
+    guid: e1421fbd-1c05-40ab-9047-94b2d02a8ac0
     interpolationSettings: {fileID: 11400000, guid: ae4419d1d9a8643709bf5f6b90c584a5, type: 2}
     coherenceSync: {fileID: 0}
-    interpolates: 1
+    isPredicted: 0
     archetypeData:
       type: 7
       minRange: 0
       maxRange: 22768
-      scale: 2400
+      sampleRate: 0
+      floatCompression: 0
       fields:
       - type: 7
-        bits: 23
+        bits: 32
         minRange: 0
         maxRange: 0
         precision: 0.001
-        scale: 2400
+        floatCompression: 0
       sharedBinding: {fileID: 0}
   - descriptor:
       name: rotation
@@ -640,32 +701,35 @@ MonoBehaviour:
       bakedSyncScriptGetter: coherenceRotation
       bakedSyncScriptSetter: coherenceRotation
       bakedSyncScriptFieldName: 
-      bakedSyncScriptCSharpType: 
+      bakedSyncScriptCSharpType: UnityEngine.Quaternion
       coherenceComponentName: WorldOrientation
       coherenceComponentFieldName: value
       schemaComponentFieldName: value
       extraData: 
+      extraFlags: 0
       required: 0
       interpolable: 1
       defaultInterpolationSettings: {fileID: 11400000, guid: f45c201a9dd7a4866ac502d18deed702, type: 2}
       enforcesLODingWhenFieldsOverriden: 1
     component: {fileID: 5087559671055490318}
     serializerAssemblyType: Coherence.Toolkit.TransformBindingSerializer, Coherence.Toolkit
+    guid: 9641347a-5853-4cdf-bcbd-0f4b737495e7
     interpolationSettings: {fileID: 11400000, guid: f45c201a9dd7a4866ac502d18deed702, type: 2}
     coherenceSync: {fileID: 0}
-    interpolates: 1
+    isPredicted: 0
     archetypeData:
       type: 8
       minRange: 0
       maxRange: 0
-      scale: 0
+      sampleRate: 0
+      floatCompression: 0
       fields:
       - type: 8
-        bits: 51
+        bits: 32
         minRange: 0
         maxRange: 0
-        precision: 0
-        scale: 0
+        precision: 0.00000008381903
+        floatCompression: 0
       sharedBinding: {fileID: 0}
   onNetworkedInstantiation:
     m_PersistentCalls:
@@ -683,7 +747,8 @@ MonoBehaviour:
   coherenceTag: 
   componentActions: []
   references:
-    version: 1
+    version: 2
+    RefIds: []
 --- !u!114 &5976404667689088643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -699,6 +764,7 @@ MonoBehaviour:
   InitialBufferSize: 32
   InitialBufferDelay: 3
   DisconnectOnTimeReset: 1
+  DestroyOnInputAuthorityDisconnected: 1
   UseFixedSimulationFrames: 1
   inputName: TestCube
   fields:

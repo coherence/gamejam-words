@@ -3,16 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using Coherence;
 using Coherence.Toolkit;
 using Coherence.UI;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.SocialPlatforms;
-using Network = Coherence.Network;
+
+using Coherence.Common;
+using Coherence.Connection;
 
 public class Grid : MonoBehaviour
 {
+    private IClient client;
+    
     public bool allowCompletingEachOthersWords = true;
     
     public const int tilesX = 80;
@@ -310,7 +315,9 @@ public class Grid : MonoBehaviour
         
         LoadDictionary();
 
-        Network.OnConnected += () =>
+        var monoBridge = FindObjectOfType<CoherenceMonoBridge>();
+        client = monoBridge.Client;
+        client.OnConnected += (obj) =>
         {
             playerName = networkDialog.nameInput.text;
         };
@@ -755,7 +762,7 @@ public class Grid : MonoBehaviour
         playerName = networkDialog.nameInput.text;
         UpdatePlayerData();
 
-        if (IsPaused && Network.IsConnected)
+        if (IsPaused && client.IsConnected())
         {
             if (startFrame != 0)
             {

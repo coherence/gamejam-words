@@ -11,10 +11,9 @@ namespace Coherence.Generated
 	using Coherence.SimulationFrame;
 	using Coherence.Entity;
 	using Coherence.Utils;
+	using Coherence.Brook;
 	using Coherence.Toolkit;
 	using UnityEngine;
-	using Unity.Collections;
-	using Unity.Mathematics;
 
 	public struct GenericFieldFloat0 : ICoherenceComponentData
 	{
@@ -33,9 +32,7 @@ namespace Coherence.Generated
 
 		public AbsoluteSimulationFrame Frame;
 
-		private static readonly float _number_Min = -2400f;
-		private static readonly float _number_Max = 2400f;
-		private static readonly float _number_Epsilon = 0.000286102294921875f;
+		private static readonly float _number_Epsilon = 2.3283064365386963e-10f;
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -71,9 +68,7 @@ namespace Coherence.Generated
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
-				Coherence.Utils.Bounds.Check(data.number, _number_Min, _number_Max, "GenericFieldFloat0.number");
-
-				bitStream.WriteFixedPoint(CoherenceToUnityConverters.FromUnityfloat(data.number), 24, 2400);
+				bitStream.WriteFloat(data.number, FloatMeta.NoCompression());
 			}
 			mask >>= 1;
 		}
@@ -84,10 +79,22 @@ namespace Coherence.Generated
 			var val = new GenericFieldFloat0();
 			if (bitStream.ReadMask())
 			{
-				val.number = CoherenceToUnityConverters.ToUnityfloat(bitStream.ReadFixedPoint(24, 2400));
+				val.number = bitStream.ReadFloat(FloatMeta.NoCompression());
 				mask |= 0b00000000000000000000000000000001;
 			}
 			return (val, mask, null);
+		}
+
+		/// <summary>
+		/// Resets byte array references to the local array instance that is kept in the lastSentData.
+		/// If the array content has changed but remains of same length, the new content is copied into the local array instance.
+		/// If the array length has changed, the array is cloned and overwrites the local instance.
+		/// If the array has not changed, the reference is reset to the local array instance.
+		/// Otherwise, changes to other fields on the component might cause the local array instance reference to become permanently lost.
+		/// </summary>
+		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
+		{
+			var last = lastSent as GenericFieldFloat0?;
 		}
 	}
 }
