@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b58ca8e478745dfab801a85671962e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  consoleLogLevel: 2
-  editorLogLevel: 1
+  consoleLogLevel: 3
+  editorLogLevel: 3
+  logSourceFilterMode: 0
+  logSourceFilterCSV: 
+  showHubSectionInfo: 1
+  showHubModuleDescription: 1
+  showHubMessageAreas: 1
   portalToken: 
   port: 32001
   sendFrequency: 20
@@ -23,7 +28,7 @@ MonoBehaviour:
   roomsUDPPort: 42001
   roomsWebPort: 42002
   bakeMode: 0
-  schemaBakeFolderGuid: f1ed50017e9c04cb59b10884d94186f8
+  schemaBakeFolderGuid: 93112f86b9f5541e59a6b6a348bcbe34
   runtimeSettingsGuid: 42178759f38ce9a46821e14ecbb48966
   prefabMapperGuid: f523075aec581684ebb1b1a2754eb2a3
   schemaBakeGenerateAsmdef: 0

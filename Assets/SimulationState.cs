@@ -18,7 +18,7 @@ public struct SimulationState : IHashable
         public int x;
         public int y;
         public string content;
-        public int owner;
+        public uint owner;
         public bool isSolid;
         public long frameWhenEntered;
     }

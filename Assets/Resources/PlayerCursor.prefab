@@ -511,19 +511,19 @@ MonoBehaviour:
   OnAuthorityGained:
     m_PersistentCalls:
       m_Calls: []
-  OnStateAuthorityGained:
+  OnStateAuthority:
     m_PersistentCalls:
       m_Calls: []
-  OnInputAuthorityGained:
+  OnInputAuthority:
     m_PersistentCalls:
       m_Calls: []
   OnAuthorityLost:
     m_PersistentCalls:
       m_Calls: []
-  OnStateAuthorityLost:
+  OnStateRemote:
     m_PersistentCalls:
       m_Calls: []
-  OnInputAuthorityLost:
+  OnInputRemote:
     m_PersistentCalls:
       m_Calls: []
   OnAuthorityTransferRejected:
@@ -587,7 +587,7 @@ MonoBehaviour:
       lodStepsActive: 1
     lodLevels:
     - distance: 0
-    archetypeName: PlayerCursor
+    archetypeName: PlayerCursor_94a5ba242d36ffd449a774ea4e84f0b5
     GeneratesArchetypeDefinition: 1
   InterpolationLocation: 1
   bakedScriptType: Coherence.Generated.CoherenceSyncPlayerCursor, Assembly-CSharp
@@ -617,7 +617,7 @@ MonoBehaviour:
       type: 5
       minRange: 0
       maxRange: 0
-      sampleRate: 0
+      sampleRate: 30
       floatCompression: 0
       fields:
       - type: 5
@@ -644,7 +644,7 @@ MonoBehaviour:
       type: 2
       minRange: 0
       maxRange: 0
-      sampleRate: 0
+      sampleRate: 30
       floatCompression: 0
       fields:
       - type: 2
@@ -683,7 +683,7 @@ MonoBehaviour:
       type: 7
       minRange: 0
       maxRange: 22768
-      sampleRate: 0
+      sampleRate: 30
       floatCompression: 0
       fields:
       - type: 7
@@ -713,7 +713,7 @@ MonoBehaviour:
       enforcesLODingWhenFieldsOverriden: 1
     component: {fileID: 5087559671055490318}
     serializerAssemblyType: Coherence.Toolkit.TransformBindingSerializer, Coherence.Toolkit
-    guid: 9641347a-5853-4cdf-bcbd-0f4b737495e7
+    guid: 0d84d40e-a7ab-4496-88e2-8d9b90f6d34c
     interpolationSettings: {fileID: 11400000, guid: f45c201a9dd7a4866ac502d18deed702, type: 2}
     coherenceSync: {fileID: 0}
     isPredicted: 0
@@ -721,7 +721,7 @@ MonoBehaviour:
       type: 8
       minRange: 0
       maxRange: 0
-      sampleRate: 0
+      sampleRate: 30
       floatCompression: 0
       fields:
       - type: 8

@@ -13,11 +13,10 @@ using UnityEngine.SocialPlatforms;
 
 using Coherence.Common;
 using Coherence.Connection;
+using UnityEngine.Events;
 
 public class Grid : MonoBehaviour
 {
-    private IClient client;
-    
     public bool allowCompletingEachOthersWords = true;
     
     public const int tilesX = 80;
@@ -126,7 +125,7 @@ public class Grid : MonoBehaviour
     {
         public CoherenceClientConnection clientConnection;
         public CoherenceSync sync;
-        public int clientID;
+        public uint clientID;
         public Player player;
         public PlayerDataUI ui;
         
@@ -157,12 +156,12 @@ public class Grid : MonoBehaviour
         {
             clientConnection = client,
             sync = client.Sync,
-            clientID = client.ClientId,
+            clientID = (uint)client.ClientId,
             ui = uigo,
             player = client.Sync.GetComponent<Player>()
         };
 
-        players[client.ClientId] = player;
+        players[(uint)client.ClientId] = player;
         
         UpdatePlayerUIControls();
     }
@@ -178,9 +177,9 @@ public class Grid : MonoBehaviour
 
     public void RemovePlayer(CoherenceClientConnection client)
     {
-        var player = (PlayerData) players[client.ClientId];
+        var player = (PlayerData) players[(uint)client.ClientId];
         Destroy(player.ui.gameObject);
-        players.Remove(client.ClientId);
+        players.Remove((uint)client.ClientId);
         UpdatePlayerUIControls();
     }
     
@@ -258,7 +257,7 @@ public class Grid : MonoBehaviour
 
                 if (age > MaxFramesForTempLetter)
                 {
-                    cell.SetState(null, -1, false);
+                    cell.SetState(null, 0, false);
                 }
             }
         }
@@ -316,11 +315,11 @@ public class Grid : MonoBehaviour
         LoadDictionary();
 
         var monoBridge = FindObjectOfType<CoherenceMonoBridge>();
-        client = monoBridge.Client;
-        client.OnConnected += (obj) =>
+
+        monoBridge.onConnected.AddListener((mb) =>
         {
             playerName = networkDialog.nameInput.text;
-        };
+        });
         
         var alphabet = Player.SupportedAlphabet;
         int foundLetter = -1;
@@ -366,14 +365,14 @@ public class Grid : MonoBehaviour
                     if (Mathf.Abs(diffX) > 2 || Mathf.Abs(diffY) > 2)
                     {
                         cell.SetContent(null);
-                        cell.SetOwner(-1);
+                        cell.SetOwner(0);
                     }
                 }
             }
         }
     }
     
-    public void SetCellContentAndCheckWord(int x, int y, string content, int clientID, long frameID)
+    public void SetCellContentAndCheckWord(int x, int y, string content, uint clientID, long frameID)
     {
         var cell = GetCellAtXY(x, y);
 
@@ -393,9 +392,16 @@ public class Grid : MonoBehaviour
         }
     }
 
-    private void AddPlayerScore(int clientID, int score)
+    private void AddPlayerScore(uint clientID, int score)
     {
         var player = (PlayerData) players[clientID];
+
+        if (player == null)
+        {
+            Debug.LogWarning($"Player {clientID} is null for some reason.");
+            return;
+        }
+        
         player.player.score += score;
         player.Update();
         UpdatePlayerUIControls();
@@ -432,7 +438,7 @@ public class Grid : MonoBehaviour
         return GetLetterScoreFromFrequency(freq);
     }
 
-    int GetWordBeginningX(int x, int y, int clientID, bool allowCompleteOthers)
+    int GetWordBeginningX(int x, int y, uint clientID, bool allowCompleteOthers)
     {
         x--;
         
@@ -455,7 +461,7 @@ public class Grid : MonoBehaviour
         return beginning;
     }
     
-    int GetWordBeginningY(int x, int y, int clientID, bool allowCompleteOthers)
+    int GetWordBeginningY(int x, int y, uint clientID, bool allowCompleteOthers)
     {
         y++;
         
@@ -478,7 +484,7 @@ public class Grid : MonoBehaviour
         return beginning;
     }
     
-    int EvaluateWordInDirection(int ox, int oy, int xdir, int ydir, int clientID, bool allowCompleteOthers)
+    int EvaluateWordInDirection(int ox, int oy, int xdir, int ydir, uint clientID, bool allowCompleteOthers)
     {
         int score = 0;
         string content = "";
@@ -524,7 +530,7 @@ public class Grid : MonoBehaviour
         return score;
     }
 
-    private int EvaluateAddedWord(int xdir, int ydir, int clientID, string content, int x, int y)
+    private int EvaluateAddedWord(int xdir, int ydir, uint clientID, string content, int x, int y)
     {
         int score = 0;
         
@@ -532,7 +538,7 @@ public class Grid : MonoBehaviour
         {
             var cell = GetCellAtXY(x, y);
 
-            if (cell.Owner != -1) cell.SetOwner(clientID);
+            if (cell.Owner != 0) cell.SetOwner(clientID);
 
             if (cell.IsSolid)
             {
@@ -550,7 +556,7 @@ public class Grid : MonoBehaviour
         return score;
     }
 
-    private bool PerformCrossChecks(int ox, int oy, int xdir, int ydir, int clientID, string content, bool horizontal, bool allowCompleteOthers)
+    private bool PerformCrossChecks(int ox, int oy, int xdir, int ydir, uint clientID, string content, bool horizontal, bool allowCompleteOthers)
     {
         int x;
         int y;
@@ -612,7 +618,7 @@ public class Grid : MonoBehaviour
 
     
     
-    private string GetWordInDirection(int xdir, int ydir, int x, int y, int clientID, bool allowCompleteOthers)
+    private string GetWordInDirection(int xdir, int ydir, int x, int y, uint clientID, bool allowCompleteOthers)
     {
         string content = "";
         
@@ -646,7 +652,7 @@ public class Grid : MonoBehaviour
         return content;
     }
     
-    private void ClearNonSolidLettersInDirection(int xdir, int ydir, int x, int y, int clientID)
+    private void ClearNonSolidLettersInDirection(int xdir, int ydir, int x, int y, uint clientID)
     {
         var currentCell = GetCellAtXY(x, y);
         
@@ -655,7 +661,7 @@ public class Grid : MonoBehaviour
             if (!currentCell.IsSolid)
             {
                 Debug.Log($"Clearing letter {currentCell.Content}");
-                currentCell.SetState(null, -1);
+                currentCell.SetState(null, 0);
             }
             
             var character = currentCell.Content;
@@ -762,7 +768,7 @@ public class Grid : MonoBehaviour
         playerName = networkDialog.nameInput.text;
         UpdatePlayerData();
 
-        if (IsPaused && client.IsConnected())
+        if (IsPaused && monoBridge.isConnected)
         {
             if (startFrame != 0)
             {
