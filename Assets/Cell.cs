@@ -5,7 +5,7 @@ using UnityEngine;
 public class Cell : MonoBehaviour
 {
     public string Content { get; private set;  }
-    public int Owner { get; private set; }
+    public uint Owner { get; private set; }
     public bool IsSolid { get; private set; }
 
     public Vector2Int gridPosition = new Vector2Int(40, 25);
@@ -38,7 +38,7 @@ public class Cell : MonoBehaviour
         textControl.text = Content;
     }
 
-    public void SetOwner(int owner)
+    public void SetOwner(uint owner)
     {
         this.Owner = owner;
     }
@@ -48,7 +48,7 @@ public class Cell : MonoBehaviour
         this.IsSolid = solid;
     }
     
-    public void SetState(string content, int owner, bool? isSolid = null)
+    public void SetState(string content, uint owner, bool? isSolid = null)
     {
         this.Content = content;
         this.Owner = owner;

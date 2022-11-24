@@ -5,23 +5,50 @@ EditorUserSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 4
   m_ConfigSettings:
+    Coherence.BakeOnBuild:
+      value: 52
+      flags: 0
+    Coherence.BakeOnEnterPlayMode:
+      value: 52
+      flags: 0
     Coherence.CodeGen.LastInstallation:
-      value: 15011a57541b5d
+      value: 15011a545d1b5b
+      flags: 0
+    Coherence.CoherenceSyncSchemasDirty:
+      value: 53
+      flags: 0
+    Coherence.GatherOnBake:
+      value: 52
       flags: 0
     Coherence.LastInstallation:
-      value: 531f0c48551819490818052707
+      value: 531f0d4857
       flags: 0
     Coherence.Settings.ActiveSchemas.Hash:
-      value: 52520655510358085b580d2640775e47434f4a787f2a77627c7d4f6bbbb2613c
+      value: 5707565004040d03085e552744710c46434e1b7d7e2a7333782b4a62b4b36160
       flags: 0
     Coherence.Settings.CustomToolsPath:
       value: 200b68110a4702670e01042702265113132b1a3f25242223
+      flags: 0
+    Coherence.Settings.Email:
+      value: 175050030f750a54050b1e271e205a5e1f18
+      flags: 0
+    Coherence.Settings.LoginToken:
+      value: 06487e0e07720a522207260b25397641381e3139052614652e0a3465cbeb2400d4c41cb0a93f26162306d8150d110815f8273121a4261003060df05a43fc1a3100eb3f900df24c26dc343fe7de34dcd581d5f7c38ec6d3dfc6f1baf5ecdedafba7dc8dabe480e88dae99f8a98af5f3d6f698bae3c4cbdce68aeddcf8b8dcc280fff391fcfcd2d2cccaa0b5d4b7ddb78d
       flags: 0
     Coherence.Settings.PortalToken:
       value: 5a02550453500b085c5e542444725a43174f4b2c2d7127322b284836b1e2656b
       flags: 0
     Coherence.Settings.UseCustomTools:
-      value: 164251
+      value: 
+      flags: 0
+    Coherence.Settings.UserID:
+      value: 00004610560d194903581e721a7751001101087a
+      flags: 0
+    Coherence.Settings.UserLoginToken:
+      value: 06487e0e07720a522207260b25397641381e3139052614652e0a3465cbeb2400d4c41cb0a93f26162306d8150d110815f8273121a4261003060df05a43fc1a3100eb3f900df24c26dc343fe7de34dcd581d5f7c38ec6d3dfc7f1aaf9a7dfdac9a5dfababe489f695869cf6a39b9bee95909cbfc0d9d390cfe2ebf7e3ef83e5d8f4f8a6d5f494f3d3d5dbb280f197a895
+      flags: 0
+    RecentlyUsedSceneGuid-0:
+      value: 5a5757560101590a5d0c0e24427b5d44434e4c7a7b7a23677f2b4565b7b5353a
       flags: 0
     RecentlyUsedScenePath-0:
       value: 22424703114646680e0b0227036c6c111b07142f1f2b233e2867083debf42d
@@ -37,9 +64,13 @@ EditorUserSettings:
   m_VCDebugCmd: 0
   m_VCDebugOut: 0
   m_SemanticMergeMode: 2
+  m_DesiredImportWorkerCount: 2
+  m_StandbyImportWorkerCount: 2
+  m_IdleImportWorkerShutdownDelay: 60000
   m_VCShowFailedCheckout: 1
   m_VCOverwriteFailedCheckoutAssets: 1
   m_VCProjectOverlayIcons: 1
   m_VCHierarchyOverlayIcons: 1
   m_VCOtherOverlayIcons: 1
   m_VCAllowAsyncUpdate: 1
+  m_ArtifactGarbageCollection: 1

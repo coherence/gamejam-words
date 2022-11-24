@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 063a0485677644868a7e4dfa2f5a482a, type: 3}
   m_Name: PrefabMapper
   m_EditorClassIdentifier: 
+  hasGuidIssue: 0
   prefabMappings: []

@@ -64,7 +64,7 @@ public class Simulation : CoherenceInputSimulation<SimulationState>
             if (alphabetInt != 0)
             {
                 var key = (KeyCode) alphabetInt;
-                grid.SetCellContentAndCheckWord(player.gridPosition.x, player.gridPosition.y, key.ToString(), client.ClientId, simulationFrame);
+                grid.SetCellContentAndCheckWord(player.gridPosition.x, player.gridPosition.y, key.ToString(), (uint)client.ClientId, simulationFrame);
             }
             
             var hasMovement = false;

@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: RuntimeSettings
   m_EditorClassIdentifier: 
   versionInfo: {fileID: 11400000, guid: 2191b6f902c97477baa32a7919010503, type: 2}
-  runtimeKey: 5fd9768951104386aaa8361105b7bdfc
-  projectName: 
-  schemaID: 4dd898b480f5e1a60fbf378c49c7de01d985356d
+  runtimeKey: ab2ab36f760a496885294b055256bd1a
+  schemaID: 73e45d1a3ff463185a8b850695f12d33372ab96b
   simulatorSlug: 
   localHost: 127.0.0.1
   localPort: 32001
@@ -28,4 +27,7 @@ MonoBehaviour:
   localHttpServerPort: 42006
   localDevelopmentMode: 1
   useDebugStreams: 0
-  apiEndpoint: https://lb.dev.coherence.io/play/api/v1
+  organizationID: c27v33hrn6r5ki5unl10
+  projectID: cbpqiprri4degicpj8mg
+  projectName: Words
+  playApiEndpoint: https://api.prod.coherence.io/v1/play
