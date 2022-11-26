@@ -385,6 +385,7 @@ public class Player : MonoBehaviour
         }
         
         var movement = new Vector2(x, y).normalized;
+        
         input.SetAxisState("Mov", movement);
     }
 

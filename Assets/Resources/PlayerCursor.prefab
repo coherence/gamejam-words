@@ -761,9 +761,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc97a814921d461188a38ca20db6787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InitialBufferSize: 32
-  InitialBufferDelay: 3
-  DisconnectOnTimeReset: 1
+  InitialBufferSize: 10
+  InitialBufferDelay: 5
+  DisconnectOnTimeReset: 0
   DestroyOnInputAuthorityDisconnected: 1
   UseFixedSimulationFrames: 1
   inputName: TestCube
