@@ -2160,7 +2160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7685291073514734216, guid: 356df2fdc05054d879bcdd9ae0534951, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 174
       objectReference: {fileID: 0}
     - target: {fileID: 7685291073514734216, guid: 356df2fdc05054d879bcdd9ae0534951, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2346,6 +2346,8 @@ MonoBehaviour:
   cameraNear: 1
   nearSize: 10
   farSize: 20
+  lerpSpeed: 0.5
+  snapDistance: 250
 --- !u!1 &994830140
 GameObject:
   m_ObjectHideFlags: 0
@@ -2717,7 +2719,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1532632744
 RectTransform:
   m_ObjectHideFlags: 0

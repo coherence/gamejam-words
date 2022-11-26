@@ -131,7 +131,10 @@ public class Grid : MonoBehaviour
         
         public void Update()
         {
+            if(ui.playerName.text != player.playerName)
             ui.playerName.text = player.playerName;
+            
+            if(ui.playerScore.text != player.score.ToString())
             ui.playerScore.text = player.score.ToString();
         }
     }

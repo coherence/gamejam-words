@@ -12,7 +12,13 @@ public class CameraFollow : MonoBehaviour
     public bool cameraNear = true;
     public float nearSize = 10f, farSize = 20f;
 
+    public float lerpSpeed = 2;
+    
     private Vector3 originalCameraPos;
+
+    float distance = 0;
+
+    public float snapDistance = 10;
     
     void Awake()
     {
@@ -57,12 +63,23 @@ public class CameraFollow : MonoBehaviour
         {
             var playerPos = player.transform.position;
             playerPos.z = transform.position.z;
-            targetPosition = Vector3.Lerp(targetPosition, playerPos, Time.deltaTime * 0.6f);
-            
-            if (Vector3.SqrMagnitude(transform.position - targetPosition) > 0.5f)
+            targetPosition = playerPos;// Vector3.Lerp(targetPosition, playerPos, Time.deltaTime * 0.6f);
+
+            if (Time.frameCount % 20 == 0)
             {
-                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 0.5f);
+                distance = Vector3.SqrMagnitude(transform.position - targetPosition);
             }
+            
+            if (distance > snapDistance)
+            {
+                transform.position = targetPosition;
+                distance = Vector3.SqrMagnitude(transform.position - targetPosition);
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * lerpSpeed);
+            }
+        
         }
         
         
