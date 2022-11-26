@@ -349,7 +349,7 @@ public class Grid : MonoBehaviour
         return wordDictionary.Contains(word);
     }
 
-    public void UpdatePlayerPositionAndClearNonSolidCells(int clientID, int xp, int yp)
+    public void UpdatePlayerPositionAndClearNonSolidCells(uint clientID, int xp, int yp)
     {
         for (var y = 0; y < tilesY; y++)
         {
@@ -718,7 +718,7 @@ public class Grid : MonoBehaviour
         foreach (DictionaryEntry s in players)
         {
             var pl = (PlayerData)s.Value;
-            pl.player.score = (int) state.PlayerScores[pl.clientID];
+            pl.player.score = (int) state.PlayerScores[(uint)pl.clientID];
         }
     }
     
@@ -756,7 +756,7 @@ public class Grid : MonoBehaviour
 
         foreach (DictionaryEntry s in players)
         {
-            playerScores[(int) ((PlayerData)s.Value).clientID] = ((PlayerData) s.Value).player.score;
+            playerScores[(uint) ((PlayerData)s.Value).clientID] = ((PlayerData) s.Value).player.score;
         }
         
         return cellStates;

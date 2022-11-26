@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b58ca8e478745dfab801a85671962e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  consoleLogLevel: 3
-  editorLogLevel: 3
+  consoleLogLevel: 1
+  editorLogLevel: 1
   logSourceFilterMode: 0
   logSourceFilterCSV: 
   showHubSectionInfo: 1
