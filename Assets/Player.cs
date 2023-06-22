@@ -276,7 +276,7 @@ public class Player : MonoBehaviour
             }
             else if (fixedUpdateInput.GetKeyDown(key))
             {
-                if (Input.GetKey(KeyCode.LeftControl))
+                if (Input.GetKey(KeyCode.LeftAlt))
                 {
                     return;
                 }
@@ -351,7 +351,7 @@ public class Player : MonoBehaviour
         TryTypeKey(KeyCode.RightArrow, 1, 0, ref x, ref y);
         TryTypeKey(KeyCode.LeftArrow, -1, 0, ref x, ref y);
 
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.LeftAlt))
         {
             TryTypeKey(KeyCode.K, 0, 1, ref x, ref y);
             TryTypeKey(KeyCode.J, 0, -1, ref x, ref y);

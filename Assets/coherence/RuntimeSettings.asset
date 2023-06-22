@@ -15,7 +15,7 @@ MonoBehaviour:
   versionInfo: {fileID: 11400000, guid: 2191b6f902c97477baa32a7919010503, type: 2}
   runtimeKey: 5fd9768951104386aaa8361105b7bdfc
   schemaID: 359b0e6ac3b2375f0a0f3633b67e823c885dff2a
-  uploadedSchema: 0
+  uploadedSchema: 1
   simulatorSlug: 
   localHost: 127.0.0.1
   localWorldUDPPort: 32001
