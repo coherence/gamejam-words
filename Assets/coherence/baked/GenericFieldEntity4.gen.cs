@@ -17,21 +17,24 @@ namespace Coherence.Generated
 
 	public struct GenericFieldEntity4 : ICoherenceComponentData
 	{
-		public SerializeEntityID Value;
+		public SerializeEntityID value;
 
 		public override string ToString()
 		{
-			return $"GenericFieldEntity4(Value: {Value})";
+			return $"GenericFieldEntity4(value: {value})";
 		}
 
 		public uint GetComponentType() => Definition.InternalGenericFieldEntity4;
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -46,7 +49,7 @@ namespace Coherence.Generated
 			if ((mask & 0x01) != 0)
 			{
 				Frame = other.Frame;
-				Value = other.Value;
+				value = other.value;
 			}
 			mask >>= 1;
 			return this;
@@ -54,35 +57,34 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (GenericFieldEntity4)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (Value != newData.Value) {
-				mask |= 0b00000000000000000000000000000001;
+		}
+
+		public static uint Serialize(GenericFieldEntity4 data, uint mask, IOutProtocolBitStream bitStream)
+		{
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				var fieldValue = data.value;
+
+				bitStream.WriteEntity(fieldValue);
 			}
+			mask >>= 1;
 
 			return mask;
 		}
 
-		public static void Serialize(GenericFieldEntity4 data, uint mask, IOutProtocolBitStream bitStream)
-		{
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				bitStream.WriteEntity(data.Value);
-			}
-			mask >>= 1;
-		}
-
-		public static (GenericFieldEntity4, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldEntity4, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldEntity4();
+	
 			if (bitStream.ReadMask())
 			{
-				val.Value = bitStream.ReadEntity();
+				val.value = bitStream.ReadEntity();
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -95,6 +97,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as GenericFieldEntity4?;
+	
 		}
 	}
 }

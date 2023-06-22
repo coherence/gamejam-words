@@ -28,11 +28,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
-		private static readonly float _value_Epsilon = 2.3283064365386963e-10f;
+	
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -55,35 +57,34 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (GenericScale)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (value.DiffersFrom(newData.value, _value_Epsilon)) {
-				mask |= 0b00000000000000000000000000000001;
+		}
+
+		public static uint Serialize(GenericScale data, uint mask, IOutProtocolBitStream bitStream)
+		{
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				var fieldValue = (data.value.ToCoreVector3());
+
+				bitStream.WriteVector3(fieldValue, FloatMeta.NoCompression());
 			}
+			mask >>= 1;
 
 			return mask;
 		}
 
-		public static void Serialize(GenericScale data, uint mask, IOutProtocolBitStream bitStream)
-		{
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				bitStream.WriteVector3((data.value.ToCoreVector3()), FloatMeta.NoCompression());
-			}
-			mask >>= 1;
-		}
-
-		public static (GenericScale, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericScale, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericScale();
+	
 			if (bitStream.ReadMask())
 			{
 				val.value = (bitStream.ReadVector3(FloatMeta.NoCompression())).ToUnityVector3();
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -96,6 +97,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as GenericScale?;
+	
 		}
 	}
 }

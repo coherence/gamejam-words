@@ -10,11 +10,8 @@ namespace Coherence.Generated
 
 	public static class Archetypes
 	{
-		public const int PlayerCursor_94a5ba242d36ffd449a774ea4e84f0b5Index = 0;
 
 		public static Dictionary<string, int> IndexForName = new Dictionary<string, int>() {
-			{ "PlayerCursor_94a5ba242d36ffd449a774ea4e84f0b5", 0 },
-
 		};
 	}
 }

@@ -28,10 +28,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 		private static readonly uint _number_Min = 0;
 		private static readonly uint _number_Max = 4294967295;
 
@@ -56,37 +59,36 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (GenericFieldUInt6)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (number != newData.number) {
-				mask |= 0b00000000000000000000000000000001;
-			}
-
-			return mask;
 		}
 
-		public static void Serialize(GenericFieldUInt6 data, uint mask, IOutProtocolBitStream bitStream)
+		public static uint Serialize(GenericFieldUInt6 data, uint mask, IOutProtocolBitStream bitStream)
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
 				Coherence.Utils.Bounds.Check(data.number, _number_Min, _number_Max, "GenericFieldUInt6.number");
 				data.number = Coherence.Utils.Bounds.Clamp(data.number, _number_Min, _number_Max);
-				bitStream.WriteUIntegerRange(data.number, 32, 0);
+				var fieldValue = data.number;
+
+				bitStream.WriteUIntegerRange(fieldValue, 32, 0);
 			}
 			mask >>= 1;
+
+			return mask;
 		}
 
-		public static (GenericFieldUInt6, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldUInt6, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldUInt6();
+	
 			if (bitStream.ReadMask())
 			{
 				val.number = bitStream.ReadUIntegerRange(32, 0);
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -99,6 +101,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as GenericFieldUInt6?;
+	
 		}
 	}
 }

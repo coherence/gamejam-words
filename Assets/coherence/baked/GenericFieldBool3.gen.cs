@@ -28,10 +28,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -54,35 +57,34 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (GenericFieldBool3)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (number != newData.number) {
-				mask |= 0b00000000000000000000000000000001;
+		}
+
+		public static uint Serialize(GenericFieldBool3 data, uint mask, IOutProtocolBitStream bitStream)
+		{
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				var fieldValue = data.number;
+
+				bitStream.WriteBool(fieldValue);
 			}
+			mask >>= 1;
 
 			return mask;
 		}
 
-		public static void Serialize(GenericFieldBool3 data, uint mask, IOutProtocolBitStream bitStream)
-		{
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				bitStream.WriteBool(data.number);
-			}
-			mask >>= 1;
-		}
-
-		public static (GenericFieldBool3, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldBool3, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldBool3();
+	
 			if (bitStream.ReadMask())
 			{
 				val.number = bitStream.ReadBool();
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -95,6 +97,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as GenericFieldBool3?;
+	
 		}
 	}
 }

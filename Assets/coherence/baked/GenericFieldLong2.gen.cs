@@ -28,10 +28,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -54,35 +57,34 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (GenericFieldLong2)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (number != newData.number) {
-				mask |= 0b00000000000000000000000000000001;
+		}
+
+		public static uint Serialize(GenericFieldLong2 data, uint mask, IOutProtocolBitStream bitStream)
+		{
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				var fieldValue = data.number;
+
+				bitStream.WriteLong(fieldValue);
 			}
+			mask >>= 1;
 
 			return mask;
 		}
 
-		public static void Serialize(GenericFieldLong2 data, uint mask, IOutProtocolBitStream bitStream)
-		{
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				bitStream.WriteLong(data.number);
-			}
-			mask >>= 1;
-		}
-
-		public static (GenericFieldLong2, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldLong2, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldLong2();
+	
 			if (bitStream.ReadMask())
 			{
 				val.number = bitStream.ReadLong();
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -95,6 +97,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as GenericFieldLong2?;
+	
 		}
 	}
 }

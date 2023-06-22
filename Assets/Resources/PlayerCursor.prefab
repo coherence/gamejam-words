@@ -508,25 +508,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff62c046a053f416a8dc48ad6483a25e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnAuthorityGained:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStateAuthority:
-    m_PersistentCalls:
-      m_Calls: []
-  OnInputAuthority:
-    m_PersistentCalls:
-      m_Calls: []
-  OnAuthorityLost:
-    m_PersistentCalls:
-      m_Calls: []
   OnStateRemote:
     m_PersistentCalls:
       m_Calls: []
   OnInputRemote:
     m_PersistentCalls:
       m_Calls: []
-  OnAuthorityTransferRejected:
+  OnStateAuthority:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInputAuthority:
     m_PersistentCalls:
       m_Calls: []
   OnAuthorityRequestRejected:
@@ -538,9 +529,7 @@ MonoBehaviour:
   OnInputSimulatorConnected:
     m_PersistentCalls:
       m_Calls: []
-  OnInputOwnerAssigned:
-    m_PersistentCalls:
-      m_Calls: []
+  coherenceSyncConfig: {fileID: -2424841752174103780, guid: 159374c3e70de2e45bf1c150f0c607df, type: 2}
   archetype:
     boundComponents:
     - component: {fileID: 5087559671055490318}
@@ -588,149 +577,22 @@ MonoBehaviour:
     lodLevels:
     - distance: 0
     archetypeName: PlayerCursor_94a5ba242d36ffd449a774ea4e84f0b5
-    GeneratesArchetypeDefinition: 1
-  InterpolationLocation: 1
-  bakedScriptType: Coherence.Generated.CoherenceSyncPlayerCursor, Assembly-CSharp
+    GeneratesArchetypeDefinition: 0
+  interpolationLocation: 1
+  bakedScriptType: Coherence.Generated.CoherenceSyncPlayerCursor_94a5ba242d36ffd449a774ea4e84f0b5,
+    Assembly-CSharp
   approveAuthorityTransferRequests: 1
   simulationType: 0
   authorityTransferType: 0
   orphanedBehavior: 0
   lifetimeType: 0
   uniquenessType: 0
-  coherenceUUID: 
-  destructionBehavior: 0
-  reflectionBindings:
-  - name: playerName
-    memberKind: 1
-    memberAssemblyType: System.String, mscorlib
-    parameterAssemblyTypes: []
-    returnAssemblyType: 
-    compatibility: -1
-    routing: 1
-    required: 0
-    interpolationSettings: {fileID: 0}
-    component: {fileID: 694873017490517114}
-    coherenceSync: {fileID: 0}
-    isPredicted: 0
-    guid: 12a1df85-ce79-4383-a2ee-acbf14b231a8
-    archetypeData:
-      type: 5
-      minRange: 0
-      maxRange: 0
-      sampleRate: 30
-      floatCompression: 0
-      fields:
-      - type: 5
-        bits: 518
-        minRange: 0
-        maxRange: 0
-        precision: 0
-        floatCompression: 0
-      sharedBinding: {fileID: 0}
-  - name: startOnFrame
-    memberKind: 1
-    memberAssemblyType: System.Int64, mscorlib
-    parameterAssemblyTypes: []
-    returnAssemblyType: 
-    compatibility: -1
-    routing: 1
-    required: 0
-    interpolationSettings: {fileID: 0}
-    component: {fileID: 694873017490517114}
-    coherenceSync: {fileID: 0}
-    isPredicted: 0
-    guid: 2d004627-0964-48b3-8864-8be5e9bee8c6
-    archetypeData:
-      type: 2
-      minRange: 0
-      maxRange: 0
-      sampleRate: 30
-      floatCompression: 0
-      fields:
-      - type: 2
-        bits: 0
-        minRange: 0
-        maxRange: 0
-        precision: 0
-        floatCompression: 0
-      sharedBinding: {fileID: 0}
-  customBindings:
-  - descriptor:
-      name: position
-      displayName: 
-      monoAssemblyType: UnityEngine.Vector3, UnityEngine
-      coherenceAssemblyType: Coherence.Generated.WorldPosition, Assembly-CSharp
-      bakedSyncScriptGetter: coherencePosition
-      bakedSyncScriptSetter: coherencePosition
-      bakedSyncScriptFieldName: 
-      bakedSyncScriptCSharpType: UnityEngine.Vector3
-      coherenceComponentName: WorldPosition
-      coherenceComponentFieldName: value
-      schemaComponentFieldName: value
-      extraData: 
-      extraFlags: 0
-      required: 1
-      interpolable: 1
-      defaultInterpolationSettings: {fileID: 11400000, guid: ae4419d1d9a8643709bf5f6b90c584a5, type: 2}
-      enforcesLODingWhenFieldsOverriden: 1
-    component: {fileID: 5087559671055490318}
-    serializerAssemblyType: Coherence.Toolkit.TransformBindingSerializer, Coherence.Toolkit
-    guid: e1421fbd-1c05-40ab-9047-94b2d02a8ac0
-    interpolationSettings: {fileID: 11400000, guid: ae4419d1d9a8643709bf5f6b90c584a5, type: 2}
-    coherenceSync: {fileID: 0}
-    isPredicted: 0
-    archetypeData:
-      type: 7
-      minRange: 0
-      maxRange: 22768
-      sampleRate: 30
-      floatCompression: 0
-      fields:
-      - type: 7
-        bits: 32
-        minRange: 0
-        maxRange: 0
-        precision: 0.001
-        floatCompression: 0
-      sharedBinding: {fileID: 0}
-  - descriptor:
-      name: rotation
-      displayName: 
-      monoAssemblyType: UnityEngine.Quaternion, UnityEngine
-      coherenceAssemblyType: Coherence.Generated.WorldOrientation, Assembly-CSharp
-      bakedSyncScriptGetter: coherenceRotation
-      bakedSyncScriptSetter: coherenceRotation
-      bakedSyncScriptFieldName: 
-      bakedSyncScriptCSharpType: UnityEngine.Quaternion
-      coherenceComponentName: WorldOrientation
-      coherenceComponentFieldName: value
-      schemaComponentFieldName: value
-      extraData: 
-      extraFlags: 0
-      required: 0
-      interpolable: 1
-      defaultInterpolationSettings: {fileID: 11400000, guid: f45c201a9dd7a4866ac502d18deed702, type: 2}
-      enforcesLODingWhenFieldsOverriden: 1
-    component: {fileID: 5087559671055490318}
-    serializerAssemblyType: Coherence.Toolkit.TransformBindingSerializer, Coherence.Toolkit
-    guid: 0d84d40e-a7ab-4496-88e2-8d9b90f6d34c
-    interpolationSettings: {fileID: 11400000, guid: f45c201a9dd7a4866ac502d18deed702, type: 2}
-    coherenceSync: {fileID: 0}
-    isPredicted: 0
-    archetypeData:
-      type: 8
-      minRange: 0
-      maxRange: 0
-      sampleRate: 30
-      floatCompression: 0
-      fields:
-      - type: 8
-        bits: 32
-        minRange: 0
-        maxRange: 0
-        precision: 0.00000008381903
-        floatCompression: 0
-      sharedBinding: {fileID: 0}
+  replacementStrategy: 0
+  preserveChildren: 0
+  bindings:
+  - rid: 6956503902392942594
+  - rid: 6956503902392942596
+  - rid: 6956503902392942598
   onNetworkedInstantiation:
     m_PersistentCalls:
       m_Calls: []
@@ -740,15 +602,147 @@ MonoBehaviour:
   onNetworkedDestruction:
     m_PersistentCalls:
       m_Calls: []
-  remoteVersionPrefabName: PlayerCursor
-  PrefabGuid: 
-  selectedSynchronizedPrefabOption: 0
+  scenePrefabInstanceUUID: 
+  coherenceUUID: 
   usingReflection: 0
   coherenceTag: 
   componentActions: []
+  floatingOriginMode: 0
+  floatingOriginParentedMode: 1
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 6956503902392942594
+      type: {class: PositionBinding, ns: Coherence.Toolkit.Bindings.TransformBindings, asm: Coherence.Toolkit}
+      data:
+        descriptor:
+          rid: 6956503902392942595
+        routing: 0
+        isPredicted: 0
+        defaultInterpolationPath: 
+        guid: bbfa81ab-20f2-4802-998d-3a444677b9a0
+        archetypeData:
+          type: 7
+          minRange: 0
+          maxRange: 0
+          sampleRate: 20
+          floatCompression: 0
+          fields:
+          - type: 7
+            bits: 32
+            precision: 0.001
+            floatCompression: 0
+        unityComponent: {fileID: 5087559671055490318}
+        coherenceSync: {fileID: 0}
+        interpolationSettings: {fileID: 11400000, guid: ae4419d1d9a8643709bf5f6b90c584a5, type: 2}
+    - rid: 6956503902392942595
+      type: {class: Descriptor, ns: Coherence.Toolkit.Bindings, asm: Coherence.Toolkit}
+      data:
+        name: position
+        monoAssemblyType: UnityEngine.Vector3, UnityEngine
+        required: 1
+        enforcesLODingWhenFieldsOverriden: 1
+        valueSyncCallbackName: 
+        memberType: 64
+        parameterAssemblyTypes: []
+        ownerType:
+          assemblyQualifiedName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
+            Culture=neutral, PublicKeyToken=null
+        CustomData:
+          rid: -2
+        bindingType:
+          assemblyQualifiedName: Coherence.Toolkit.Bindings.TransformBindings.PositionBinding,
+            Coherence.Toolkit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        oldName: 
+        oldParameterAssemblyTypes: []
+    - rid: 6956503902392942596
+      type: {class: StringBinding, ns: Coherence.Toolkit.Bindings.ValueBindings, asm: Coherence.Toolkit}
+      data:
+        descriptor:
+          rid: 6956503902392942597
+        routing: 0
+        isPredicted: 0
+        defaultInterpolationPath: 
+        guid: f3da6e61-c19f-483e-9ef4-00d29299efda
+        archetypeData:
+          type: 5
+          minRange: 0
+          maxRange: 0
+          sampleRate: 20
+          floatCompression: 0
+          fields:
+          - type: 5
+            bits: 6
+            precision: 0
+            floatCompression: 0
+        unityComponent: {fileID: 694873017490517114}
+        coherenceSync: {fileID: 0}
+        interpolationSettings: {fileID: 0}
+    - rid: 6956503902392942597
+      type: {class: Descriptor, ns: Coherence.Toolkit.Bindings, asm: Coherence.Toolkit}
+      data:
+        name: playerName
+        monoAssemblyType: System.String, mscorlib
+        required: 0
+        enforcesLODingWhenFieldsOverriden: 1
+        valueSyncCallbackName: 
+        memberType: 4
+        parameterAssemblyTypes: []
+        ownerType:
+          assemblyQualifiedName: Player, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+        CustomData:
+          rid: -2
+        bindingType:
+          assemblyQualifiedName: Coherence.Toolkit.Bindings.ValueBindings.StringBinding,
+            Coherence.Toolkit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        oldName: 
+        oldParameterAssemblyTypes: []
+    - rid: 6956503902392942598
+      type: {class: LongBinding, ns: Coherence.Toolkit.Bindings.ValueBindings, asm: Coherence.Toolkit}
+      data:
+        descriptor:
+          rid: 6956503902392942599
+        routing: 0
+        isPredicted: 0
+        defaultInterpolationPath: 
+        guid: 95cc7032-16a9-4b2a-a7dd-e24f61f4959b
+        archetypeData:
+          type: 2
+          minRange: -9223372036854775808
+          maxRange: -9223372036854775808
+          sampleRate: 20
+          floatCompression: 0
+          fields:
+          - type: 2
+            bits: 64
+            precision: 0
+            floatCompression: 0
+        unityComponent: {fileID: 694873017490517114}
+        coherenceSync: {fileID: 0}
+        interpolationSettings: {fileID: 0}
+    - rid: 6956503902392942599
+      type: {class: Descriptor, ns: Coherence.Toolkit.Bindings, asm: Coherence.Toolkit}
+      data:
+        name: startOnFrame
+        monoAssemblyType: System.Int64, mscorlib
+        required: 0
+        enforcesLODingWhenFieldsOverriden: 1
+        valueSyncCallbackName: 
+        memberType: 4
+        parameterAssemblyTypes: []
+        ownerType:
+          assemblyQualifiedName: Player, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+            PublicKeyToken=null
+        CustomData:
+          rid: -2
+        bindingType:
+          assemblyQualifiedName: Coherence.Toolkit.Bindings.ValueBindings.LongBinding,
+            Coherence.Toolkit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        oldName: 
+        oldParameterAssemblyTypes: []
 --- !u!114 &5976404667689088643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -762,11 +756,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialBufferSize: 10
-  InitialBufferDelay: 5
+  InitialInputDelay: 5
   DisconnectOnTimeReset: 0
   DestroyOnInputAuthorityDisconnected: 1
   UseFixedSimulationFrames: 1
-  inputName: TestCube
   fields:
   - name: key
     type: 2

@@ -17,21 +17,24 @@ namespace Coherence.Generated
 
 	public struct GenericFieldColor1 : ICoherenceComponentData
 	{
-		public Color Value;
+		public Color value;
 
 		public override string ToString()
 		{
-			return $"GenericFieldColor1(Value: {Value})";
+			return $"GenericFieldColor1(value: {value})";
 		}
 
 		public uint GetComponentType() => Definition.InternalGenericFieldColor1;
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -46,7 +49,7 @@ namespace Coherence.Generated
 			if ((mask & 0x01) != 0)
 			{
 				Frame = other.Frame;
-				Value = other.Value;
+				value = other.value;
 			}
 			mask >>= 1;
 			return this;
@@ -54,35 +57,34 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (GenericFieldColor1)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (Value != newData.Value) {
-				mask |= 0b00000000000000000000000000000001;
+		}
+
+		public static uint Serialize(GenericFieldColor1 data, uint mask, IOutProtocolBitStream bitStream)
+		{
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				var fieldValue = (data.value.ToCoreColor());
+
+				bitStream.WriteColor(fieldValue, FloatMeta.ForFixedPoint(0, 1, 2.3283064370807973753052522170037E-10));
 			}
+			mask >>= 1;
 
 			return mask;
 		}
 
-		public static void Serialize(GenericFieldColor1 data, uint mask, IOutProtocolBitStream bitStream)
-		{
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				bitStream.WriteColor((data.Value.ToCoreColor()), FloatMeta.ForFixedPoint(0, 1, 2.3283064370807973753052522170037E-10));
-			}
-			mask >>= 1;
-		}
-
-		public static (GenericFieldColor1, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldColor1, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldColor1();
+	
 			if (bitStream.ReadMask())
 			{
-				val.Value = (bitStream.ReadColor(FloatMeta.ForFixedPoint(0, 1, 2.3283064370807973753052522170037E-10))).ToUnityColor();
+				val.value = (bitStream.ReadColor(FloatMeta.ForFixedPoint(0, 1, 2.3283064370807973753052522170037E-10))).ToUnityColor();
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -95,6 +97,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as GenericFieldColor1?;
+	
 		}
 	}
 }

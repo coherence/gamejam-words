@@ -28,10 +28,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -54,35 +57,34 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (UniqueID)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (uuid.DiffersFrom(newData.uuid)) {
-				mask |= 0b00000000000000000000000000000001;
+		}
+
+		public static uint Serialize(UniqueID data, uint mask, IOutProtocolBitStream bitStream)
+		{
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				var fieldValue = data.uuid;
+
+				bitStream.WriteShortString(fieldValue);
 			}
+			mask >>= 1;
 
 			return mask;
 		}
 
-		public static void Serialize(UniqueID data, uint mask, IOutProtocolBitStream bitStream)
-		{
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				bitStream.WriteShortString(data.uuid);
-			}
-			mask >>= 1;
-		}
-
-		public static (UniqueID, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (UniqueID, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new UniqueID();
+	
 			if (bitStream.ReadMask())
 			{
 				val.uuid = bitStream.ReadShortString();
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -95,6 +97,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as UniqueID?;
+	
 		}
 	}
 }

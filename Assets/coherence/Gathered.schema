@@ -1,0 +1,11 @@
+component PlayerCursor_94a5ba242d36ffd449a774ea4e84f0b5_Player_694873017490517114
+  playerName String [bits "6"]
+  startOnFrame Int64 [bits "64"]
+
+component PlayerCursor_94a5ba242d36ffd449a774ea4e84f0b5_UnityEngine__char_46_Transform_5087559671055490318
+  position Vector3 [compression "None"]
+
+input PlayerCursor_94a5ba242d36ffd449a774ea4e84f0b5_Input
+  key Float [compression "None"]
+  Mov Vector2 [compression "None"]
+

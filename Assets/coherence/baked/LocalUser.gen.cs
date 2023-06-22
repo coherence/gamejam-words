@@ -28,10 +28,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 		private static readonly int _localIndex_Min = -2147483648;
 		private static readonly int _localIndex_Max = 2147483647;
 
@@ -56,37 +59,36 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (LocalUser)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (localIndex != newData.localIndex) {
-				mask |= 0b00000000000000000000000000000001;
-			}
-
-			return mask;
 		}
 
-		public static void Serialize(LocalUser data, uint mask, IOutProtocolBitStream bitStream)
+		public static uint Serialize(LocalUser data, uint mask, IOutProtocolBitStream bitStream)
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
 				Coherence.Utils.Bounds.Check(data.localIndex, _localIndex_Min, _localIndex_Max, "LocalUser.localIndex");
 				data.localIndex = Coherence.Utils.Bounds.Clamp(data.localIndex, _localIndex_Min, _localIndex_Max);
-				bitStream.WriteIntegerRange(data.localIndex, 32, -2147483648);
+				var fieldValue = data.localIndex;
+
+				bitStream.WriteIntegerRange(fieldValue, 32, -2147483648);
 			}
 			mask >>= 1;
+
+			return mask;
 		}
 
-		public static (LocalUser, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (LocalUser, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new LocalUser();
+	
 			if (bitStream.ReadMask())
 			{
 				val.localIndex = bitStream.ReadIntegerRange(32, -2147483648);
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -99,6 +101,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as LocalUser?;
+	
 		}
 	}
 }

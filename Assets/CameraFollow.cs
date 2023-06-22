@@ -52,7 +52,7 @@ public class CameraFollow : MonoBehaviour
                 var sync = obj.GetComponent<CoherenceSync>();
                 if (sync)
                 {
-                    if (sync.isSimulated)
+                    if (sync.HasStateAuthority)
                     {
                         player = obj;
                     }

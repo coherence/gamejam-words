@@ -27,10 +27,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000000;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -47,22 +50,22 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (Persistence)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
+		}
+
+		public static uint Serialize(Persistence data, uint mask, IOutProtocolBitStream bitStream)
+		{
 
 			return mask;
 		}
 
-		public static void Serialize(Persistence data, uint mask, IOutProtocolBitStream bitStream)
-		{
-		}
-
-		public static (Persistence, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (Persistence, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new Persistence();
-			return (val, mask, null);
+	
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -75,6 +78,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as Persistence?;
+	
 		}
 	}
 }

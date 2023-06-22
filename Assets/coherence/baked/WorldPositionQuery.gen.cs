@@ -29,12 +29,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000011;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
-		private static readonly float _position_Epsilon = 2.3283064365386963e-10f;
-		private static readonly float _radius_Epsilon = 2.3283064365386963e-10f;
+	
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -63,37 +64,35 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (WorldPositionQuery)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (position.DiffersFrom(newData.position, _position_Epsilon)) {
-				mask |= 0b00000000000000000000000000000001;
+		}
+
+		public static uint Serialize(WorldPositionQuery data, uint mask, IOutProtocolBitStream bitStream)
+		{
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				var fieldValue = (data.position.ToCoreVector3());
+
+				bitStream.WriteVector3(fieldValue, FloatMeta.NoCompression());
 			}
-			if (radius.DiffersFrom(newData.radius, _radius_Epsilon)) {
-				mask |= 0b00000000000000000000000000000010;
+			mask >>= 1;
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				var fieldValue = data.radius;
+
+				bitStream.WriteFloat(fieldValue, FloatMeta.NoCompression());
 			}
+			mask >>= 1;
 
 			return mask;
 		}
 
-		public static void Serialize(WorldPositionQuery data, uint mask, IOutProtocolBitStream bitStream)
-		{
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				bitStream.WriteVector3((data.position.ToCoreVector3()), FloatMeta.NoCompression());
-			}
-			mask >>= 1;
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				bitStream.WriteFloat(data.radius, FloatMeta.NoCompression());
-			}
-			mask >>= 1;
-		}
-
-		public static (WorldPositionQuery, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (WorldPositionQuery, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new WorldPositionQuery();
+	
 			if (bitStream.ReadMask())
 			{
 				val.position = (bitStream.ReadVector3(FloatMeta.NoCompression())).ToUnityVector3();
@@ -104,7 +103,7 @@ namespace Coherence.Generated
 				val.radius = bitStream.ReadFloat(FloatMeta.NoCompression());
 				mask |= 0b00000000000000000000000000000010;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -117,6 +116,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as WorldPositionQuery?;
+	
 		}
 	}
 }

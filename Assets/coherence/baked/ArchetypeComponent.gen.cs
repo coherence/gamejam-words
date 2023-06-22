@@ -28,10 +28,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 		private static readonly int _index_Min = -2147483648;
 		private static readonly int _index_Max = 2147483647;
 
@@ -56,37 +59,36 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (ArchetypeComponent)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (index != newData.index) {
-				mask |= 0b00000000000000000000000000000001;
-			}
-
-			return mask;
 		}
 
-		public static void Serialize(ArchetypeComponent data, uint mask, IOutProtocolBitStream bitStream)
+		public static uint Serialize(ArchetypeComponent data, uint mask, IOutProtocolBitStream bitStream)
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
 				Coherence.Utils.Bounds.Check(data.index, _index_Min, _index_Max, "ArchetypeComponent.index");
 				data.index = Coherence.Utils.Bounds.Clamp(data.index, _index_Min, _index_Max);
-				bitStream.WriteIntegerRange(data.index, 32, -2147483648);
+				var fieldValue = data.index;
+
+				bitStream.WriteIntegerRange(fieldValue, 32, -2147483648);
 			}
 			mask >>= 1;
+
+			return mask;
 		}
 
-		public static (ArchetypeComponent, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (ArchetypeComponent, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new ArchetypeComponent();
+	
 			if (bitStream.ReadMask())
 			{
 				val.index = bitStream.ReadIntegerRange(32, -2147483648);
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -99,6 +101,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as ArchetypeComponent?;
+	
 		}
 	}
 }

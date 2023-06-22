@@ -68,7 +68,8 @@ public class Player : MonoBehaviour
         AUTOMATIC = 0,
         ALWAYS_RIGHT = 1,
         ALWAYS_DOWN = 2,
-        MANUAL = 3
+        SHIFT_DOWN = 4,
+        MANUAL = 3,
     }
 
     public TypingMode typingMode = TypingMode.AUTOMATIC;
@@ -114,7 +115,7 @@ public class Player : MonoBehaviour
     {
         sync = GetComponent<CoherenceSync>();
         
-        fixedUpdateInput = sync.MonoBridge.FixedUpdateInput;
+        fixedUpdateInput = sync.CoherenceBridge.FixedUpdateInput;
         input = sync.Input;
         grid = FindObjectOfType<Grid>();
 
@@ -152,7 +153,7 @@ public class Player : MonoBehaviour
     {
         transform.position = grid.GetGlobalPositionFromGrid(gridPosition.x, gridPosition.y);
 
-        if (sync.isSimulated)
+        if (sync.HasStateAuthority)
         {
             if(!grid.IsPaused)
             {
@@ -239,12 +240,12 @@ public class Player : MonoBehaviour
 
     public Vector2 GetNetworkInputMovement(long frame)
     {
-        return input.GetAxisState("Mov", frame);
+        return input.GetAxis2D("Mov", frame);
     }
 
     public float GetNetworkInputString(long frame)
     {
-        return input.GetButtonRangeState("key", frame);
+        return input.GetAxis("key", frame);
     }
 
     public void ApplyLocalInputs()
@@ -256,7 +257,7 @@ public class Player : MonoBehaviour
     private void ApplyAlphabet()
     {
         bool canType = false;
-        
+
         foreach (KeyCode key in acceptedAlphabetKeys)
         {
             if (demoKeysReplaying)
@@ -265,7 +266,7 @@ public class Player : MonoBehaviour
                 {
                     if (CanTypeKey(key))
                     {
-                        input.SetButtonRangeState("key", (float)key);
+                        input.SetAxis("key", (float)key);
                         GetCurrentDemoKey(true); // just advance
                         canType = true;
                         RecordKeyTime(key);
@@ -275,7 +276,12 @@ public class Player : MonoBehaviour
             }
             else if (fixedUpdateInput.GetKeyDown(key))
             {
-                input.SetButtonRangeState("key", (float)key);
+                if (Input.GetKey(KeyCode.LeftControl))
+                {
+                    return;
+                }
+                
+                input.SetAxis("key", (float)key);
                 RecordKeyTime(key);
                 canType = true;
                 tmpKeyRecorder.Add(key);
@@ -286,7 +292,7 @@ public class Player : MonoBehaviour
 
         if (!canType)
         {
-            input.SetButtonRangeState("key", 0f);
+            input.SetAxis("key", 0f);
         }
     }
 
@@ -345,6 +351,14 @@ public class Player : MonoBehaviour
         TryTypeKey(KeyCode.RightArrow, 1, 0, ref x, ref y);
         TryTypeKey(KeyCode.LeftArrow, -1, 0, ref x, ref y);
 
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            TryTypeKey(KeyCode.K, 0, 1, ref x, ref y);
+            TryTypeKey(KeyCode.J, 0, -1, ref x, ref y);
+            TryTypeKey(KeyCode.L, 1, 0, ref x, ref y);
+            TryTypeKey(KeyCode.H, -1, 0, ref x, ref y);
+        }
+
         bool backspace = false;
         
         if (lastTypingDirection == TypingDirection.RIGHT)
@@ -361,6 +375,13 @@ public class Player : MonoBehaviour
         {
             if (lastTypedWasLetter)
             {
+                if (typingMode == TypingMode.SHIFT_DOWN && lastTypingDirection == TypingDirection.NONE)
+                {
+                    lastTypingDirection = Input.GetKey(KeyCode.LeftShift) 
+                        ? TypingDirection.DOWN 
+                        : TypingDirection.RIGHT; 
+                }
+                
                 if (lastTypingDirection != TypingDirection.NONE)
                 {
                     x = lastTypingDirection == TypingDirection.RIGHT ? 1 : 0;
@@ -386,7 +407,7 @@ public class Player : MonoBehaviour
         
         var movement = new Vector2(x, y).normalized;
         
-        input.SetAxisState("Mov", movement);
+        input.SetAxis2D("Mov", movement);
     }
 
     private void ChangeTypingDirectionBasedOnMode()
@@ -395,8 +416,9 @@ public class Player : MonoBehaviour
         {
             case TypingMode.AUTOMATIC:
                 break;
-                
+            
             case TypingMode.MANUAL:
+            case TypingMode.SHIFT_DOWN:
                 lastTypingDirection = TypingDirection.NONE;
                 break;
                 

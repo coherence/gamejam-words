@@ -28,10 +28,13 @@ namespace Coherence.Generated
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
+	
 		private static readonly int _number_Min = -2147483648;
 		private static readonly int _number_Max = 2147483647;
 
@@ -56,37 +59,36 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (GenericFieldInt5)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (number != newData.number) {
-				mask |= 0b00000000000000000000000000000001;
-			}
-
-			return mask;
 		}
 
-		public static void Serialize(GenericFieldInt5 data, uint mask, IOutProtocolBitStream bitStream)
+		public static uint Serialize(GenericFieldInt5 data, uint mask, IOutProtocolBitStream bitStream)
 		{
 			if (bitStream.WriteMask((mask & 0x01) != 0))
 			{
 				Coherence.Utils.Bounds.Check(data.number, _number_Min, _number_Max, "GenericFieldInt5.number");
 				data.number = Coherence.Utils.Bounds.Clamp(data.number, _number_Min, _number_Max);
-				bitStream.WriteIntegerRange(data.number, 32, -2147483648);
+				var fieldValue = data.number;
+
+				bitStream.WriteIntegerRange(fieldValue, 32, -2147483648);
 			}
 			mask >>= 1;
+
+			return mask;
 		}
 
-		public static (GenericFieldInt5, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericFieldInt5, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericFieldInt5();
+	
 			if (bitStream.ReadMask())
 			{
 				val.number = bitStream.ReadIntegerRange(32, -2147483648);
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -99,6 +101,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as GenericFieldInt5?;
+	
 		}
 	}
 }

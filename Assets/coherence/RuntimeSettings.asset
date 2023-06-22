@@ -13,21 +13,25 @@ MonoBehaviour:
   m_Name: RuntimeSettings
   m_EditorClassIdentifier: 
   versionInfo: {fileID: 11400000, guid: 2191b6f902c97477baa32a7919010503, type: 2}
-  runtimeKey: ab2ab36f760a496885294b055256bd1a
-  schemaID: 73e45d1a3ff463185a8b850695f12d33372ab96b
+  runtimeKey: 5fd9768951104386aaa8361105b7bdfc
+  schemaID: 359b0e6ac3b2375f0a0f3633b67e823c885dff2a
+  uploadedSchema: 0
   simulatorSlug: 
   localHost: 127.0.0.1
-  localPort: 32001
-  localWebPort: 32002
-  roomsPort: 64001
-  roomsUDPPort: 42001
-  roomsWebPort: 42002
+  localWorldUDPPort: 32001
+  localWorldWebPort: 32002
   remoteWebPort: 443
+  localRoomsUDPPort: 42001
+  localRoomsWebPort: 42002
+  apiPort: 64001
+  worldsAPIPort: 64002
   localHttpServerHost: localhost
   localHttpServerPort: 42006
   localDevelopmentMode: 1
   useDebugStreams: 0
-  organizationID: c27v33hrn6r5ki5unl10
-  projectID: cbpqiprri4degicpj8mg
-  projectName: Words
+  organizationID: c1ho23prn6r43hh5tc40
+  projectID: c87eo3hvpaj215o05qog
+  projectName: crosswords
+  defaultTransportMode: 0
+  replicationServerToken: 
   playApiEndpoint: https://api.prod.coherence.io/v1/play

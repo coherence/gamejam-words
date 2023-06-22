@@ -14,6 +14,7 @@ using UnityEngine.SocialPlatforms;
 using Coherence.Common;
 using Coherence.Connection;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Grid : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class Grid : MonoBehaviour
 
     private long currentSimulationFrame = 0;
 
-    public NetworkDialog networkDialog;
+    public Text nameInput;
 
     public Transform playerScoreParent;
     public Transform playerScoreUIPrefab;
@@ -56,8 +57,9 @@ public class Grid : MonoBehaviour
     public Transform letterScoreUIParent;
     public Transform letterScoreUIPrefab;
 
+    public DebugDisplay debugDisplay;
     public SystemMessage systemMessage;
-    public CoherenceMonoBridge monoBridge;
+    public CoherenceBridge monoBridge;
     public Simulation simulation;
 
     public TMPro.TMP_Text typingModeCaption;
@@ -317,15 +319,14 @@ public class Grid : MonoBehaviour
         
         LoadDictionary();
 
-        var monoBridge = FindObjectOfType<CoherenceMonoBridge>();
+        var monoBridge = FindObjectOfType<CoherenceBridge>();
 
         monoBridge.onConnected.AddListener((mb) =>
         {
-            playerName = networkDialog.nameInput.text;
+            playerName = nameInput.text;
         });
         
         var alphabet = Player.SupportedAlphabet;
-        int foundLetter = -1;
 
         float startX = -13.4f;
         float startY = -8f;
@@ -768,7 +769,7 @@ public class Grid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerName = networkDialog.nameInput.text;
+        playerName = nameInput.text;
         UpdatePlayerData();
 
         if (IsPaused && monoBridge.isConnected)
@@ -801,8 +802,17 @@ public class Grid : MonoBehaviour
         {
             systemMessage.DisplayMessage(null);
         }
-        
-        systemMessage.UpdateFrame(currentSimulationFrame, monoBridge.NetworkTime.ClientSimulationFrame, monoBridge.NetworkTime.ServerSimulationFrame, simulation.hash);
+
+        debugDisplay.UpdateInfo(
+            monoBridge.isConnected ? monoBridge.Ping.LatencyMs : 0,
+            currentSimulationFrame, 
+            monoBridge.NetworkTime.ClientSimulationFrame, 
+            monoBridge.NetworkTime.ServerSimulationFrame, 
+            simulation.hash,
+            monoBridge.InputManager?.AcknowledgedFrame ?? 0,
+            monoBridge.InputManager?.MispredictionFrame ?? 0,
+            monoBridge.InputManager?.CommonReceivedFrame ?? 0,
+            monoBridge.InputManager?.ShouldPause ?? false);
         
         if (Input.GetKeyDown(KeyCode.Space))
         {

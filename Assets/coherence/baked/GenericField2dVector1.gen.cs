@@ -17,22 +17,24 @@ namespace Coherence.Generated
 
 	public struct GenericField2dVector1 : ICoherenceComponentData
 	{
-		public Vector2 Value;
+		public Vector2 value;
 
 		public override string ToString()
 		{
-			return $"GenericField2dVector1(Value: {Value})";
+			return $"GenericField2dVector1(value: {value})";
 		}
 
 		public uint GetComponentType() => Definition.InternalGenericField2dVector1;
 
 		public const int order = 0;
 
+		public uint FieldsMask => 0b00000000000000000000000000000001;
+
 		public int GetComponentOrder() => order;
+		public bool IsSendOrdered() { return false; }
 
 		public AbsoluteSimulationFrame Frame;
-
-		private static readonly float _Value_Epsilon = 2.3283064365386963e-10f;
+	
 
 		public void SetSimulationFrame(AbsoluteSimulationFrame frame)
 		{
@@ -47,7 +49,7 @@ namespace Coherence.Generated
 			if ((mask & 0x01) != 0)
 			{
 				Frame = other.Frame;
-				Value = other.Value;
+				value = other.value;
 			}
 			mask >>= 1;
 			return this;
@@ -55,35 +57,34 @@ namespace Coherence.Generated
 
 		public uint DiffWith(ICoherenceComponentData data)
 		{
-			uint mask = 0;
-			var newData = (GenericField2dVector1)data;
+			throw new System.NotSupportedException($"{nameof(DiffWith)} is not supported in Unity");
 
-			if (Value.DiffersFrom(newData.Value, _Value_Epsilon)) {
-				mask |= 0b00000000000000000000000000000001;
+		}
+
+		public static uint Serialize(GenericField2dVector1 data, uint mask, IOutProtocolBitStream bitStream)
+		{
+			if (bitStream.WriteMask((mask & 0x01) != 0))
+			{
+				var fieldValue = (data.value.ToCoreVector2());
+
+				bitStream.WriteVector2(fieldValue, FloatMeta.NoCompression());
 			}
+			mask >>= 1;
 
 			return mask;
 		}
 
-		public static void Serialize(GenericField2dVector1 data, uint mask, IOutProtocolBitStream bitStream)
-		{
-			if (bitStream.WriteMask((mask & 0x01) != 0))
-			{
-				bitStream.WriteVector2((data.Value.ToCoreVector2()), FloatMeta.NoCompression());
-			}
-			mask >>= 1;
-		}
-
-		public static (GenericField2dVector1, uint, uint?) Deserialize(InProtocolBitStream bitStream)
+		public static (GenericField2dVector1, uint) Deserialize(InProtocolBitStream bitStream)
 		{
 			var mask = (uint)0;
 			var val = new GenericField2dVector1();
+	
 			if (bitStream.ReadMask())
 			{
-				val.Value = (bitStream.ReadVector2(FloatMeta.NoCompression())).ToUnityVector2();
+				val.value = (bitStream.ReadVector2(FloatMeta.NoCompression())).ToUnityVector2();
 				mask |= 0b00000000000000000000000000000001;
 			}
-			return (val, mask, null);
+			return (val, mask);
 		}
 
 		/// <summary>
@@ -96,6 +97,7 @@ namespace Coherence.Generated
 		public void ResetByteArrays(ICoherenceComponentData lastSent, uint mask)
 		{
 			var last = lastSent as GenericField2dVector1?;
+	
 		}
 	}
 }
